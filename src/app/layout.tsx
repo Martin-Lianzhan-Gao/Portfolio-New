@@ -14,15 +14,17 @@ const geistMono = Geist_Mono({
 
 // manually imported font style
 const anton = Anton({
-    variable: "--font--anton",
+    variable: "--font-anton",
     subsets: ["latin"],
-    weight: '400'
+    weight: '400',
+    style: 'normal'
 })
 
 const robotoCondensed = Roboto_Condensed({
-    variable: "--font--roboto-condensed",
+    variable: "--font-roboto-condensed",
     subsets: ["latin"],
-    weight: ['200','300', '400']
+    weight: ['200', '300', '400', '500', '600', '700', '800', '900'],
+    style: ['normal', 'italic']
 })
 
 export const metadata: Metadata = {
