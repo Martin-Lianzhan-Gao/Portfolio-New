@@ -17,5 +17,5 @@ const Logo = ({ width = 60 } : {width?: number} ) => {
     </svg>)
 }
 
-export default Logo;
+export default Logo; 
 
