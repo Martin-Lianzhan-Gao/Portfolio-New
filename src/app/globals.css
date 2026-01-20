@@ -10,6 +10,6 @@
     --color-foreground: var(--foreground);
     --font-sans: var(--font-geist-sans);
     --font-mono: var(--font-geist-mono);
-    --font-anton: var(--font-anton);
-    --font-roboto-condensed: var(--font-roboto-condensed)
+    --font-montserrat: var(--font-montserrat);
+    --font-inter: var(--font-inter)
 }
