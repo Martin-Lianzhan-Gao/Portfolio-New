@@ -1,4 +1,4 @@
-import GetInTouchButton from "../components/GetInTouchButton";
+import GetInTouchButton from "../components/elements/GetInTouchButton";
 
 const Intro = () => {
     return (
