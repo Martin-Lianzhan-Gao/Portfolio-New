@@ -21,9 +21,49 @@ const GetInTouchButton = () => {
 
     const textMoveDistance = -6;
 
-    /**
-     * TODO: Design the onClick event animation
-     */
+    const handleClick = contextSafe(() => {
+        // 创建一个timeline来组织动画序列
+        const tl = gsap.timeline();
+
+        // 1. 箭头向右移动后消失，动画先慢后快 (power2.in)
+        tl.to(iconRef.current, {
+            x: 30,
+            opacity: 0,
+            filter: 'blur(4px)',
+            duration: 0.4,
+            ease: 'power2.in'
+        }, '<');
+
+        // 2. 按钮颜色恢复
+        tl.to(containerRef.current, {
+            backgroundColor: '#000000',
+            duration: 0.1,
+            ease: 'power1.out'
+        });
+
+        // 2. 恢复到hover之前的初始状态（平滑过渡）
+        tl.to(iconRef.current, {
+            x: -20,
+            filter: 'blur(4px)',
+            opacity: 0,
+            width: 0,
+            marginLeft: 0,
+            duration: 0.5,
+            ease: 'expo.out'
+        });
+
+        tl.to(textRef.current, {
+            x: 0,
+            duration: 0.35,
+            ease: 'expo.out'
+        }, '<');
+
+        tl.to(containerRef.current, {
+            paddingRight: 32,
+            duration: 0.5,
+            ease: 'expo.out'
+        }, '<');
+    });
 
     const handleMouseEnter = contextSafe(() => {
 
@@ -49,6 +89,7 @@ const GetInTouchButton = () => {
         })
 
         gsap.to(containerRef.current, {
+            backgroundColor: '#2F2F2F',
             paddingRight: 20,
             duration: 0.5,
             ease: 'expo.out'
@@ -74,6 +115,7 @@ const GetInTouchButton = () => {
         })
 
         gsap.to(containerRef.current, {
+            backgroundColor: '#000000',
             paddingRight: 32, // 2 rem, back to the default padding
             duration: 0.5,
             ease: 'expo.out'
@@ -96,6 +138,7 @@ const GetInTouchButton = () => {
             ref={containerRef}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
+            onClick={handleClick}
             className="mt-16 text-xl text-white bg-black rounded-4xl px-8 py-4 flex flex-row items-center justify-center overflow-hidden"
         >
             <p ref={textRef}>Get in touch</p>
