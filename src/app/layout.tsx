@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Montserrat, Inter } from "next/font/google";
+import { Geist, Geist_Mono, Montserrat, Inter, Inria_Sans } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header";
 
@@ -27,6 +27,13 @@ const inter = Inter({
     style: ['normal', 'italic']
 })
 
+const inriaSans = Inria_Sans({
+    variable: "--font-inria-sans",
+    subsets: ["latin"],
+    weight: ['300', '400', '700'],
+    style: ['normal', 'italic']
+})
+
 export const metadata: Metadata = {
     title: "Martin's Portfolio",
     description: "Martin's experimental portfolio",
@@ -49,7 +56,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body
-                className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} ${inter.variable} antialiased`}
+                className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} ${inter.variable} ${inriaSans.variable} antialiased`}
             >
                 <Header />
                 {children}
