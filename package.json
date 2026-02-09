@@ -12,6 +12,8 @@
     "@gsap/react": "^2.1.2",
     "@react-three/drei": "^10.7.6",
     "@react-three/fiber": "^9.3.0",
+    "@splinetool/react-spline": "^4.1.0",
+    "@splinetool/runtime": "^1.12.51",
     "gsap": "^3.13.0",
     "jotai": "^2.15.0",
     "lucide-react": "^0.562.0",
