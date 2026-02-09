@@ -5,8 +5,8 @@ import Intro from "./Pages/Intro";
 export default function Page() {
 
     return (
-        <div className="w-full h-full font-inter">
+        <div className="font-inter">
             <Intro />
-        </div >
+        </div>
     );
 }
