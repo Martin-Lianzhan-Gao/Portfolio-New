@@ -1,17 +1,16 @@
-import GetInTouchButton from "../components/elements/GetInTouchButton";
+'use client'
 
 const Intro = () => {
     return (
-        <div className="flex flex-row">
-            <div className="text-9xl flex flex-col items-start justify-center h-[100vh] w-[50vw] pl-20">
-                <h1>MARTIN GAO</h1>
-                <h1 className="text-[#A4A4A4]">LIANZHAN.</h1>
-                <p className="ml-2 text-xl font-semibold">Engineered for Exceptional Experiences ©2026</p>
-                <GetInTouchButton />
+        <div className="flex flex-col md:flex-row w-full h-[100vh] overflow-x-hidden ">
+            <div className="h-[20vh]"></div>
+            <div className="w-full h-[50vh] flex flex-row items-center">
+                <h1 className="ml-6 font-inria-sans text-9xl font-bold max-w-full break-words">PORT<br />FOL<br />IO.</h1>
             </div>
-            <div className="flex flex-col h-[100vh] w-[50vw] items-end justify-around pr-20">
-                <div className="h-[300px] w-[400px] bg-black rounded-4xl"></div>
-                <p className="text-right text-md">A Computer Science graduate dedicated to building high-performance web interfaces. Merging technical precision with user-centered design to create scalable applications. Driven by curiosity and a constant pursuit of innovation.</p>
+            <div className="font-medium h-[30vh] flex flex-col justify-center items-end mr-6">
+                <p>AESTHETIC.</p>
+                <p>EXPERIENCE.</p>
+                <p>INNOVATION.</p>
             </div>
         </div>
     )
