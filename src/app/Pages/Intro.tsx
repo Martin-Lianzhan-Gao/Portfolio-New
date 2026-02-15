@@ -2,27 +2,20 @@
 
 const Intro = () => {
     return (
-        <div className="flex flex-col w-full h-[100dvh] overflow-x-hidden md:flex-row">
-            <div className="w-full h-[70dvh]">
-                <div className="h-[20dvh] w-full"></div>
-                <div className="flex flex-row items-center h-[50dvh] max-w-full">
-                    <div className="ml-6 mr-6 font-inria-sans text-9xl font-bold">
-                        <h1>PORT</h1>
-                        <h1>FOL</h1>
-                        <h1>IO.</h1>
-                    </div>
+        <div className="flex flex-col w-full h-[100dvh] overflow-x-hidden">
+            <div className="w-full h-[70dvh] flex flex-col justify-center md:h-[60dvh] md:@container">
+                <div className="ml-6 mr-6 w-auto font-inria-sans text-8xl font-bold wrap-break-word md:text-[16cqw]
+                md:ml-12">
+                    <h1>MARTIN GAO.</h1>
                 </div>
             </div>
-            <div className="font-semibold h-[30dvh] flex flex-col justify-center">
-                <div className="flex flex-col items-end mr-6">
-                    <p>DEV WITH</p>
-                    <p>AESTHETIC,</p>
-                    <p>PASSION,</p>
-                    <p>INNOVATION.</p>
+            <div className="font-semibold text-xl h-[30dvh] w-full flex flex-row justify-end items-center md:h-[20dvh] md:justify-start md:text-2xl">
+                <div className="w-3/5 mr-6 md:ml-12 md:w-2/5">
+                    EXPERIENCED FULL-STACK DEVELOPER WITH INNOVATION, CREATIVITY AND AESTHETICS.
                 </div>
-                {/* <div className="flex flex-row justify-start ml-6">
-                    <p>(SCROLL DOWN)</p>
-                </div> */}
+            </div>
+            <div className="hidden md:h-[20dvh] font-semibold text-2xl md:flex md:flex-row md:justify-end md:w-full md:items-center">
+                <p className="mr-12">( SCROLL DOWN )</p>
             </div>
         </div>
     )
