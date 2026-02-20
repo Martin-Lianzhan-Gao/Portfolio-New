@@ -238,7 +238,7 @@ const Header = () => {
                     <div className='mr-2 w-[36px] h-[18px] md:w-[42px] md:h-[21px]'>
                         <Logo color={isMenuOpen ? 'white' : 'black'} />
                     </div>
-                    <p className={`font-montserrat font-medium text-2xl md:text-3xl transition-colors duration-300 ${isMenuOpen ? 'text-white' : 'text-black'}`}>
+                    <p className="hidden md:block font-montserrat font-medium text-3xl">
                         MG
                     </p>
                 </div>
@@ -332,13 +332,13 @@ const Header = () => {
                 style={{ visibility: 'hidden', opacity: 0 }}
             >
                 <div className='h-2/10'></div>
-                <div className='flex flex-row flex-wrap justify-between h-4/10 pl-8 pr-8 gap-y-0 gap-x-16'>
-                    <div className='w-full font-medium text-md tracking-tight text-[#D7D7D7]'>EXPLORE BY KEYWORDS</div>
+                <div className='flex flex-row flex-wrap justify-between h-4/10 pl-8 pr-8 gap-y-0'>
+                    <div className='mb-2 w-full font-medium text-md tracking-tight text-[#D7D7D7]'>EXPLORE BY KEYWORDS</div>
                     {menuItems.map((item, index) => (
                         <div
                             key={item}
                             ref={(el) => { menuItemRefs.current[index] = el }}
-                            className='overflow-hidden cursor-pointer'
+                            className={`flex overflow-hidden cursor-pointer w-1/2 ${index % 2 === 1 ? 'justify-end' : 'justify-start'}`}
                             onClick={() => handleMobileMenuClick(index)}
                         >
                             <div className='menu-text text-white/50 font-extralight text-2xl tracking-tight' style={{ transform: 'translateY(100%)' }}>
@@ -347,8 +347,8 @@ const Header = () => {
                         </div>
                     ))}
                 </div>
-
-                <div className="flex flex-col justify-around w-full h-4/10 px-8">
+                <div className='h-1/10'></div>
+                <div className="flex flex-col justify-around w-full h-3/10 px-8">
                     <div className="text-[#D7D7D7] w-full h-auto wrap-break-word flex flex-row justify-start">
                         <div className="w-1/2">
                             <p className='text-md'>ENGINEERED FOR EXCEPTIONAL EXPERIECNES.</p>
