@@ -6,7 +6,7 @@ const Intro = () => {
             <div className="w-full h-[70dvh] flex flex-col justify-center md:h-[60dvh] md:@container">
                 <div className="ml-6 mr-6 w-auto font-inria-sans text-8xl font-bold wrap-break-word md:text-[16cqw]
                 md:ml-12">
-                    <h1>MARTIN GAO.</h1>
+                    <h1 className="tracking-tight">MARTIN GAO.</h1>
                 </div>
             </div>
             <div className="font-semibold text-xl h-[30dvh] w-full flex flex-row justify-end items-center md:h-[20dvh] md:justify-start md:text-2xl">
