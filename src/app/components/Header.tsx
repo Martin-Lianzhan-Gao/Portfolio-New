@@ -242,7 +242,7 @@ const Header = () => {
                         MG
                     </p>
                 </div>
-                { /* Menu Bar / Items */}
+                { /* Menu Bar Items */}
                 <div className='w-auto h-auto mr-6 md:mr-12'>
                     <div className='hidden md:flex md:text-base md:gap-8'>
                         {menuItems.map((item, index) => (
@@ -331,8 +331,9 @@ const Header = () => {
                 className='fixed inset-0 z-40 bg-black/90 backdrop-blur-md md:hidden'
                 style={{ visibility: 'hidden', opacity: 0 }}
             >
-                <div className='flex flex-col justify-center h-full pl-8 gap-12'>
-                    <div className='font-montserrat font-regular text-2xl tracking-tight text-[#D7D7D7]'>MENU</div>
+                <div className='h-2/10'></div>
+                <div className='flex flex-row flex-wrap justify-between h-4/10 pl-8 pr-8 gap-y-0 gap-x-16'>
+                    <div className='w-full font-medium text-md tracking-tight text-[#D7D7D7]'>EXPLORE BY KEYWORDS</div>
                     {menuItems.map((item, index) => (
                         <div
                             key={item}
@@ -340,12 +341,24 @@ const Header = () => {
                             className='overflow-hidden cursor-pointer'
                             onClick={() => handleMobileMenuClick(index)}
                         >
-                            <div className='menu-text text-white/50 font-extralight text-4xl tracking-tight' style={{ transform: 'translateY(100%)' }}>
-                                <span className='text-white/50 mr-2'>0{index + 1}.</span>
+                            <div className='menu-text text-white/50 font-extralight text-2xl tracking-tight' style={{ transform: 'translateY(100%)' }}>
                                 {item}
                             </div>
                         </div>
                     ))}
+                </div>
+
+                <div className="flex flex-col justify-around w-full h-4/10 px-8">
+                    <div className="text-[#D7D7D7] w-full h-auto wrap-break-word flex flex-row justify-start">
+                        <div className="w-1/2">
+                            <p className='text-md'>ENGINEERED FOR EXCEPTIONAL EXPERIECNES.</p>
+                        </div>
+                    </div>
+                    <div className="text-[#D7D7D7] w-full h-auto flex flex-col items-end text-md gap-2">
+                        <p>GITHUB</p>
+                        <p>EMAIL</p>
+                        <p>LINKEDIN</p>
+                    </div>
                 </div>
             </div>
         </>
