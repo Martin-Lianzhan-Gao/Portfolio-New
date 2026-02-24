@@ -21,10 +21,12 @@ const Header = () => {
     const rippleRef = useRef<HTMLDivElement>(null)
     const overlayRef = useRef<HTMLDivElement>(null)
     const menuItemRefs = useRef<(HTMLDivElement | null)[]>([])
+    const secondaryTextRefs = useRef<(HTMLDivElement | HTMLParagraphElement | null)[]>([])
 
     const { contextSafe } = useGSAP()
 
     // Initialize header selection
+    // ... useEffect hooks intact ...
     useEffect(() => {
         underlineRefs.current.forEach((ref, index) => {
             if (ref) {
@@ -36,38 +38,25 @@ const Header = () => {
         })
     }, [])
 
-    // Initialize X icon (hidden initially)
     useEffect(() => {
         if (xLine1Ref.current && xLine2Ref.current) {
-            // Line 1: from top-left (0,0) to bottom-right (23,23)
-            gsap.set(xLine1Ref.current, {
-                scale: 0,
-                transformOrigin: '0px 0px'
-            })
-            // Line 2: from bottom-left (0,23) to top-right (23,0)
-            gsap.set(xLine2Ref.current, {
-                scale: 0,
-                transformOrigin: '0px 23px'
-            })
+            gsap.set(xLine1Ref.current, { scale: 0, transformOrigin: '0px 0px' })
+            gsap.set(xLine2Ref.current, { scale: 0, transformOrigin: '0px 23px' })
         }
     }, [])
 
-    // Lock body scroll when menu is open
     useEffect(() => {
         if (isMenuOpen) {
             document.body.style.overflow = 'hidden'
         } else {
             document.body.style.overflow = ''
         }
-        return () => {
-            document.body.style.overflow = ''
-        }
+        return () => { document.body.style.overflow = '' }
     }, [isMenuOpen])
 
     const handleItemClick = contextSafe((index: number) => {
         const prevIndex = prevSelectedRef.current
 
-        // Hide underline while previous item is unselected
         if (prevIndex !== null && underlineRefs.current[prevIndex]) {
             gsap.to(underlineRefs.current[prevIndex], {
                 scaleX: 0,
@@ -77,11 +66,8 @@ const Header = () => {
             })
         }
 
-        // Show underline while new item is selected
         if (underlineRefs.current[index]) {
-            gsap.set(underlineRefs.current[index], {
-                transformOrigin: 'left center'
-            })
+            gsap.set(underlineRefs.current[index], { transformOrigin: 'left center' })
             gsap.to(underlineRefs.current[index], {
                 scaleX: 1,
                 duration: 0.6,
@@ -92,13 +78,23 @@ const Header = () => {
         prevSelectedRef.current = index;
     })
 
-    // Toggle mobile menu with Sequential Swap & Stagger animation
+    // Toggle mobile menu with Orchestrated Timeline Strategy
     const toggleMenu = contextSafe(() => {
         const tl = gsap.timeline()
 
         if (!isMenuOpen) {
             // === OPENING MENU ===
-            // 1. Ripple effect (80% = 0.4s)
+
+            // 1. Overlay (Fade in)
+            if (overlayRef.current) {
+                tl.fromTo(overlayRef.current,
+                    { opacity: 0, visibility: 'visible' },
+                    { opacity: 1, duration: 0.4, ease: 'power2.out' },
+                    0 // Starts immediately
+                )
+            }
+
+            // 2. Ripple effect & Hamburger exit
             if (rippleRef.current) {
                 tl.fromTo(rippleRef.current,
                     { scale: 0, opacity: 1 },
@@ -106,116 +102,102 @@ const Header = () => {
                     0
                 )
             }
-
-            // 2. Sequential hamburger exit (80% = 0.24s each, 0.08s stagger)
             if (hamburgerTopRef.current && hamburgerBottomRef.current) {
-                tl.to(hamburgerTopRef.current, {
+                tl.to([hamburgerTopRef.current, hamburgerBottomRef.current], {
                     scaleX: 0,
                     duration: 0.24,
+                    stagger: 0.08,
                     ease: 'expo.out'
                 }, 0)
-                tl.to(hamburgerBottomRef.current, {
-                    scaleX: 0,
-                    duration: 0.24,
-                    ease: 'expo.out'
-                }, 0.08)
             }
 
-            // 3. Show overlay (starts at 0.15s, duration 0.4s)
-            if (overlayRef.current) {
-                tl.fromTo(overlayRef.current,
-                    { opacity: 0, visibility: 'visible' },
-                    { opacity: 1, duration: 0.4, ease: 'expo.out' },
-                    0.15
+            // 3. X Icon entrance
+            if (xLine1Ref.current && xLine2Ref.current) {
+                tl.to([xLine1Ref.current, xLine2Ref.current], {
+                    scale: 1,
+                    duration: 0.48,
+                    stagger: 0.08,
+                    ease: 'expo.out'
+                }, 0.2) // Triggers as overlay is half-way complete
+            }
+
+            // 4. Nav items reveal (Starts at 0.2s to overlap with overlay)
+            const navElements = menuItemRefs.current
+                .map(item => item?.querySelector('.menu-text'))
+                .filter(Boolean)
+
+            if (navElements.length > 0) {
+                // 使用 gsap.set() 强行在 Timeline 之前打卡初始帧，防止第二次打开时发生闪跳
+                gsap.set(navElements, { y: 30, opacity: 0, skewY: 2 })
+                tl.to(navElements,
+                    { y: 0, opacity: 1, skewY: 0, duration: 0.5, stagger: 0.06, ease: 'power4.out' },
+                    0.2
                 )
             }
 
-            // 4. Sequential X entrance (starts at 0.35s, duration 0.48s each, 0.08s stagger)
-            if (xLine1Ref.current && xLine2Ref.current) {
-                tl.to(xLine1Ref.current, {
-                    scale: 1,
-                    duration: 0.48,
-                    ease: 'expo.out'
-                }, 0.35)
-                tl.to(xLine2Ref.current, {
-                    scale: 1,
-                    duration: 0.48,
-                    ease: 'expo.out'
-                }, 0.43) // 0.08s stagger
+            // 5. Secondary text reveal (Starts slightly after first nav item)
+            const secElements = secondaryTextRefs.current.filter(Boolean)
+            if (secElements.length > 0) {
+                // 同时补充 y: 20 以覆盖退出时残余的 y: -20，以及解决 filter 状态不同步导致的极速闪烁
+                gsap.set(secElements, { y: 20, opacity: 0, filter: 'blur(4px)' })
+                tl.to(secElements,
+                    { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.6, stagger: 0.04, ease: 'power2.out' },
+                    0.3 // Delay 0.1s after Nav items start
+                )
             }
-
-            // 5. Menu items reveal (starts at 0.6s, duration 0.32s, 0.06s stagger)
-            menuItemRefs.current.forEach((item, index) => {
-                if (item) {
-                    const textEl = item.querySelector('.menu-text')
-                    if (textEl) {
-                        tl.fromTo(textEl,
-                            { y: '100%' },
-                            { y: '0%', duration: 0.32, ease: 'expo.out' },
-                            0.6 + index * 0.06
-                        )
-                    }
-                }
-            })
 
             setIsMenuOpen(true)
         } else {
             // === CLOSING MENU ===
-            // 1. Menu items exit (duration 0.32s, 0.05s stagger)
-            menuItemRefs.current.forEach((item, index) => {
-                if (item) {
-                    const textEl = item.querySelector('.menu-text')
-                    if (textEl) {
-                        tl.to(textEl,
-                            { y: '-100%', duration: 0.32, ease: 'expo.out' },
-                            index * 0.05
-                        )
-                    }
-                }
-            })
 
-            // 2. Sequential X exit (starts at 0.3s, duration 0.24s each, 0.08s stagger)
+            // 1. All text elements exit (Nav + Secondary Text together)
+            const navElements = menuItemRefs.current
+                .map(item => item?.querySelector('.menu-text'))
+                .filter(Boolean)
+            const secElements = secondaryTextRefs.current.filter(Boolean)
+
+            if (navElements.length > 0 || secElements.length > 0) {
+                tl.to([...navElements, ...secElements], {
+                    y: -20,
+                    opacity: 0,
+                    duration: 0.3,
+                    stagger: 0.02,
+                    ease: 'power2.inOut'
+                }, 0)
+            }
+
+            // 2. X icon exit
             if (xLine1Ref.current && xLine2Ref.current) {
-                tl.to(xLine1Ref.current, {
+                tl.to([xLine1Ref.current, xLine2Ref.current], {
                     scale: 0,
-                    transformOrigin: '23px 23px',
                     duration: 0.24,
+                    stagger: 0.08,
+                    ease: 'expo.out'
+                }, 0.1) // Start while text is exiting
+            }
+
+            // 3. Hamburger icon entrance
+            if (hamburgerTopRef.current && hamburgerBottomRef.current) {
+                tl.to([hamburgerTopRef.current, hamburgerBottomRef.current], {
+                    scaleX: 1,
+                    duration: 0.24,
+                    stagger: 0.08,
                     ease: 'expo.out'
                 }, 0.3)
-                tl.to(xLine2Ref.current, {
-                    scale: 0,
-                    transformOrigin: '23px 0px',
-                    duration: 0.24,
-                    ease: 'expo.out'
-                }, 0.38) // 0.08s stagger
             }
 
-            // 3. Hide overlay (starts at 0.4s, duration 0.32s)
+            // 4. Hide overlay
             if (overlayRef.current) {
-                tl.to(overlayRef.current,
-                    {
-                        opacity: 0, duration: 0.32, ease: 'expo.out', onComplete: () => {
-                            if (overlayRef.current) {
-                                overlayRef.current.style.visibility = 'hidden'
-                            }
+                tl.to(overlayRef.current, {
+                    opacity: 0,
+                    duration: 0.32,
+                    ease: 'power2.inOut',
+                    onComplete: () => {
+                        if (overlayRef.current) {
+                            overlayRef.current.style.visibility = 'hidden'
                         }
-                    },
-                    0.4
-                )
-            }
-
-            // 4. Sequential hamburger entrance (starts at 0.6s, duration 0.24s, 0.08s stagger)
-            if (hamburgerTopRef.current && hamburgerBottomRef.current) {
-                tl.to(hamburgerTopRef.current, {
-                    scaleX: 1,
-                    duration: 0.24,
-                    ease: 'expo.out'
-                }, 0.6)
-                tl.to(hamburgerBottomRef.current, {
-                    scaleX: 1,
-                    duration: 0.24,
-                    ease: 'expo.out'
-                }, 0.68)
+                    }
+                }, 0.2) // Overlap overlay fading out with X exit
             }
 
             setIsMenuOpen(false)
@@ -224,9 +206,7 @@ const Header = () => {
 
     // Handle mobile menu item click
     const handleMobileMenuClick = contextSafe((index: number) => {
-        // Close menu first
         toggleMenu()
-        // Then trigger the desktop selection logic
         handleItemClick(index)
     })
 
@@ -333,15 +313,20 @@ const Header = () => {
             >
                 <div className='h-2/10'></div>
                 <div className='flex flex-row flex-wrap justify-between h-4/10 pl-8 pr-8 gap-y-0'>
-                    <div className='mb-2 w-full font-medium text-md tracking-tight text-[#CDCDCD]'>EXPLORE BY KEYWORDS</div>
+                    <div
+                        ref={(el) => { if (el) secondaryTextRefs.current.push(el) }}
+                        className='mb-2 w-full font-medium text-md tracking-tight text-[#CDCDCD]'
+                    >
+                        EXPLORE BY KEYWORDS
+                    </div>
                     {menuItems.map((item, index) => (
                         <div
                             key={item}
                             ref={(el) => { menuItemRefs.current[index] = el }}
-                            className={`flex overflow-hidden cursor-pointer w-1/2 ${index % 2 === 1 ? 'justify-end' : 'justify-start'}`}
+                            className={`flex cursor-pointer w-1/2 ${index % 2 === 1 ? 'justify-end' : 'justify-start'}`}
                             onClick={() => handleMobileMenuClick(index)}
                         >
-                            <div className='menu-text text-white/50 font-regular text-2xl tracking-tight' style={{ transform: 'translateY(100%)' }}>
+                            <div className='menu-text text-white/50 font-regular text-2xl tracking-tight' style={{ transform: 'translateY(30px)', opacity: 0, clipPath: 'none' }}>
                                 {item}
                             </div>
                         </div>
@@ -350,14 +335,17 @@ const Header = () => {
                 <div className='h-1/10'></div>
                 <div className="flex flex-col justify-around w-full h-3/10 px-8">
                     <div className="text-[#CDCDCD] w-full h-auto wrap-break-word flex flex-row justify-start">
-                        <div className="w-1/2">
+                        <div
+                            ref={(el) => { if (el) secondaryTextRefs.current.push(el) }}
+                            className="w-1/2"
+                        >
                             <p className='text-md font-medium'>ENGINEERED FOR EXCEPTIONAL EXPERIECNES.</p>
                         </div>
                     </div>
                     <div className="text-[#CDCDCD] w-full h-auto flex flex-col items-end text-md gap-2 font-medium">
-                        <p>GITHUB</p>
-                        <p>EMAIL</p>
-                        <p>LINKEDIN</p>
+                        <p ref={(el) => { if (el) secondaryTextRefs.current.push(el) }}>GITHUB</p>
+                        <p ref={(el) => { if (el) secondaryTextRefs.current.push(el) }}>EMAIL</p>
+                        <p ref={(el) => { if (el) secondaryTextRefs.current.push(el) }}>LINKEDIN</p>
                     </div>
                 </div>
             </div>
