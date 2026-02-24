@@ -3,8 +3,8 @@
 const Intro = () => {
     return (
         <div className="flex flex-col w-full h-[100dvh] overflow-x-hidden">
-            <div className="w-full h-[70dvh] flex flex-col justify-center md:h-[60dvh] md:@container">
-                <div className="ml-6 mr-6 w-auto font-inria-sans text-8xl font-bold wrap-break-word md:text-[16cqw]
+            <div className="w-full h-[70dvh] flex flex-col justify-center md:h-[60dvh] @container">
+                <div className="ml-6 mr-6 w-auto font-inria-sans text-[14cqh] font-bold wrap-break-word md:text-[16cqw]
                 md:ml-12">
                     <h1 className="tracking-tight">MARTIN GAO.</h1>
                 </div>
