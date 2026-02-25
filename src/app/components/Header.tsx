@@ -1,5 +1,4 @@
 'use client'
-
 import { useRef, useEffect, useState } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
@@ -9,7 +8,7 @@ const menuItems = ['ABOUT ME', 'WORKS', 'SKILLS', 'PROJECT', 'CONTACT']
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
-
+    // Refs for desktop header selection underline
     const underlineRefs = useRef<(HTMLSpanElement | null)[]>([])
     const prevSelectedRef = useRef<number | null>(0)
 
@@ -20,13 +19,14 @@ const Header = () => {
     const xLine2Ref = useRef<SVGLineElement>(null)
     const rippleRef = useRef<HTMLDivElement>(null)
     const overlayRef = useRef<HTMLDivElement>(null)
+    // Refs for mobile menu content
     const menuItemRefs = useRef<(HTMLDivElement | null)[]>([])
+    // Refs for mobile menu secondary text & links
     const secondaryTextRefs = useRef<(HTMLDivElement | HTMLParagraphElement | null)[]>([])
 
     const { contextSafe } = useGSAP()
 
-    // Initialize header selection
-    // ... useEffect hooks intact ...
+    // Initialize desktop header selection underline
     useEffect(() => {
         underlineRefs.current.forEach((ref, index) => {
             if (ref) {
@@ -38,6 +38,7 @@ const Header = () => {
         })
     }, [])
 
+    // Initialize mobile menu close icon
     useEffect(() => {
         if (xLine1Ref.current && xLine2Ref.current) {
             gsap.set(xLine1Ref.current, { scale: 0, transformOrigin: '0px 0px' })
@@ -45,6 +46,7 @@ const Header = () => {
         }
     }, [])
 
+    // Prevent background scrolling when menu is open
     useEffect(() => {
         if (isMenuOpen) {
             document.body.style.overflow = 'hidden'
@@ -83,7 +85,7 @@ const Header = () => {
         const tl = gsap.timeline()
 
         if (!isMenuOpen) {
-            // === OPENING MENU ===
+            // OPENING MENU
 
             // 1. Overlay (Fade in)
             if (overlayRef.current) {
@@ -127,7 +129,7 @@ const Header = () => {
                 .filter(Boolean)
 
             if (navElements.length > 0) {
-                // 使用 gsap.set() 强行在 Timeline 之前打卡初始帧，防止第二次打开时发生闪跳
+
                 gsap.set(navElements, { y: 30, opacity: 0, skewY: 2 })
                 tl.to(navElements,
                     { y: 0, opacity: 1, skewY: 0, duration: 0.5, stagger: 0.06, ease: 'power4.out' },
@@ -138,7 +140,7 @@ const Header = () => {
             // 5. Secondary text reveal (Starts slightly after first nav item)
             const secElements = secondaryTextRefs.current.filter(Boolean)
             if (secElements.length > 0) {
-                // 同时补充 y: 20 以覆盖退出时残余的 y: -20，以及解决 filter 状态不同步导致的极速闪烁
+
                 gsap.set(secElements, { y: 20, opacity: 0, filter: 'blur(4px)' })
                 tl.to(secElements,
                     { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.6, stagger: 0.04, ease: 'power2.out' },
@@ -148,8 +150,7 @@ const Header = () => {
 
             setIsMenuOpen(true)
         } else {
-            // === CLOSING MENU ===
-
+            // CLOSING MENU
             // 1. All text elements exit (Nav + Secondary Text together)
             const navElements = menuItemRefs.current
                 .map(item => item?.querySelector('.menu-text'))
@@ -157,12 +158,13 @@ const Header = () => {
             const secElements = secondaryTextRefs.current.filter(Boolean)
 
             if (navElements.length > 0 || secElements.length > 0) {
+                // define the closing animation
                 tl.to([...navElements, ...secElements], {
                     y: -20,
                     opacity: 0,
                     duration: 0.3,
                     stagger: 0.02,
-                    ease: 'power2.inOut'
+                    ease: 'power2.inOut',
                 }, 0)
             }
 
@@ -190,7 +192,7 @@ const Header = () => {
             if (overlayRef.current) {
                 tl.to(overlayRef.current, {
                     opacity: 0,
-                    duration: 0.32,
+                    duration: 0.4,
                     ease: 'power2.inOut',
                     onComplete: () => {
                         if (overlayRef.current) {
@@ -336,16 +338,16 @@ const Header = () => {
                 <div className="flex flex-col justify-around w-full h-3/10 px-8">
                     <div className="text-[#CDCDCD] w-full h-auto wrap-break-word flex flex-row justify-start">
                         <div
-                            ref={(el) => { if (el) secondaryTextRefs.current.push(el) }}
+                            ref={(el) => { secondaryTextRefs.current[1] = el }}
                             className="w-1/2"
                         >
                             <p className='text-md font-medium'>ENGINEERED FOR EXCEPTIONAL EXPERIECNES.</p>
                         </div>
                     </div>
                     <div className="text-[#CDCDCD] w-full h-auto flex flex-col items-end text-md gap-2 font-medium">
-                        <p ref={(el) => { if (el) secondaryTextRefs.current.push(el) }}>GITHUB</p>
-                        <p ref={(el) => { if (el) secondaryTextRefs.current.push(el) }}>EMAIL</p>
-                        <p ref={(el) => { if (el) secondaryTextRefs.current.push(el) }}>LINKEDIN</p>
+                        <p ref={(el) => { secondaryTextRefs.current[2] = el }}>GITHUB</p>
+                        <p ref={(el) => { secondaryTextRefs.current[3] = el }}>EMAIL</p>
+                        <p ref={(el) => { secondaryTextRefs.current[4] = el }}>LINKEDIN</p>
                     </div>
                 </div>
             </div>
