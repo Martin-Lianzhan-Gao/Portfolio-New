@@ -8,6 +8,7 @@ const menuItems = ['ABOUT ME', 'WORKS', 'SKILLS', 'PROJECT', 'CONTACT']
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const [selectedIndex, setSelectedIndex] = useState<number>(0)
     // Refs for desktop header selection underline
     const underlineRefs = useRef<(HTMLSpanElement | null)[]>([])
     const prevSelectedRef = useRef<number | null>(0)
@@ -19,10 +20,10 @@ const Header = () => {
     const xLine2Ref = useRef<SVGLineElement>(null)
     const rippleRef = useRef<HTMLDivElement>(null)
     const overlayRef = useRef<HTMLDivElement>(null)
-    // Refs for mobile menu content
+    // Ref for mobile menu content
     const menuItemRefs = useRef<(HTMLDivElement | null)[]>([])
-    // Refs for mobile menu secondary text & links
-    const secondaryTextRefs = useRef<(HTMLDivElement | HTMLParagraphElement | null)[]>([])
+    // Ref for mobile menu secondary text & links
+    const secondaryTextRefs = useRef<(HTMLDivElement | HTMLParagraphElement | HTMLAnchorElement | null)[]>([])
     // Ref for Logo color interpolation
     const logoRef = useRef<SVGPathElement>(null)
 
@@ -60,8 +61,11 @@ const Header = () => {
     }, [isMenuOpen])
 
     const handleItemClick = contextSafe((index: number) => {
+        setSelectedIndex(index)
+        // get previous selected item index
         const prevIndex = prevSelectedRef.current
 
+        // animate previous selected item underline to 0
         if (prevIndex !== null && underlineRefs.current[prevIndex]) {
             gsap.to(underlineRefs.current[prevIndex], {
                 scaleX: 0,
@@ -71,6 +75,7 @@ const Header = () => {
             })
         }
 
+        // animate current selected item underline to 1
         if (underlineRefs.current[index]) {
             gsap.set(underlineRefs.current[index], { transformOrigin: 'left center' })
             gsap.to(underlineRefs.current[index], {
@@ -243,7 +248,7 @@ const Header = () => {
                         MG
                     </p>
                 </div>
-                { /* Menu Bar Items */}
+                { /* Desktop Menu Nav Items */}
                 <div className='w-auto h-auto mr-6 md:mr-12'>
                     <div className='hidden md:flex md:text-base md:gap-8'>
                         {menuItems.map((item, index) => (
@@ -340,6 +345,7 @@ const Header = () => {
                     >
                         EXPLORE BY KEYWORDS
                     </div>
+                    {/* Mobile Menu Nav Items */}
                     {menuItems.map((item, index) => (
                         <div
                             key={item}
@@ -347,7 +353,11 @@ const Header = () => {
                             className={`flex cursor-pointer w-1/2 ${index % 2 === 1 ? 'justify-end' : 'justify-start'}`}
                             onClick={() => handleMobileMenuClick(index)}
                         >
-                            <div className='menu-text text-white/50 font-regular text-2xl tracking-tight' style={{ transform: 'translateY(30px)', opacity: 0, clipPath: 'none' }}>
+                            <div
+                                className={`menu-text font-regular text-2xl tracking-tight transition-colors duration-300 ${selectedIndex === index ? 'text-white font-medium' : 'text-white/50'
+                                    }`}
+                                style={{ transform: 'translateY(30px)', opacity: 0, clipPath: 'none' }}
+                            >
                                 {item}
                             </div>
                         </div>
@@ -364,9 +374,31 @@ const Header = () => {
                         </div>
                     </div>
                     <div className="text-[#CDCDCD] w-full h-auto flex flex-col items-end text-md gap-2 font-medium">
-                        <p ref={(el) => { secondaryTextRefs.current[2] = el }}>GITHUB</p>
-                        <p ref={(el) => { secondaryTextRefs.current[3] = el }}>EMAIL</p>
-                        <p ref={(el) => { secondaryTextRefs.current[4] = el }}>LINKEDIN</p>
+                        <a
+                            ref={(el) => { secondaryTextRefs.current[2] = el }}
+                            href="https://github.com/Martin-Lianzhan-Gao"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-white transition-colors"
+                        >
+                            GITHUB
+                        </a>
+                        <a
+                            ref={(el) => { secondaryTextRefs.current[3] = el }}
+                            href="mailto:gaolianzhan@gmail.com"
+                            className="hover:text-white transition-colors"
+                        >
+                            EMAIL
+                        </a>
+                        <a
+                            ref={(el) => { secondaryTextRefs.current[4] = el }}
+                            href="https://www.linkedin.com/in/martin-lianzhan-gao"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-white transition-colors"
+                        >
+                            LINKEDIN
+                        </a>
                     </div>
                 </div>
             </div>
