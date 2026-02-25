@@ -23,10 +23,13 @@ const Header = () => {
     const menuItemRefs = useRef<(HTMLDivElement | null)[]>([])
     // Refs for mobile menu secondary text & links
     const secondaryTextRefs = useRef<(HTMLDivElement | HTMLParagraphElement | null)[]>([])
+    // Ref for Logo color interpolation
+    const logoRef = useRef<SVGPathElement>(null)
 
     const { contextSafe } = useGSAP()
 
     // Initialize desktop header selection underline
+    // ...
     useEffect(() => {
         underlineRefs.current.forEach((ref, index) => {
             if (ref) {
@@ -38,7 +41,7 @@ const Header = () => {
         })
     }, [])
 
-    // Initialize mobile menu close icon
+    // Initialize mobile menu close icon (hidden initially)
     useEffect(() => {
         if (xLine1Ref.current && xLine2Ref.current) {
             gsap.set(xLine1Ref.current, { scale: 0, transformOrigin: '0px 0px' })
@@ -87,7 +90,7 @@ const Header = () => {
         if (!isMenuOpen) {
             // OPENING MENU
 
-            // 1. Overlay (Fade in)
+            // 1. Overlay (Fade in) & Logo Color Interpolation
             if (overlayRef.current) {
                 tl.fromTo(overlayRef.current,
                     { opacity: 0, visibility: 'visible' },
@@ -95,21 +98,29 @@ const Header = () => {
                     0 // Starts immediately
                 )
             }
+            if (logoRef.current) {
+                // Organic color bleed into white accompanying the dark overlay
+                tl.to(logoRef.current, {
+                    stroke: "white",
+                    duration: 0.5,
+                    ease: "power2.inOut"
+                }, 0)
+            }
 
-            // 2. Ripple effect & Hamburger exit
+            // 2. Ripple effect & Hamburger exit (Organic Feel)
             if (rippleRef.current) {
                 tl.fromTo(rippleRef.current,
                     { scale: 0, opacity: 1 },
-                    { scale: 2.5, opacity: 0, duration: 0.4, ease: 'expo.out' },
+                    { scale: 2.5, opacity: 0, duration: 0.6, ease: 'power2.out' },
                     0
                 )
             }
             if (hamburgerTopRef.current && hamburgerBottomRef.current) {
                 tl.to([hamburgerTopRef.current, hamburgerBottomRef.current], {
                     scaleX: 0,
-                    duration: 0.24,
-                    stagger: 0.08,
-                    ease: 'expo.out'
+                    duration: 0.5,
+                    stagger: 0.1, // Increased stagger for wave effect
+                    ease: 'power2.inOut' // Slower, organic slow-fast-slow feel
                 }, 0)
             }
 
@@ -117,9 +128,9 @@ const Header = () => {
             if (xLine1Ref.current && xLine2Ref.current) {
                 tl.to([xLine1Ref.current, xLine2Ref.current], {
                     scale: 1,
-                    duration: 0.48,
-                    stagger: 0.08,
-                    ease: 'expo.out'
+                    duration: 0.5,
+                    stagger: 0.1,
+                    ease: 'power2.inOut'
                 }, 0.2) // Triggers as overlay is half-way complete
             }
 
@@ -129,7 +140,6 @@ const Header = () => {
                 .filter(Boolean)
 
             if (navElements.length > 0) {
-
                 gsap.set(navElements, { y: 30, opacity: 0, skewY: 2 })
                 tl.to(navElements,
                     { y: 0, opacity: 1, skewY: 0, duration: 0.5, stagger: 0.06, ease: 'power4.out' },
@@ -140,7 +150,6 @@ const Header = () => {
             // 5. Secondary text reveal (Starts slightly after first nav item)
             const secElements = secondaryTextRefs.current.filter(Boolean)
             if (secElements.length > 0) {
-
                 gsap.set(secElements, { y: 20, opacity: 0, filter: 'blur(4px)' })
                 tl.to(secElements,
                     { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.6, stagger: 0.04, ease: 'power2.out' },
@@ -151,6 +160,7 @@ const Header = () => {
             setIsMenuOpen(true)
         } else {
             // CLOSING MENU
+
             // 1. All text elements exit (Nav + Secondary Text together)
             const navElements = menuItemRefs.current
                 .map(item => item?.querySelector('.menu-text'))
@@ -165,6 +175,7 @@ const Header = () => {
                     duration: 0.3,
                     stagger: 0.02,
                     ease: 'power2.inOut',
+                    clearProps: "all"
                 }, 0)
             }
 
@@ -172,9 +183,9 @@ const Header = () => {
             if (xLine1Ref.current && xLine2Ref.current) {
                 tl.to([xLine1Ref.current, xLine2Ref.current], {
                     scale: 0,
-                    duration: 0.24,
-                    stagger: 0.08,
-                    ease: 'expo.out'
+                    duration: 0.4,
+                    stagger: 0.1,
+                    ease: 'power2.inOut'
                 }, 0.1) // Start while text is exiting
             }
 
@@ -182,13 +193,13 @@ const Header = () => {
             if (hamburgerTopRef.current && hamburgerBottomRef.current) {
                 tl.to([hamburgerTopRef.current, hamburgerBottomRef.current], {
                     scaleX: 1,
-                    duration: 0.24,
-                    stagger: 0.08,
-                    ease: 'expo.out'
-                }, 0.3)
+                    duration: 0.5,
+                    stagger: 0.1,
+                    ease: 'power2.inOut'
+                }, 0.2) // Starts overlapping with X exit
             }
 
-            // 4. Hide overlay
+            // 4. Hide overlay & Logo color revert
             if (overlayRef.current) {
                 tl.to(overlayRef.current, {
                     opacity: 0,
@@ -199,7 +210,15 @@ const Header = () => {
                             overlayRef.current.style.visibility = 'hidden'
                         }
                     }
-                }, 0.2) // Overlap overlay fading out with X exit
+                }, 0.2) // Overlap overlay fading out with text exit
+            }
+            if (logoRef.current) {
+                // Color bleed back to black
+                tl.to(logoRef.current, {
+                    stroke: "black",
+                    duration: 0.5,
+                    ease: "power2.inOut"
+                }, 0.1)
             }
 
             setIsMenuOpen(false)
@@ -218,7 +237,8 @@ const Header = () => {
                 {/* Logo and text */}
                 <div className="w-auto h-auto ml-6 md:ml-12 flex flex-row items-center">
                     <div className='mr-2 w-[36px] h-[18px] md:w-[42px] md:h-[21px]'>
-                        <Logo color={isMenuOpen ? 'white' : 'black'} />
+                        {/* We no longer rely on state for color, letting GSAP manage the stroke dynamically */}
+                        <Logo ref={logoRef} color="black" />
                     </div>
                     <p className="hidden md:block font-montserrat font-medium text-3xl">
                         MG
