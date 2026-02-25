@@ -174,8 +174,7 @@ const Header = () => {
                     opacity: 0,
                     duration: 0.3,
                     stagger: 0.02,
-                    ease: 'power2.inOut',
-                    clearProps: "all"
+                    ease: 'power2.inOut'
                 }, 0)
             }
 
