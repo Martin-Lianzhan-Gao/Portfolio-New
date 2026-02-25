@@ -6,7 +6,6 @@ interface LogoProps {
     color?: string
 }
 
-// 用 forwardRef 把 ref 转发给 path 元素，让 GSAP 可以直接插值颜色
 const Logo = forwardRef<SVGPathElement, LogoProps>(({ color = 'currentColor' }, ref) => {
     return (
         <div>
@@ -17,14 +16,10 @@ const Logo = forwardRef<SVGPathElement, LogoProps>(({ color = 'currentColor' }, 
                     stroke={color}
                     strokeWidth="3"
                     strokeLinecap="square"
-                // 删除了 tailwind 的 transition-colors，把控制权交给 GSAP
                 />
             </svg>
         </div>
     )
 })
-
-// 添加 display name 以避免 ESLint/React 警告
-Logo.displayName = 'Logo'
 
 export default Logo;
