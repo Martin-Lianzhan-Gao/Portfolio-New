@@ -26,9 +26,9 @@ const Intro = () => {
 
         // Optional: Infinite yoyo float to the sphere
         gsap.to(ambientSphereRef.current, {
-            y: "-=30",
-            x: "+=20",
-            duration: 4,
+            y: "-=120", // Much larger vertical drift
+            scale: 1.2, // Subtle breathing effect
+            duration: 6, // Slower, heavier movement
             ease: "sine.inOut",
             yoyo: true,
             repeat: -1,
@@ -76,11 +76,12 @@ const Intro = () => {
     return (
         <div className="relative w-full h-[100dvh] overflow-hidden bg-white">
             {/* 1. Ambient Sphere Background (z-0) */}
-            <div className="absolute z-0 w-[100vw] h-[100vw] top-1/2 right-0 translate-x-1/2 -translate-y-1/2 md:w-[100vh] md:h-[100vh] md:top-0 md:left-1/2 md:right-auto md:-translate-x-1/2 md:-translate-y-1/2">
+            <div className="absolute z-0 w-[150vw] h-[150vw] top-1/2 right-0 translate-x-1/2 -translate-y-1/2 md:w-[150vh] md:h-[150vh] md:top-0 md:left-1/2 md:right-auto md:-translate-x-1/2 md:-translate-y-1/2 pointer-events-none">
                 <div
                     ref={ambientSphereRef}
-                    className="w-full h-full bg-[#FF4500] blur-[80px] md:blur-[120px] opacity-0"
+                    className="w-full h-full opacity-0"
                     style={{
+                        background: "radial-gradient(circle closest-side, rgba(255, 69, 0, 0.95) 0%, rgba(255, 69, 0, 0.8) 30%, rgba(255, 69, 0, 0.3) 65%, rgba(255, 69, 0, 0) 100%)",
                         borderRadius: "50%",
                         transform: "scale(0.95)"
                     }}
@@ -113,7 +114,7 @@ const Intro = () => {
                     </div>
                 </div>
 
-                {/* Scroll Down */}
+                {/* Scroll Down Nav */}
                 <div className="hidden md:h-[20dvh] font-semibold text-2xl md:flex md:flex-row md:justify-end md:w-full md:items-center">
                     <p ref={scrollDownRef} className="mr-12 will-change-transform">( SCROLL DOWN )</p>
                 </div>
