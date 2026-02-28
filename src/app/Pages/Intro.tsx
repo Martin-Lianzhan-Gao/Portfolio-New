@@ -4,6 +4,7 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import SplitText from "gsap/SplitText";
+import ScrollDown from "../components/elements/ScrollDown";
 
 gsap.registerPlugin(SplitText);
 
@@ -116,7 +117,7 @@ const Intro = () => {
 
                 {/* Scroll Down Nav */}
                 <div className="hidden md:h-[20dvh] font-semibold text-2xl md:flex md:flex-row md:justify-end md:w-full md:items-center">
-                    <p ref={scrollDownRef} className="mr-12 will-change-transform">( SCROLL DOWN )</p>
+                    <ScrollDown ref={scrollDownRef} className="mr-12 will-change-transform" />
                 </div>
             </div>
         </div>
