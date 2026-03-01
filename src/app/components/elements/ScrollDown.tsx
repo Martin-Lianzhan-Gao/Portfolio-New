@@ -59,11 +59,11 @@ const ScrollDown = forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLPar
             }
 
             // Loop recursively every 2 seconds
-            timer = gsap.delayedCall(2, animateRandomLetter);
+            timer = gsap.delayedCall(4, animateRandomLetter);
         });
 
         // Start the loop
-        timer = gsap.delayedCall(2, animateRandomLetter);
+        timer = gsap.delayedCall(4, animateRandomLetter);
 
         return () => {
             if (timer) timer.kill();
