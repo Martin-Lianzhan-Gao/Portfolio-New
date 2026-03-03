@@ -128,6 +128,8 @@ const ScrollDown = forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLPar
                             {char}
                         </span>
                         <ArrowDown
+                            strokeLinecap='butt'
+                            strokeLinejoin='miter'
                             strokeWidth={3}
                             ref={(el) => { chevronRefs.current[index] = el as unknown as SVGSVGElement; }}
                             className="absolute w-[1em] h-[1em] will-change-transform"
