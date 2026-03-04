@@ -12,7 +12,7 @@ const Intro = () => {
     const ambientSphereRef = useRef<HTMLDivElement>(null);
     const glassLayerRef = useRef<HTMLDivElement>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
-    const slogansRef = useRef<HTMLDivElement>(null);
+
     const scrollDownRef = useRef<HTMLParagraphElement>(null);
 
     useGSAP(() => {
@@ -55,10 +55,8 @@ const Intro = () => {
             1.0
         );
 
-        // 4. Secondary Elements: Slogan & Scroll Down Navigation (Starts during title animation)
-        const slogan = slogansRef.current?.querySelector("p");
 
-        const secondaryElements = [slogan, scrollDownRef.current].filter(Boolean); // Filter out any nulls
+        const secondaryElements = [scrollDownRef.current].filter(Boolean); // Filter out any nulls
 
         if (secondaryElements.length > 0) {
             tl.fromTo(secondaryElements,
@@ -96,28 +94,22 @@ const Intro = () => {
             />
 
             {/* 3. Foreground Content Layer (z-20) */}
-            <div className="relative z-20 w-full h-full flex flex-col pointer-events-none">
-                {/* Title */}
-                <div className="w-full h-[70dvh] flex flex-col justify-center md:h-[60dvh] @container">
-                    <div className="ml-6 mr-6 w-auto font-inria-sans text-[14cqh] font-bold wrap-break-word md:text-[16cqw] md:ml-12">
-                        <h1 ref={titleRef} className="tracking-tight m-0">
-                            MARTIN GAO.
-                        </h1>
+            <div className="relative z-20 w-full h-full flex flex-col pointer-events-none items-center">
+                <div className="w-full h-full flex flex-col justify-around max-w-vw-safe">
+                    {/* Title */}
+                    <div className="w-full h-full flex flex-col justify-center md:gap-6 md:h-auto @container">
+                        <div className="ml-6 mr-6 w-full font-inria-sans text-[14cqh] font-bold wrap-break-word md:text-[18cqw] md:ml-12">
+                            <h1 ref={titleRef} className="tracking-tight m-0 uppercase">
+                                MARTIN GAO.
+                            </h1>
+                        </div>
                     </div>
-                </div>
 
-                {/* Slogan */}
-                <div className="font-semibold text-xl h-[30dvh] w-full flex flex-row justify-end items-center md:h-[20dvh] md:justify-start md:text-2xl">
-                    <div ref={slogansRef} className="w-3/5 mr-6 md:ml-12 md:w-2/5 overflow-hidden">
-                        <p className="will-change-transform m-0">
-                            EXPERIENCED FULL-STACK DEVELOPER WITH INNOVATION, CREATIVITY AND AESTHETICS.
-                        </p>
+
+                    {/* Scroll Down Nav */}
+                    <div className="hidden md:h-auto font-semibold text-3xl md:flex md:flex-row md:justify-end md:w-full md:items-center">
+                        <ScrollDown ref={scrollDownRef} className="mr-12 will-change-transform" />
                     </div>
-                </div>
-
-                {/* Scroll Down Nav */}
-                <div className="hidden md:h-[20dvh] font-semibold text-2xl md:flex md:flex-row md:justify-end md:w-full md:items-center">
-                    <ScrollDown ref={scrollDownRef} className="mr-12 will-change-transform" />
                 </div>
             </div>
         </div>
