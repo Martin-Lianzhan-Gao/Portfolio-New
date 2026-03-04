@@ -3,6 +3,9 @@
 const Description = () => {
     return (
         <div className="w-full @container">
+            <div>
+                <h1 className="uppercase text-[5cqw]">Self Description</h1>
+            </div>
             <div className="text-[3cqw] font-inter uppercase font-light">
                 <p>
                     A Computer Science graduate dedicated to building high-performance web interfaces.
