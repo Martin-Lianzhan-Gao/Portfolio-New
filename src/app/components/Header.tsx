@@ -4,7 +4,7 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import Logo from './elements/Logo'
 
-const menuItems = ['ABOUT ME', 'WORKS', 'SKILLS', 'PROJECT', 'CONTACT']
+const menuItems = ['ABOUT', 'EDUCATION', 'SKILLS', 'WORKS', 'CONTACT']
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
