@@ -25,7 +25,7 @@ const Intro = () => {
             ease: "power1.inOut"
         }, 0);
 
-        // Optional: Infinite yoyo float to the sphere
+        // Optional: Infinite yoyo float to the sphere  
         gsap.to(ambientSphereRef.current, {
             y: "-=120", // Much larger vertical drift
             scale: 1.2, // Subtle breathing effect
@@ -36,14 +36,14 @@ const Intro = () => {
             delay: 3 // Starts after the entrance animation finishes
         });
 
-        // 2. Glass Condensation (Starts at 0.5s)
+        // 2. Glass Condensation
         tl.to(glassLayerRef.current, {
             opacity: 1,
             duration: 2.5,
             ease: "power2.inOut"
         }, 0.5);
 
-        // 3. The Monolith Title using SplitText (Starts at 1.0s)
+        // 3. The Monolith Title using SplitText
         const split = new SplitText(titleRef.current, { type: 'chars' });
 
         // Pre-computation: Force GPU Hardware Acceleration
@@ -87,27 +87,28 @@ const Intro = () => {
                 />
             </div>
 
-            {/* 2. Glass Condensation Layer (z-10) */}
+            {/* 2. Glass Condensation Layer */}
             <div
                 ref={glassLayerRef}
                 className="absolute inset-0 z-10 bg-white/30 backdrop-blur-xl opacity-0 pointer-events-none"
             />
 
-            {/* 3. Foreground Content Layer (z-20) */}
+            {/* 3. Foreground Content Layer */}
             <div className="relative z-20 w-full h-full flex flex-col pointer-events-none items-center">
-                <div className="w-full h-full flex flex-col justify-around max-w-vw-safe">
+                <div className="w-full h-full flex flex-col justify-between max-w-vw-safe">
                     {/* Title */}
-                    <div className="w-full h-full flex flex-col justify-center md:gap-6 md:h-auto @container">
-                        <div className="ml-6 mr-6 w-full font-inria-sans text-[14cqh] font-bold wrap-break-word md:text-[18cqw] md:ml-12">
+                    <div className="w-full h-full flex flex-col justify-center md:h-auto @container">
+                        <div className="ml-6 mr-6 w-full font-inria-sans text-[14cqh] font-bold wrap-break-word md:text-[18cqw] md:ml-12 md:mt-[10%]">
                             <h1 ref={titleRef} className="tracking-tight m-0 uppercase">
                                 MARTIN GAO.
                             </h1>
                         </div>
                     </div>
 
-
                     {/* Scroll Down Nav */}
-                    <div className="hidden md:h-auto font-semibold text-3xl md:flex md:flex-row md:justify-end md:w-full md:items-center">
+                    <div className="hidden md:h-auto font-semibold text-2xl md:flex md:flex-row md:justify-between md:w-full md:items-center md:mb-12">
+                        <p>hello@martingaolianzhan.com</p>
+                        <p>©2026</p>
                         <ScrollDown ref={scrollDownRef} className="mr-12 will-change-transform" />
                     </div>
                 </div>
