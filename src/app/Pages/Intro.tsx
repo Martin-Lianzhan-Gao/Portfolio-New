@@ -108,7 +108,7 @@ const Intro = () => {
                     </div>
 
                     {/* Scroll Down Nav and Secondary Information */}
-                    <div className="hidden md:h-auto font-semibold text-2xl md:flex md:flex-row md:justify-between md:w-full md:items-center md:mb-12">
+                    <div className="hidden md:h-auto font-semibold text-2xl md:flex md:flex-row md:justify-between md:w-full md:items-center md:mb-14">
                         <p ref={emailRef} className="ml-12 will-change-transform">hello@martingaolianzhan.com</p>
                         <p ref={copyrightRef} className="will-change-transform">©2026</p>
                         <ScrollDown ref={scrollDownRef} className="mr-12 will-change-transform" />
