@@ -13,6 +13,8 @@ const Intro = () => {
     const glassLayerRef = useRef<HTMLDivElement>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
 
+    const emailRef = useRef<HTMLParagraphElement>(null);
+    const copyrightRef = useRef<HTMLParagraphElement>(null);
     const scrollDownRef = useRef<HTMLParagraphElement>(null);
 
     useGSAP(() => {
@@ -56,7 +58,7 @@ const Intro = () => {
         );
 
 
-        const secondaryElements = [scrollDownRef.current].filter(Boolean); // Filter out any nulls
+        const secondaryElements = [emailRef.current, copyrightRef.current, scrollDownRef.current].filter(Boolean); // Filter out any nulls
 
         if (secondaryElements.length > 0) {
             tl.fromTo(secondaryElements,
@@ -105,10 +107,10 @@ const Intro = () => {
                         </div>
                     </div>
 
-                    {/* Scroll Down Nav */}
+                    {/* Scroll Down Nav and Secondary Information */}
                     <div className="hidden md:h-auto font-semibold text-2xl md:flex md:flex-row md:justify-between md:w-full md:items-center md:mb-12">
-                        <p>hello@martingaolianzhan.com</p>
-                        <p>©2026</p>
+                        <p ref={emailRef} className="ml-12 will-change-transform">hello@martingaolianzhan.com</p>
+                        <p ref={copyrightRef} className="will-change-transform">©2026</p>
                         <ScrollDown ref={scrollDownRef} className="mr-12 will-change-transform" />
                     </div>
                 </div>
