@@ -13,7 +13,7 @@ const Intro = () => {
     const glassLayerRef = useRef<HTMLDivElement>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
 
-    const emailRef = useRef<HTMLParagraphElement>(null);
+    const emailRef = useRef<HTMLAnchorElement>(null);
     const copyrightRef = useRef<HTMLParagraphElement>(null);
     const scrollDownRef = useRef<HTMLParagraphElement>(null);
 
@@ -97,10 +97,10 @@ const Intro = () => {
 
             {/* 3. Foreground Content Layer */}
             <div className="relative z-20 w-full h-full flex flex-col pointer-events-none items-center">
-                <div className="w-full h-full flex flex-col justify-between max-w-vw-safe">
+                <div className="w-full h-full flex flex-col justify-center max-w-vw-safe relative">
                     {/* Title */}
-                    <div className="w-full h-full flex flex-col justify-center md:h-auto @container">
-                        <div className="ml-6 mr-6 w-full font-inria-sans text-[14cqh] font-bold wrap-break-word md:text-[18cqw] md:ml-12 md:mt-[10%]">
+                    <div className="w-full flex flex-col justify-center @container -translate-y-[5vh] md:-translate-y-[8vh]">
+                        <div className="ml-6 mr-6 font-inria-sans text-[14cqh] font-bold wrap-break-word md:text-[16cqw] md:ml-12 md:mr-12">
                             <h1 ref={titleRef} className="tracking-tight m-0 uppercase">
                                 MARTIN GAO.
                             </h1>
@@ -108,8 +108,9 @@ const Intro = () => {
                     </div>
 
                     {/* Scroll Down Nav and Secondary Information */}
-                    <div className="hidden md:h-auto font-semibold text-2xl md:flex md:flex-row md:justify-between md:w-full md:items-center md:mb-14">
-                        <p ref={emailRef} className="ml-12 will-change-transform">hello@martingaolianzhan.com</p>
+                    <div className="absolute bottom-0 left-0 w-full hidden md:h-auto font-semibold text-2xl md:flex md:flex-row md:justify-between md:items-center md:mb-6 pointer-events-auto">
+                        <a href="mailto:gaolianzhan@gmail.com" ref={emailRef} target="_blank"
+                            rel="noopener noreferrer" className="ml-12 will-change-transform">gaolianzhan@gmail.com</a>
                         <p ref={copyrightRef} className="will-change-transform">©2026</p>
                         <ScrollDown ref={scrollDownRef} className="mr-12 will-change-transform" />
                     </div>
