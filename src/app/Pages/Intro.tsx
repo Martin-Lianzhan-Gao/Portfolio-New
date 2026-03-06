@@ -82,7 +82,7 @@ const Intro = () => {
 
     return (
         <div className="relative w-full h-[100dvh] overflow-hidden bg-white">
-            {/* Particle Sphere Background (z-10) */}
+            {/* Particle Sphere Background */}
             <div
                 ref={particleSphereContainerRef}
                 className="absolute z-10 w-[70vh] h-[70vh] top-1/2 right-0 translate-x-1/2 -translate-y-1/2 md:w-[70vw] md:h-[70vw] md:top-0 md:left-1/2 md:right-auto md:-translate-x-1/2 md:-translate-y-1/2 opacity-0 pointer-events-none"

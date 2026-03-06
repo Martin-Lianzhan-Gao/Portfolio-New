@@ -36,7 +36,7 @@ const Particles = () => {
         const time = state.clock.getElapsedTime()
         pointsRef.current.rotation.y = time * 0.05
         pointsRef.current.rotation.x = time * 0.02
-        
+
         // Add a very subtle vertical breathing/floating effect
         pointsRef.current.position.y = Math.sin(time * 0.5) * 0.05
     })
@@ -69,9 +69,9 @@ const ParticleSphere = () => {
     return (
         <div className="w-full h-full pointer-events-none">
             <Canvas
-                camera={{ position: [0, 0, 5], fov: 45 }}
+                camera={{ position: [0, 0, 5.6], fov: 45 }}
                 dpr={[1, 2]} // Optimize for high-DPI screens but cap at 2x for performance
-                gl={{ 
+                gl={{
                     alpha: true, // Transparent background so the white div shows through
                     antialias: true,
                 }}
