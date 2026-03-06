@@ -98,7 +98,7 @@ const Intro = () => {
 
     return (
         <div className="relative w-full h-[100dvh] overflow-hidden bg-white">
-            {/* Ambient Sphere Background (z-0) */}
+            {/* Ambient Sphere Background */}
             <div className="absolute z-0 w-[150vw] h-[150vw] top-1/2 right-0 translate-x-1/2 -translate-y-1/2 md:w-[150vh] md:h-[150vh] md:top-0 md:left-1/2 md:right-auto md:-translate-x-1/2 md:-translate-y-1/2 pointer-events-none">
                 <div
                     ref={ambientSphereRef}
@@ -122,7 +122,7 @@ const Intro = () => {
                 <div className="w-full h-full flex flex-col justify-center max-w-vw-safe relative">
                     {/* Title */}
                     <div className="w-full flex flex-col justify-center @container -translate-y-[5vh] md:-translate-y-[8vh]">
-                        <div className="ml-6 mr-6 font-inria-sans text-[14cqh] font-bold wrap-break-word md:text-[16cqw] md:ml-12 md:mr-12">
+                        <div className="ml-6 mr-6 font-inria-sans text-[24cqw] font-bold wrap-break-word md:text-[16cqw] md:ml-12 md:mr-12">
                             <h1 ref={titleRef} className="tracking-tight m-0 uppercase">
                                 MARTIN GAO.
                             </h1>
@@ -130,17 +130,17 @@ const Intro = () => {
                     </div>
 
                     {/* Scroll Down Nav and Secondary Information */}
-                    <div className="absolute bottom-0 left-0 w-full hidden md:h-auto font-semibold text-2xl md:flex md:flex-row md:justify-between md:items-center md:mb-6 pointer-events-auto">
+                    <div className="absolute bottom-0 left-0 w-full h-auto font-semibold text-xl lg:text-2xl flex flex-row justify-between items-center mb-6 pointer-events-auto">
                         <a href="mailto:gaolianzhan@gmail.com" ref={emailRef} target="_blank"
                             rel="noopener noreferrer"
-                            className="ml-12 relative group inline-block"
+                            className="relative group hidden md:ml-12 md:block"
                             onPointerEnter={handleUnderlineHover}
                             onPointerLeave={handleUnderlineLeave}>
                             gaolianzhan@gmail.com
                             <span ref={underlineRef} className="absolute left-0 -bottom-1 w-full h-[3px] bg-black" style={{ transformOrigin: 'left center', transform: 'scaleX(0)' }}></span>
                         </a>
-                        <p ref={copyrightRef} className="will-change-transform">©2026</p>
-                        <ScrollDown ref={scrollDownRef} className="mr-12" />
+                        <p ref={copyrightRef} className="ml-6">©2026</p>
+                        <ScrollDown ref={scrollDownRef} className="mr-6 md:mr-12" />
                     </div>
                 </div>
             </div>
