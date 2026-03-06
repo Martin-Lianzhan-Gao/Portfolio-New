@@ -17,6 +17,10 @@ const Intro = () => {
     const copyrightRef = useRef<HTMLParagraphElement>(null);
     const scrollDownRef = useRef<HTMLParagraphElement>(null);
 
+    const underlineRef = useRef<HTMLSpanElement>(null);
+
+    const { contextSafe } = useGSAP();
+
     useGSAP(() => {
         const tl = gsap.timeline();
 
@@ -74,9 +78,25 @@ const Intro = () => {
         };
     });
 
+    const handleUnderlineHover = contextSafe(() => {
+        gsap.to(underlineRef.current, {
+            scaleX: 1,
+            duration: 0.8,
+            ease: "expo.out"
+        });
+    });
+
+    const handleUnderlineLeave = contextSafe(() => {
+        gsap.to(underlineRef.current, {
+            scaleX: 0,
+            duration: 0.8,
+            ease: "expo.out"
+        });
+    });
+
     return (
         <div className="relative w-full h-[100dvh] overflow-hidden bg-white">
-            {/* 1. Ambient Sphere Background (z-0) */}
+            {/* Ambient Sphere Background (z-0) */}
             <div className="absolute z-0 w-[150vw] h-[150vw] top-1/2 right-0 translate-x-1/2 -translate-y-1/2 md:w-[150vh] md:h-[150vh] md:top-0 md:left-1/2 md:right-auto md:-translate-x-1/2 md:-translate-y-1/2 pointer-events-none">
                 <div
                     ref={ambientSphereRef}
@@ -89,13 +109,13 @@ const Intro = () => {
                 />
             </div>
 
-            {/* 2. Glass Condensation Layer */}
+            {/* Glass Condensation Layer */}
             <div
                 ref={glassLayerRef}
                 className="absolute inset-0 z-10 bg-white/30 backdrop-blur-xl opacity-0 pointer-events-none"
             />
 
-            {/* 3. Foreground Content Layer */}
+            {/* Foreground Content Layer */}
             <div className="relative z-20 w-full h-full flex flex-col pointer-events-none items-center">
                 <div className="w-full h-full flex flex-col justify-center max-w-vw-safe relative">
                     {/* Title */}
@@ -110,9 +130,15 @@ const Intro = () => {
                     {/* Scroll Down Nav and Secondary Information */}
                     <div className="absolute bottom-0 left-0 w-full hidden md:h-auto font-semibold text-2xl md:flex md:flex-row md:justify-between md:items-center md:mb-6 pointer-events-auto">
                         <a href="mailto:gaolianzhan@gmail.com" ref={emailRef} target="_blank"
-                            rel="noopener noreferrer" className="ml-12 will-change-transform">gaolianzhan@gmail.com</a>
+                            rel="noopener noreferrer"
+                            className="ml-12 relative group inline-block"
+                            onMouseEnter={handleUnderlineHover}
+                            onMouseLeave={handleUnderlineLeave}>
+                            gaolianzhan@gmail.com
+                            <span ref={underlineRef} className="absolute left-0 -bottom-1 w-full h-[3px] bg-black" style={{ transformOrigin: 'left center', transform: 'scaleX(0)' }}></span>
+                        </a>
                         <p ref={copyrightRef} className="will-change-transform">©2026</p>
-                        <ScrollDown ref={scrollDownRef} className="mr-12 will-change-transform" />
+                        <ScrollDown ref={scrollDownRef} className="mr-12" />
                     </div>
                 </div>
             </div>
