@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef } from "react";
+import { useRef, PointerEvent } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import SplitText from "gsap/SplitText";
@@ -78,7 +78,8 @@ const Intro = () => {
         };
     });
 
-    const handleUnderlineHover = contextSafe(() => {
+    const handleUnderlineHover = contextSafe((e: PointerEvent<HTMLAnchorElement>) => {
+        if (e.pointerType !== 'mouse') return;
         gsap.to(underlineRef.current, {
             scaleX: 1,
             duration: 0.8,
@@ -86,7 +87,8 @@ const Intro = () => {
         });
     });
 
-    const handleUnderlineLeave = contextSafe(() => {
+    const handleUnderlineLeave = contextSafe((e: PointerEvent<HTMLAnchorElement>) => {
+        if (e.pointerType !== 'mouse') return;
         gsap.to(underlineRef.current, {
             scaleX: 0,
             duration: 0.8,
@@ -132,8 +134,8 @@ const Intro = () => {
                         <a href="mailto:gaolianzhan@gmail.com" ref={emailRef} target="_blank"
                             rel="noopener noreferrer"
                             className="ml-12 relative group inline-block"
-                            onMouseEnter={handleUnderlineHover}
-                            onMouseLeave={handleUnderlineLeave}>
+                            onPointerEnter={handleUnderlineHover}
+                            onPointerLeave={handleUnderlineLeave}>
                             gaolianzhan@gmail.com
                             <span ref={underlineRef} className="absolute left-0 -bottom-1 w-full h-[3px] bg-black" style={{ transformOrigin: 'left center', transform: 'scaleX(0)' }}></span>
                         </a>
