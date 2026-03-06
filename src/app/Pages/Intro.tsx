@@ -5,12 +5,12 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import SplitText from "gsap/SplitText";
 import ScrollDown from "../components/elements/ScrollDown";
+import ParticleSphere from "../components/elements/ParticleSphere";
 
 gsap.registerPlugin(SplitText);
 
 const Intro = () => {
-    const ambientSphereRef = useRef<HTMLDivElement>(null);
-    const glassLayerRef = useRef<HTMLDivElement>(null);
+    const particleSphereContainerRef = useRef<HTMLDivElement>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
 
     const emailRef = useRef<HTMLAnchorElement>(null);
@@ -24,30 +24,14 @@ const Intro = () => {
     useGSAP(() => {
         const tl = gsap.timeline();
 
-        // 1. Ambient Sphere (Starts at 0s)
-        tl.to(ambientSphereRef.current, {
-            opacity: 0.6,
-            duration: 3,
-            ease: "power1.inOut"
+        // 1. Particle Sphere (Starts at 0s)
+        tl.to(particleSphereContainerRef.current, {
+            opacity: 1, // Full opacity for the black particles
+            duration: 4,
+            ease: "power2.inOut"
         }, 0);
 
-        // Optional: Infinite yoyo float to the sphere  
-        gsap.to(ambientSphereRef.current, {
-            y: "-=120", // Much larger vertical drift
-            scale: 1.2, // Subtle breathing effect
-            duration: 6, // Slower, heavier movement
-            ease: "sine.inOut",
-            yoyo: true,
-            repeat: -1,
-            delay: 3 // Starts after the entrance animation finishes
-        });
 
-        // 2. Glass Condensation
-        tl.to(glassLayerRef.current, {
-            opacity: 1,
-            duration: 2.5,
-            ease: "power2.inOut"
-        }, 0.5);
 
         // 3. The Monolith Title using SplitText
         const split = new SplitText(titleRef.current, { type: 'chars' });
@@ -98,31 +82,20 @@ const Intro = () => {
 
     return (
         <div className="relative w-full h-[100dvh] overflow-hidden bg-white">
-            {/* Ambient Sphere Background */}
-            <div className="absolute z-0 w-[150vw] h-[150vw] top-1/2 right-0 translate-x-1/2 -translate-y-1/2 md:w-[150vh] md:h-[150vh] md:top-0 md:left-1/2 md:right-auto md:-translate-x-1/2 md:-translate-y-1/2 pointer-events-none">
-                <div
-                    ref={ambientSphereRef}
-                    className="w-full h-full opacity-0"
-                    style={{
-                        background: "radial-gradient(circle closest-side, rgba(255, 69, 0, 0.95) 0%, rgba(255, 69, 0, 0.8) 30%, rgba(255, 69, 0, 0.3) 65%, rgba(255, 69, 0, 0) 100%)",
-                        borderRadius: "50%",
-                        transform: "scale(0.95)"
-                    }}
-                />
-            </div>
-
-            {/* Glass Condensation Layer */}
+            {/* Particle Sphere Background (z-10) */}
             <div
-                ref={glassLayerRef}
-                className="absolute inset-0 z-10 bg-white/30 backdrop-blur-xl opacity-0 pointer-events-none"
-            />
+                ref={particleSphereContainerRef}
+                className="absolute z-10 w-[70vh] h-[70vh] top-1/2 right-0 translate-x-1/2 -translate-y-1/2 md:w-[70vw] md:h-[70vw] md:top-0 md:left-1/2 md:right-auto md:-translate-x-1/2 md:-translate-y-1/2 opacity-0 pointer-events-none"
+            >
+                <ParticleSphere />
+            </div>
 
             {/* Foreground Content Layer */}
             <div className="relative z-20 w-full h-full flex flex-col pointer-events-none items-center">
                 <div className="w-full h-full flex flex-col justify-center max-w-vw-safe relative">
                     {/* Title */}
                     <div className="w-full flex flex-col justify-center -translate-y-[5vh] md:-translate-y-[8vh]">
-                        <div className="ml-6 mr-6 font-inria-sans text-[min(15vw,22vh)] leading-[0.85] font-bold wrap-break-word md:ml-12 md:mr-12">
+                        <div className="ml-6 mr-6 font-inria-sans text-[min(15.5vw,22vh)] leading-[0.85] font-bold wrap-break-word md:ml-12 md:mr-12">
                             <h1 ref={titleRef} className="tracking-tight m-0 uppercase">
                                 MARTIN GAO.
                             </h1>
@@ -130,7 +103,7 @@ const Intro = () => {
                     </div>
 
                     {/* Scroll Down Nav and Secondary Information */}
-                    <div className="absolute bottom-0 left-0 w-full h-auto font-semibold text-xl lg:text-2xl flex flex-row justify-between items-center mb-6 pointer-events-auto">
+                    <div className="absolute bottom-0 left-0 w-full h-auto font-semibold text-md lg:text-2xl flex flex-row justify-between items-center mb-6 pointer-events-auto">
                         <a href="mailto:gaolianzhan@gmail.com" ref={emailRef} target="_blank"
                             rel="noopener noreferrer"
                             className="relative group hidden md:ml-12 md:block"
