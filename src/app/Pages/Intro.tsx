@@ -121,8 +121,8 @@ const Intro = () => {
             <div className="relative z-20 w-full h-full flex flex-col pointer-events-none items-center">
                 <div className="w-full h-full flex flex-col justify-center max-w-vw-safe relative">
                     {/* Title */}
-                    <div className="w-full flex flex-col justify-center @container -translate-y-[5vh] md:-translate-y-[8vh]">
-                        <div className="ml-6 mr-6 font-inria-sans text-[24cqw] font-bold wrap-break-word md:text-[16cqw] md:ml-12 md:mr-12">
+                    <div className="w-full flex flex-col justify-center -translate-y-[5vh] md:-translate-y-[8vh]">
+                        <div className="ml-6 mr-6 font-inria-sans text-[min(15vw,22vh)] leading-[0.85] font-bold wrap-break-word md:ml-12 md:mr-12">
                             <h1 ref={titleRef} className="tracking-tight m-0 uppercase">
                                 MARTIN GAO.
                             </h1>
