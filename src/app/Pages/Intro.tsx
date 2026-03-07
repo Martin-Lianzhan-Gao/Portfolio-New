@@ -85,7 +85,9 @@ const Intro = () => {
             {/* Particle Sphere Background */}
             <div
                 ref={particleSphereContainerRef}
-                className="absolute z-10 w-[70vh] h-[70vh] top-1/2 right-0 translate-x-1/2 -translate-y-1/2 md:w-[70vw] md:h-[70vw] md:top-0 md:left-1/2 md:right-auto md:-translate-x-1/2 md:-translate-y-1/2 opacity-0 pointer-events-none"
+                className="absolute z-10 opacity-0 pointer-events-none 
+                    portrait:w-[160vw] portrait:h-[160vw] portrait:top-1/2 portrait:right-0 portrait:translate-x-1/2 portrait:-translate-y-1/2 
+                    landscape:w-[80vw] landscape:h-[80vw] landscape:top-0 landscape:left-1/2 landscape:-translate-x-1/2 landscape:-translate-y-1/3 lg:landscape:-translate-y-1/2"
             >
                 <ParticleSphere />
             </div>
