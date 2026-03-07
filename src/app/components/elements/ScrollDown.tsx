@@ -1,6 +1,6 @@
 'use client'
 
-import React, { forwardRef, useRef } from 'react';
+import React, { forwardRef, useRef, PointerEvent } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ArrowDown } from 'lucide-react';
@@ -70,14 +70,16 @@ const ScrollDown = forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLPar
         };
     });
 
-    const handleMouseEnter = contextSafe(() => {
+    const handleMouseEnter = contextSafe((e: PointerEvent<HTMLParagraphElement>) => {
+        if (e.pointerType !== 'mouse') return;
         if (leftBracketRef.current && rightBracketRef.current) {
             gsap.to(leftBracketRef.current, { x: -8, duration: 0.8, ease: "power2.out" });
             gsap.to(rightBracketRef.current, { x: 8, duration: 0.8, ease: "power2.out" });
         }
     });
 
-    const handleMouseLeave = contextSafe(() => {
+    const handleMouseLeave = contextSafe((e: PointerEvent<HTMLParagraphElement>) => {
+        if (e.pointerType !== 'mouse') return;
         if (leftBracketRef.current && rightBracketRef.current) {
             gsap.to([leftBracketRef.current, rightBracketRef.current], { x: 0, duration: 0.8, ease: "power2.out" });
         }
@@ -87,8 +89,8 @@ const ScrollDown = forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLPar
         <p
             ref={ref}
             className={`cursor-pointer pointer-events-auto inline-flex items-center m-0 ${className}`}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            onPointerEnter={handleMouseEnter}
+            onPointerLeave={handleMouseLeave}
             aria-label="SCROLL DOWN"
             {...props}
         >
