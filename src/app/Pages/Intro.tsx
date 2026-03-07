@@ -52,7 +52,7 @@ const Intro = () => {
             tl.fromTo(secondaryElements,
                 { opacity: 0, y: 20 },
                 { opacity: 1, y: 0, duration: 1.2, ease: "power2.out", stagger: 0.15 },
-                "-=1.0" // Overlap value to start BEFORE the Title animation fully completes
+                "-=2.0" // Overlap value to start BEFORE the Title animation fully completes
             );
         }
 
