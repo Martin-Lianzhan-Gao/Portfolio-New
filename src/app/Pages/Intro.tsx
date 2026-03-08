@@ -4,10 +4,11 @@ import { useRef, PointerEvent } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import SplitText from "gsap/SplitText";
+import ScrollTrigger from "gsap/ScrollTrigger";
 import ScrollDown from "../components/elements/ScrollDown";
 import ParticleSphere from "../components/elements/ParticleSphere";
 
-gsap.registerPlugin(SplitText);
+gsap.registerPlugin(SplitText, ScrollTrigger);
 
 const Intro = () => {
     const particleSphereContainerRef = useRef<HTMLDivElement>(null);
@@ -31,8 +32,6 @@ const Intro = () => {
             ease: "power2.inOut"
         }, 0);
 
-
-
         // 3. The Monolith Title using SplitText
         const split = new SplitText(titleRef.current, { type: 'chars' });
 
@@ -44,7 +43,6 @@ const Intro = () => {
             { y: 0, opacity: 1, filter: 'blur(0px)', stagger: 0.05, duration: 1.5, ease: 'power3.out' },
             1.0
         );
-
 
         const secondaryElements = [emailRef.current, copyrightRef.current, scrollDownRef.current].filter(Boolean); // Filter out any nulls
 
@@ -60,6 +58,31 @@ const Intro = () => {
         return () => {
             split.revert();
         };
+    });
+
+    // Handle Mobile Height Jitter (Fix for iOS Chrome/Safari URL bar hide/show)
+    useGSAP(() => {
+        // Prevent ScrollTrigger from recalculating too aggressively on fast mobile scrolls
+        ScrollTrigger.config({
+            ignoreMobileResize: true // true ignores resize events triggered by UI bar hide/show
+        });
+
+        const setFixedMobileHeight = () => {
+            const el = particleSphereContainerRef.current?.parentElement;
+            if (!el) return;
+
+            if (window.innerWidth < 768) { // Only apply to mobile devices
+                gsap.set(el, {
+                    height: window.innerHeight // Snap to exact absolute pixel height to avoid 100dvh changing
+                });
+            } else {
+                 gsap.set(el, { clearProps: "height" }); // revert to CSS on desktop
+            }
+        };
+
+        setFixedMobileHeight();
+        window.addEventListener('resize', setFixedMobileHeight);
+        return () => window.removeEventListener('resize', setFixedMobileHeight);
     });
 
     const handleUnderlineHover = contextSafe((e: PointerEvent<HTMLAnchorElement>) => {

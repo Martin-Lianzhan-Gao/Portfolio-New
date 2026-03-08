@@ -63,6 +63,8 @@ const Description = () => {
                     start: "top 85%",
                     end: "bottom 55%",
                     scrub: 1, // 增加 1 秒惯性的平顺连贯
+                    fastScrollEnd: true, // Fix iOS Chrome jitter
+                    preventOverlaps: true
                 }
             }
         );
