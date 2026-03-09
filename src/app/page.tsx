@@ -1,7 +1,7 @@
 'use client';
 
-import Intro from "./Pages/Intro";
-import Description from "./Pages/Description";
+import Intro from "./pages/Intro";
+import Description from "./pages/Description";
 
 export default function Page() {
 
