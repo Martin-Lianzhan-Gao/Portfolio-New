@@ -5,8 +5,8 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import SplitText from "gsap/SplitText";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import ScrollDown from "../components/elements/ScrollDown";
-import ParticleSphere from "../components/elements/ParticleSphere";
+import ScrollDown from "../components/ui/ScrollDown";
+import ParticleSphere from "../components/ui/ParticleSphere";
 
 gsap.registerPlugin(SplitText, ScrollTrigger);
 
@@ -76,7 +76,7 @@ const Intro = () => {
                     height: window.innerHeight // Snap to exact absolute pixel height to avoid 100dvh changing
                 });
             } else {
-                 gsap.set(el, { clearProps: "height" }); // revert to CSS on desktop
+                gsap.set(el, { clearProps: "height" }); // revert to CSS on desktop
             }
         };
 
