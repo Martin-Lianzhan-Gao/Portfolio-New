@@ -7,7 +7,7 @@ import SplitText from "gsap/SplitText";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import Heart from "../components/icons/Heart";
 import Star from "../components/icons/Star";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ArrowRight } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -15,7 +15,6 @@ const Description = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
     const textRef = useRef<HTMLDivElement>(null);
-    const uqSpanRef = useRef<HTMLSpanElement>(null);
 
     useGSAP(() => {
         if (!titleRef.current || !containerRef.current || !textRef.current) return;
@@ -57,7 +56,9 @@ const Description = () => {
         const inlineSpans = textRef.current.querySelectorAll('span.inline-flex');
         const heartSpan = inlineSpans[0];
         const starSpan = inlineSpans[1];
-        const uqWords = uqSpanRef.current ? uqSpanRef.current.querySelectorAll('div') : [];
+
+        // Find the dot span
+        const dotSpan = textRef.current.querySelector('span.bullet-dot');
 
 
         // Create a timeline for text scrubbing
@@ -79,13 +80,7 @@ const Description = () => {
             },
             {
                 x: 0,
-                // jump words of uq span
-                color: (index, target) => {
-                    if (uqSpanRef.current && uqSpanRef.current.contains(target)) {
-                        return "#A78BFA";
-                    }
-                    return "rgba(255,255,255,1)";
-                },
+                color: "rgba(255,255,255,1)",
                 stagger: 0.02,
                 ease: "power2.out",
             }, 0
@@ -101,6 +96,11 @@ const Description = () => {
             gsap.set(starSpan.querySelector('svg'), { width: '1em', height: '1em', display: 'inline' });
         }
 
+        // Initialize Dot
+        if (dotSpan) {
+            gsap.set(dotSpan, { backgroundColor: "rgba(255,255,255,0.15)", scale: 0, opacity: 0 });
+        }
+
         // Heart animation
         if (heartSpan) {
             scrubTl.to(heartSpan, {
@@ -108,7 +108,7 @@ const Description = () => {
                 scale: 1.1,
                 opacity: 1,
                 ease: "back.out(2)",
-            }, "<40%");
+            }, "<30%");
         }
         // Star animation
         if (starSpan) {
@@ -118,7 +118,17 @@ const Description = () => {
                 rotation: 180,
                 opacity: 1,
                 ease: "power3.out",
-            }, "<60%");
+            }, "<50%");
+        }
+
+        // Dot animation
+        if (dotSpan) {
+            scrubTl.to(dotSpan, {
+                backgroundColor: "#E67B4E",
+                scale: 1,
+                opacity: 1,
+                ease: "elastic.out(1.5, 0.4)",
+            }, "<70%");
         }
 
         return () => {
@@ -128,8 +138,8 @@ const Description = () => {
     }, { scope: containerRef });
 
     return (
-        <div ref={containerRef} className="relative z-20 overflow-x-hidden bg-black w-full pb-48 rounded-t-[2rem] flex flex-col items-center">
-            <div className="text-white mt-12 pt-36 pb-36 w-full max-w-vw-safe flex flex-col justify-center min-h-[100dvh]">
+        <div ref={containerRef} className="relative z-20 overflow-x-hidden bg-black w-full pb-16 md:pb-48 rounded-t-[2rem] flex flex-col items-center">
+            <div className="text-white mt-12 pt-20 pb-20 md:pt-36 md:pb-36 w-full max-w-vw-safe flex flex-col justify-center min-h-[100dvh]">
                 <div className="w-full ml-6 mr-6 md:ml-12 md:mr-12 mb-16">
                     <h1 ref={titleRef} className="uppercase text-[min(12vw,18vh)] font-inria-sans font-medium leading-[0.85] text-white">
                         More<br />About Me
@@ -137,14 +147,14 @@ const Description = () => {
                 </div>
                 <div ref={textRef} className="font-inter text-3xl md:text-5xl lg:text-[3.5rem] xl:text-[4rem] uppercase font-light break-words w-full flex flex-col items-end justify-center pr-6 pl-6 md:pr-12 md:pl-12 gap-12 lg:gap-20 leading-snug">
                     <p className="w-full md:w-5/6 lg:w-4/5 xl:w-2/3">
-                        A software engineer specializing in the end-to-end development of scalable web applications<span className="inline-flex items-center justify-center align-middle px-2 relative -top-[0.08em]"><Heart /></span>By merging robust full-stack architecture with precise UI/UX principles, I build high-performance, user-centered digital experiences<span className="inline-flex items-center justify-center align-middle px-2 relative -top-[0.08em]"><Star /></span>
+                        A software engineer specializing in the end-to-end development of scalable web applications<span className="inline-flex items-center justify-center align-middle px-2 relative -top-[0.08em]"><Heart /></span>By merging robust full-stack architecture with precise UI/UX principles<span className="inline-flex items-center justify-center align-middle px-2 relative -top-[0.08em]"><Star /></span>I build high-performance, user-centered digital experiences.
                     </p>
                     <p className="w-full md:w-5/6 lg:w-4/5 xl:w-2/3">
-                        Bachelor of Computer Science, <span ref={uqSpanRef} className="text-[#A78BFA]">The University of Queensland</span> (2019-2024).
+                        Bachelor of Computer Science, The University of Queensland (2019-2024)<span className="bullet-dot inline-flex items-center justify-center align-middle w-[0.3em] h-[0.3em] rounded-full mx-2 relative -top-[0.05em]" /><br />
                         Translated CS fundamentals into production-ready applications through real-world projects and industry works.
                     </p>
                     <div className="flex flex-row items-baseline gap-3 text-xl md:text-3xl lg:text-[1.5rem] xl:text-[2rem] w-full md:w-5/6 lg:w-4/5 xl:w-2/3 text-white/70 hover:text-white/90 active:text-white transition-colors cursor-pointer group">
-                        GRADUATE CERTIFICATE
+                        GRADUATION CERTIFICATE
                         <ArrowUpRight strokeWidth={1.5} className="w-[1em] h-[1em] group-hover:translate-x-1 group-hover:-translate-y-1 active:scale-95 transition-all duration-300" />
                     </div>
                 </div>
