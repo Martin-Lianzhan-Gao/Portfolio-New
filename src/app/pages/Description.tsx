@@ -7,6 +7,7 @@ import SplitText from "gsap/SplitText";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import Heart from "../components/icons/Heart";
 import Star from "../components/icons/Star";
+import { Milestone } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -52,9 +53,10 @@ const Description = () => {
         const textSplit = new SplitText(textRef.current.querySelectorAll('p'), { type: "words" });
 
         // Find the inline spans containing the icons
-        const inlineSpans = textRef.current.querySelectorAll('span.inline-block');
+        const inlineSpans = textRef.current.querySelectorAll('span.inline-flex');
         const heartSpan = inlineSpans[0];
         const starSpan = inlineSpans[1];
+        const arrowSpan = inlineSpans[2];
 
         // Create a timeline for text scrubbing
         const scrubTl = gsap.timeline({
@@ -72,7 +74,7 @@ const Description = () => {
         scrubTl.fromTo(textSplit.words,
             {
                 color: "rgba(255,255,255,0.15)",
-                x: -15,
+                x: -25,
             },
             {
                 color: "rgba(255,255,255,1)",
@@ -84,11 +86,11 @@ const Description = () => {
 
         // Initialize Icons
         if (heartSpan) {
-            gsap.set(heartSpan, { color: "rgba(255,255,255,0.15)", scale: 0.5 });
+            gsap.set(heartSpan, { color: "rgba(255,255,255,0.15)", scale: 0.5, opacity: 0 });
             gsap.set(heartSpan.querySelector('svg'), { width: '1em', height: '1em', display: 'inline' });
         }
         if (starSpan) {
-            gsap.set(starSpan, { color: "rgba(255,255,255,0.15)", scale: 0.5 });
+            gsap.set(starSpan, { color: "rgba(255,255,255,0.15)", scale: 0.5, opacity: 0 });
             gsap.set(starSpan.querySelector('svg'), { width: '1em', height: '1em', display: 'inline' });
         }
 
@@ -96,18 +98,20 @@ const Description = () => {
         if (heartSpan) {
             scrubTl.to(heartSpan, {
                 color: "#ff3366",
-                scale: 1.2,
-                ease: "power2.out",
-            }, "<30%"); // approx middle of the text animation
+                scale: 1.1,
+                opacity: 1,
+                ease: "back.out(2)",
+            }, "<20%"); // approx middle of the text animation
         }
         // Star animation
         if (starSpan) {
             scrubTl.to(starSpan, {
                 color: "#ffd700",
-                scale: 1.2,
-                rotation: 180, // slightly rotate it for emphasis
-                ease: "power2.out",
-            }, "<90%"); // towards the end of the text animation
+                scale: 1.1,
+                rotation: 180,
+                opacity: 1,
+                ease: "power3.out",
+            }, "<60%"); // towards the middle of the text animation
         }
 
         return () => {
@@ -126,11 +130,11 @@ const Description = () => {
                 </div>
                 <div ref={textRef} className="font-inter text-3xl md:text-5xl lg:text-[3.5rem] xl:text-[4rem] uppercase font-light break-words w-full flex flex-col items-end justify-center pr-6 pl-6 md:pr-12 md:pl-12 gap-12 lg:gap-20 leading-snug">
                     <p className="w-full md:w-5/6 lg:w-4/5 xl:w-2/3">
-                        A software engineer specializing in the end-to-end development of scalable web applications<span className="inline-block px-2 -translate-y-2"><Heart /></span>By merging robust full-stack architecture with precise UI/UX principles, I build high-performance, user-centered digital experiences<span className="inline-block px-2 translate-y-2"><Star /></span>
+                        A software engineer specializing in the end-to-end development of scalable web applications<span className="inline-flex items-center justify-center align-middle px-2 relative -top-[0.08em]"><Heart /></span>By merging robust full-stack architecture with precise UI/UX principles, I build high-performance, user-centered digital experiences<span className="inline-flex items-center justify-center align-middle px-2 relative -top-[0.08em]"><Star /></span>
                     </p>
                     <p className="w-full md:w-5/6 lg:w-4/5 xl:w-2/3">
                         Bachelor of Computer Science, The University of Queensland (2019-2024).
-                        Translated CS fundamentals into production-ready applications through real-world projects and industry internships.
+                        Translated CS fundamentals into production-ready applications through real-world projects and industry works.
                     </p>
                 </div>
             </div>
