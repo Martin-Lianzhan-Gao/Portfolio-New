@@ -7,7 +7,7 @@ import SplitText from "gsap/SplitText";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import Heart from "../components/icons/Heart";
 import Star from "../components/icons/Star";
-import { Milestone } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -15,6 +15,7 @@ const Description = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
     const textRef = useRef<HTMLDivElement>(null);
+    const uqSpanRef = useRef<HTMLSpanElement>(null);
 
     useGSAP(() => {
         if (!titleRef.current || !containerRef.current || !textRef.current) return;
@@ -56,7 +57,8 @@ const Description = () => {
         const inlineSpans = textRef.current.querySelectorAll('span.inline-flex');
         const heartSpan = inlineSpans[0];
         const starSpan = inlineSpans[1];
-        const arrowSpan = inlineSpans[2];
+        const uqWords = uqSpanRef.current ? uqSpanRef.current.querySelectorAll('div') : [];
+
 
         // Create a timeline for text scrubbing
         const scrubTl = gsap.timeline({
@@ -70,15 +72,20 @@ const Description = () => {
             }
         });
 
-        // Text animation executed on scroll
         scrubTl.fromTo(textSplit.words,
             {
                 color: "rgba(255,255,255,0.15)",
                 x: -25,
             },
             {
-                color: "rgba(255,255,255,1)",
                 x: 0,
+                // jump words of uq span
+                color: (index, target) => {
+                    if (uqSpanRef.current && uqSpanRef.current.contains(target)) {
+                        return "#A78BFA";
+                    }
+                    return "rgba(255,255,255,1)";
+                },
                 stagger: 0.02,
                 ease: "power2.out",
             }, 0
@@ -101,7 +108,7 @@ const Description = () => {
                 scale: 1.1,
                 opacity: 1,
                 ease: "back.out(2)",
-            }, "<20%"); // approx middle of the text animation
+            }, "<40%");
         }
         // Star animation
         if (starSpan) {
@@ -111,7 +118,7 @@ const Description = () => {
                 rotation: 180,
                 opacity: 1,
                 ease: "power3.out",
-            }, "<60%"); // towards the middle of the text animation
+            }, "<60%");
         }
 
         return () => {
@@ -133,9 +140,13 @@ const Description = () => {
                         A software engineer specializing in the end-to-end development of scalable web applications<span className="inline-flex items-center justify-center align-middle px-2 relative -top-[0.08em]"><Heart /></span>By merging robust full-stack architecture with precise UI/UX principles, I build high-performance, user-centered digital experiences<span className="inline-flex items-center justify-center align-middle px-2 relative -top-[0.08em]"><Star /></span>
                     </p>
                     <p className="w-full md:w-5/6 lg:w-4/5 xl:w-2/3">
-                        Bachelor of Computer Science, The University of Queensland (2019-2024).
+                        Bachelor of Computer Science, <span ref={uqSpanRef} className="text-[#A78BFA]">The University of Queensland</span> (2019-2024).
                         Translated CS fundamentals into production-ready applications through real-world projects and industry works.
                     </p>
+                    <div className="flex flex-row items-baseline gap-3 text-xl md:text-3xl lg:text-[1.5rem] xl:text-[2rem] w-full md:w-5/6 lg:w-4/5 xl:w-2/3 text-white/70 hover:text-white/90 active:text-white transition-colors cursor-pointer group">
+                        GRADUATE CERTIFICATE
+                        <ArrowUpRight strokeWidth={1.5} className="w-[1em] h-[1em] group-hover:translate-x-1 group-hover:-translate-y-1 active:scale-95 transition-all duration-300" />
+                    </div>
                 </div>
             </div>
         </div>
