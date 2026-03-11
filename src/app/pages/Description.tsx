@@ -15,6 +15,7 @@ const Description = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
     const textRef = useRef<HTMLDivElement>(null);
+    const buttonRef = useRef<HTMLAnchorElement>(null);
 
     useGSAP(() => {
         if (!titleRef.current || !containerRef.current || !textRef.current) return;
@@ -131,6 +132,23 @@ const Description = () => {
             }, "<70%");
         }
 
+        // Resume Button Entry Animation
+        if (buttonRef.current) {
+            gsap.fromTo(buttonRef.current,
+                { clipPath: "polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)" },
+                {
+                    clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+                    duration: 0.8,
+                    ease: "power3.in",
+                    scrollTrigger: {
+                        trigger: buttonRef.current,
+                        start: "top 90%",
+                        toggleActions: "play none none reverse"
+                    }
+                }
+            );
+        }
+
         return () => {
             titleSplit.revert();
             textSplit.revert();
@@ -154,10 +172,10 @@ const Description = () => {
                         Translated CS fundamentals into production-ready applications through real-world projects and industry works.
                     </p>
                     <div className="mt-6 md:mt-12 w-full md:w-5/6 lg:w-4/5 xl:w-2/3">
-                        <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="border-3 border-white/70 px-4 py-3 md:px-6 xl:px-8 xl:py-4 inline-flex flex-row items-center gap-4 text-xl md:text-3xl lg:text-[1.5rem] xl:text-[2rem] text-white/70 hover:bg-white hover:text-black hover:border-white transition-all duration-300 cursor-pointer group">
-                            <span className="font-medium tracking-wide font-inria-sans">DOWNLOAD RESUME</span>
-                            <ArrowUpRight strokeWidth={2.4} strokeLinecap='butt'
-                                strokeLinejoin='miter' className="w-[1em] h-[1em] translate-y-[0.05em] group-hover:translate-x-[0.1em] group-hover:-translate-y-[0.1em] transition-transform duration-300" />
+                        <a ref={buttonRef} href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="border-2 border-white/70 px-4 py-2 md:px-6 md:py-3 xl:px-8 xl:py-4 inline-flex flex-row items-center gap-4 text-xl md:text-3xl lg:text-[1.3rem] xl:text-[1.8rem] text-white/70 hover:bg-white hover:text-black hover:border-white transition-all duration-300 cursor-pointer group">
+                            <span className="font-regular tracking-wide font-inria-sans">DOWNLOAD RESUME</span>
+                            <ArrowUpRight strokeWidth={1.8} strokeLinecap='butt'
+                                strokeLinejoin='miter' className="w-[1em] h-[1em] translate-y-[0.03em] group-hover:translate-x-[0.1em] group-hover:-translate-y-[0.1em] transition-transform duration-300" />
                         </a>
                     </div>
                 </div>
