@@ -389,7 +389,7 @@ const Header = () => {
                     <div className='flex flex-row flex-wrap justify-between h-4/10 pl-8 pr-8 gap-y-0'>
                         <div
                             ref={(el) => { if (el) secondaryTextRefs.current.push(el) }}
-                            className='mb-2 w-full font-medium text-md tracking-tight text-[#CDCDCD]'
+                            className='mb-2 w-full font-light text-regular tracking-tight text-[#CDCDCD]'
                         >
                             EXPLORE BY KEYWORDS
                         </div>
@@ -402,7 +402,7 @@ const Header = () => {
                                 onClick={() => handleMobileMenuClick(index)}
                             >
                                 <div
-                                    className={`menu-text font-regular text-2xl tracking-tight transition-colors duration-300 ${selectedIndex === index ? 'text-white font-medium' : 'text-white/50'
+                                    className={`menu-text font-regular text-2xl font-inria-sans tracking-widest transition-colors duration-300 ${selectedIndex === index ? 'text-white' : 'text-white/50'
                                         }`}
                                     style={{ transform: 'translateY(30px)', opacity: 0, clipPath: 'none' }}
                                 >
@@ -418,10 +418,10 @@ const Header = () => {
                                 ref={(el) => { secondaryTextRefs.current[1] = el }}
                                 className="w-1/2"
                             >
-                                <p className='text-md font-medium'>ENGINEERED FOR EXCEPTIONAL EXPERIECNES.</p>
+                                <p className='text-md font-light'>ENGINEERED FOR EXCEPTIONAL EXPERIECNES.</p>
                             </div>
                         </div>
-                        <div className="text-[#CDCDCD] w-full h-auto flex flex-col items-end text-md gap-2 font-medium">
+                        <div className="text-[#CDCDCD] w-full h-auto flex flex-col items-end text-md gap-2 font-light">
                             <a
                                 ref={(el) => { secondaryTextRefs.current[2] = el }}
                                 href="https://github.com/Martin-Lianzhan-Gao"
