@@ -28,11 +28,17 @@ const Header = () => {
     // Ref for mobile menu secondary text & links
     const secondaryTextRefs = useRef<(HTMLDivElement | HTMLParagraphElement | HTMLAnchorElement | null)[]>([])
 
-    // Ref for desktop components to animate colors
+    // Refs for desktop components to animate colors
     const mgTextRef = useRef<HTMLParagraphElement>(null)
     const menuItemTextRefs = useRef<(HTMLParagraphElement | null)[]>([])
     const isMenuOpenRef = useRef(isMenuOpen)
     const currentHeaderColor = useRef<string>("black")
+
+    // Refs for header entering animation
+    const headerRef = useRef<HTMLDivElement>(null) // for GSAP scope
+    const brandRef = useRef<HTMLDivElement>(null) // Logo part 
+    const navItemRefs = useRef<(HTMLDivElement | null)[]>([]) // Desktop nav items
+    const mobileMenuBtnRef = useRef<HTMLDivElement>(null) // Mobile menu button
 
     // Keep ref updated
     useEffect(() => {
@@ -71,10 +77,48 @@ const Header = () => {
             });
         });
 
+        // Header entering animation
+        const mm = gsap.matchMedia();
+        const entranceDelay = 1.8; // Integrate with Intro animation
+
+        // On desktop 
+        mm.add("(min-width: 768px)", () => {
+            // Logo and nav items animate in
+            gsap.fromTo(
+                [brandRef.current, ...navItemRefs.current].filter(Boolean),
+                { y: -20, opacity: 0 },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.8,
+                    stagger: 0.1,
+                    ease: "power3.out",
+                    delay: entranceDelay
+                }
+            );
+        });
+
+        // On mobile
+        mm.add("(max-width: 767px)", () => {
+            // Only logo and menu button will animate in
+            gsap.fromTo(
+                [brandRef.current, mobileMenuBtnRef.current].filter(Boolean),
+                { y: -20, opacity: 0 },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.8,
+                    stagger: 0.15, // longer stagger for mobile
+                    ease: "power3.out",
+                    delay: entranceDelay
+                }
+            );
+        });
+
         return () => {
             // Cleanup custom scroll triggers for header
         };
-    }, { dependencies: [] });
+    }, { dependencies: [], scope: headerRef });
 
     // Initialize desktop header selection underline
     useEffect(() => {
@@ -283,10 +327,10 @@ const Header = () => {
 
     return (
         <>
-            <div className="fixed top-0 w-full h-auto flex flex-row items-center justify-center mt-6 z-100 font-inter font-medium">
+            <div ref={headerRef} className="fixed top-0 w-full h-auto flex flex-row items-center justify-center mt-6 z-100 font-inter font-medium">
                 <div className='w-full max-w-vw-safe flex flex-row items-center justify-between'>
                     {/* Logo and text */}
-                    <div className="w-auto h-auto ml-6 md:ml-12 flex flex-row items-center">
+                    <div ref={brandRef} className="w-auto h-auto ml-6 md:ml-12 flex flex-row items-center">
                         <div className='mr-2 w-[36px] h-[18px] md:w-[42px] md:h-[21px]'>
                             {/* We no longer rely on state for color, letting GSAP manage the stroke dynamically */}
                             <Logo ref={logoRef} color="black" />
@@ -301,6 +345,7 @@ const Header = () => {
                         <div className='hidden md:flex md:gap-8 md:tracking-widest md:text-lg'>
                             {menuItems.map((item, index) => (
                                 <div
+                                    ref={(el) => { navItemRefs.current[index] = el }}
                                     key={item}
                                     className='relative cursor-pointer text-black'
                                     onClick={() => handleItemClick(index)}
@@ -316,6 +361,7 @@ const Header = () => {
                         </div>
                         {/* Mobile Menu Button */}
                         <div
+                            ref={mobileMenuBtnRef}
                             className='md:hidden relative z-50 w-[30px] h-[20px]'
                             onClick={toggleMenu}
                         >
@@ -413,7 +459,7 @@ const Header = () => {
                     </div>
                     <div className='h-1/10'></div>
                     <div className="flex flex-col justify-around w-full h-3/10 px-8">
-                        <div className="text-[#CDCDCD] w-full h-auto wrap-break-word flex flex-row justify-start">
+                        <div className="text-[#CDCDCD] w-full h-auto wrap-break-word flex flex-row justify-start tracking-wider">
                             <div
                                 ref={(el) => { secondaryTextRefs.current[1] = el }}
                                 className="w-1/2"
