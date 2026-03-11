@@ -127,7 +127,7 @@ const Description = () => {
                 backgroundColor: "#E67B4E",
                 scale: 1,
                 opacity: 1,
-                ease: "elastic.out(1.5, 0.4)",
+                ease: "elastic.out(1.8, 0.4)",
             }, "<70%");
         }
 
@@ -153,9 +153,12 @@ const Description = () => {
                         Bachelor of Computer Science, The University of Queensland (2019-2024)<span className="bullet-dot inline-flex items-center justify-center align-middle w-[0.3em] h-[0.3em] rounded-full mx-2 relative -top-[0.05em]" /><br />
                         Translated CS fundamentals into production-ready applications through real-world projects and industry works.
                     </p>
-                    <div className="flex flex-row items-baseline gap-3 text-xl md:text-3xl lg:text-[1.5rem] xl:text-[2rem] w-full md:w-5/6 lg:w-4/5 xl:w-2/3 text-white/70 hover:text-white/90 active:text-white transition-colors cursor-pointer group">
-                        GRADUATION CERTIFICATE
-                        <ArrowUpRight strokeWidth={1.5} className="w-[1em] h-[1em] group-hover:translate-x-1 group-hover:-translate-y-1 active:scale-95 transition-all duration-300" />
+                    <div className="mt-6 md:mt-12 w-full md:w-5/6 lg:w-4/5 xl:w-2/3">
+                        <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="border-3 border-white/70 px-4 py-3 md:px-6 xl:px-8 xl:py-4 inline-flex flex-row items-center gap-4 text-xl md:text-3xl lg:text-[1.5rem] xl:text-[2rem] text-white/70 hover:bg-white hover:text-black hover:border-white transition-all duration-300 cursor-pointer group">
+                            <span className="font-medium tracking-wide font-inria-sans">DOWNLOAD RESUME</span>
+                            <ArrowUpRight strokeWidth={2.4} strokeLinecap='butt'
+                                strokeLinejoin='miter' className="w-[1em] h-[1em] translate-y-[0.05em] group-hover:translate-x-[0.1em] group-hover:-translate-y-[0.1em] transition-transform duration-300" />
+                        </a>
                     </div>
                 </div>
             </div>
