@@ -25,14 +25,14 @@ const Intro = () => {
     useGSAP(() => {
         const tl = gsap.timeline();
 
-        // 1. Particle Sphere (Starts at 0s)
+        // Particle Sphere (Starts at 0s)
         tl.to(particleSphereContainerRef.current, {
             opacity: 1, // Full opacity for the black particles
             duration: 4,
             ease: "power2.inOut"
         }, 0);
 
-        // 3. The Monolith Title using SplitText
+        // The Monolith Title using SplitText
         const split = new SplitText(titleRef.current, { type: 'chars' });
 
         // Pre-computation: Force GPU Hardware Acceleration
