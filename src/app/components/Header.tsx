@@ -2,7 +2,10 @@
 import { useRef, useEffect, useState } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
+import ScrollTrigger from 'gsap/ScrollTrigger'
 import Logo from './ui/Logo'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const menuItems = ['ABOUT', 'SKILLS', 'WORKS', 'CONTACT']
 
@@ -24,13 +27,56 @@ const Header = () => {
     const menuItemRefs = useRef<(HTMLDivElement | null)[]>([])
     // Ref for mobile menu secondary text & links
     const secondaryTextRefs = useRef<(HTMLDivElement | HTMLParagraphElement | HTMLAnchorElement | null)[]>([])
+
+    // Ref for desktop components to animate colors
+    const mgTextRef = useRef<HTMLParagraphElement>(null)
+    const menuItemTextRefs = useRef<(HTMLParagraphElement | null)[]>([])
+    const isMenuOpenRef = useRef(isMenuOpen)
+    const currentHeaderColor = useRef<string>("black")
+
+    // Keep ref updated
+    useEffect(() => {
+        isMenuOpenRef.current = isMenuOpen
+    }, [isMenuOpen])
     // Ref for Logo color interpolation
     const logoRef = useRef<SVGPathElement>(null)
 
     const { contextSafe } = useGSAP()
 
+    const updateHeaderColor = contextSafe((color: string) => {
+        currentHeaderColor.current = color;
+        if (!isMenuOpenRef.current) {
+            const strokeTargets = [logoRef.current, hamburgerTopRef.current, hamburgerBottomRef.current].filter(Boolean);
+            const colorTargets = [mgTextRef.current, ...menuItemTextRefs.current].filter(Boolean);
+            const bgTargets = [...underlineRefs.current, rippleRef.current].filter(Boolean);
+
+            gsap.to(strokeTargets, { stroke: color, duration: 0.4, ease: "power2.inOut" });
+            gsap.to(colorTargets, { color: color, duration: 0.4, ease: "power2.inOut" });
+            gsap.to(bgTargets, { backgroundColor: color, duration: 0.4, ease: "power2.inOut" });
+        }
+    });
+
+    useGSAP(() => {
+        const darkSections = document.querySelectorAll('.theme-dark');
+
+        darkSections.forEach(section => {
+            ScrollTrigger.create({
+                trigger: section,
+                start: "top 50px",
+                end: "bottom 50px",
+                onEnter: () => updateHeaderColor("white"),
+                onLeave: () => updateHeaderColor("black"),
+                onEnterBack: () => updateHeaderColor("white"),
+                onLeaveBack: () => updateHeaderColor("black"),
+            });
+        });
+
+        return () => {
+            // Cleanup custom scroll triggers for header
+        };
+    }, { dependencies: [] });
+
     // Initialize desktop header selection underline
-    // ...
     useEffect(() => {
         underlineRefs.current.forEach((ref, index) => {
             if (ref) {
@@ -93,8 +139,7 @@ const Header = () => {
         const tl = gsap.timeline()
 
         if (!isMenuOpen) {
-            // OPENING MENU
-
+            // Opening Menu
             // 1. Overlay (Fade in) & Logo Color Interpolation
             if (overlayRef.current) {
                 tl.fromTo(overlayRef.current,
@@ -103,14 +148,14 @@ const Header = () => {
                     0 // Starts immediately
                 )
             }
-            if (logoRef.current) {
-                // Organic color bleed into white accompanying the dark overlay
-                tl.to(logoRef.current, {
-                    stroke: "white",
-                    duration: 0.5,
-                    ease: "power2.inOut"
-                }, 0)
-            }
+            // Organic color bleed into white accompanying the dark overlay
+            const strokeTargets = [logoRef.current, hamburgerTopRef.current, hamburgerBottomRef.current].filter(Boolean);
+            const colorTargets = [mgTextRef.current, ...menuItemTextRefs.current].filter(Boolean);
+            const bgTargets = [...underlineRefs.current, rippleRef.current].filter(Boolean);
+
+            tl.to(strokeTargets, { stroke: "white", duration: 0.5, ease: "power2.inOut" }, 0)
+            tl.to(colorTargets, { color: "white", duration: 0.5, ease: "power2.inOut" }, 0)
+            tl.to(bgTargets, { backgroundColor: "white", duration: 0.5, ease: "power2.inOut" }, 0)
 
             // 2. Ripple effect & Hamburger exit (Organic Feel)
             if (rippleRef.current) {
@@ -164,8 +209,7 @@ const Header = () => {
 
             setIsMenuOpen(true)
         } else {
-            // CLOSING MENU
-
+            // Closing Menu
             // 1. All text elements exit (Nav + Secondary Text together)
             const navElements = menuItemRefs.current
                 .map(item => item?.querySelector('.menu-text'))
@@ -216,14 +260,16 @@ const Header = () => {
                     }
                 }, 0.2) // Overlap overlay fading out with text exit
             }
-            if (logoRef.current) {
-                // Color bleed back to black
-                tl.to(logoRef.current, {
-                    stroke: "black",
-                    duration: 0.5,
-                    ease: "power2.inOut"
-                }, 0.1)
-            }
+
+            // Color bleed back to theme state
+            const targetColor = currentHeaderColor.current;
+            const strokeTargets = [logoRef.current, hamburgerTopRef.current, hamburgerBottomRef.current].filter(Boolean);
+            const colorTargets = [mgTextRef.current, ...menuItemTextRefs.current].filter(Boolean);
+            const bgTargets = [...underlineRefs.current, rippleRef.current].filter(Boolean);
+
+            tl.to(strokeTargets, { stroke: targetColor, duration: 0.5, ease: "power2.inOut" }, 0.1)
+            tl.to(colorTargets, { color: targetColor, duration: 0.5, ease: "power2.inOut" }, 0.1)
+            tl.to(bgTargets, { backgroundColor: targetColor, duration: 0.5, ease: "power2.inOut" }, 0.1)
 
             setIsMenuOpen(false)
         }
@@ -245,20 +291,21 @@ const Header = () => {
                             {/* We no longer rely on state for color, letting GSAP manage the stroke dynamically */}
                             <Logo ref={logoRef} color="black" />
                         </div>
-                        <p className="hidden md:block font-montserrat font-medium text-3xl">
+                        <p ref={mgTextRef} className="hidden md:block font-montserrat font-medium text-3xl text-black">
                             MG
                         </p>
                     </div>
-                    { /* Desktop Menu Nav Items */}
+
                     <div className='w-auto h-auto mr-6 md:mr-12'>
-                        <div className='hidden md:flex md:text-base md:gap-8'>
+                        { /* Desktop Menu Nav Items */}
+                        <div className='hidden md:flex md:gap-8 md:tracking-widest md:text-lg'>
                             {menuItems.map((item, index) => (
                                 <div
                                     key={item}
-                                    className='relative cursor-pointer'
+                                    className='relative cursor-pointer text-black'
                                     onClick={() => handleItemClick(index)}
                                 >
-                                    <p>{item}</p>
+                                    <p ref={(el) => { menuItemTextRefs.current[index] = el }}>{item}</p>
                                     <span
                                         ref={(el) => { underlineRefs.current[index] = el }}
                                         className='absolute bottom-0 left-0 w-full h-[2px] bg-black'
