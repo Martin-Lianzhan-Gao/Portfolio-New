@@ -448,7 +448,7 @@ const Header = () => {
                                 onClick={() => handleMobileMenuClick(index)}
                             >
                                 <div
-                                    className={`menu-text font-regular text-2xl font-inria-sans tracking-widest transition-colors duration-300 ${selectedIndex === index ? 'text-white' : 'text-white/50'
+                                    className={`menu-text font-light text-2xl font-inter tracking-widest transition-colors duration-300 ${selectedIndex === index ? 'text-white' : 'text-white/50'
                                         }`}
                                     style={{ transform: 'translateY(30px)', opacity: 0, clipPath: 'none' }}
                                 >
