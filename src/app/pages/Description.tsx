@@ -89,7 +89,7 @@ const Description = () => {
 
         // Initialize Icons
         if (heartSpan) {
-            gsap.set(heartSpan, { color: "rgba(255,255,255,0.15)", scale: 0.5, opacity: 0 });
+            gsap.set(heartSpan, { color: "rgba(255,255,255,0.15)", scale: 0.5, opacity: 0, rotation: -15 });
             gsap.set(heartSpan.querySelector('svg'), { width: '1em', height: '1em', display: 'inline' });
         }
         if (starSpan) {
@@ -106,9 +106,10 @@ const Description = () => {
         if (heartSpan) {
             scrubTl.to(heartSpan, {
                 color: "#ff3366",
-                scale: 1.35,
+                scale: 1.2,
                 opacity: 1,
-                ease: "elastic.out(1.2, 0.3)",
+                rotation: 0,
+                ease: "back.out(3.5)",
             }, "<30%");
         }
         // Star animation
