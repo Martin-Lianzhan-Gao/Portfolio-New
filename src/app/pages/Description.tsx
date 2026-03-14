@@ -106,9 +106,9 @@ const Description = () => {
         if (heartSpan) {
             scrubTl.to(heartSpan, {
                 color: "#ff3366",
-                scale: 1.1,
+                scale: 1.35,
                 opacity: 1,
-                ease: "back.out(2)",
+                ease: "elastic.out(1.2, 0.3)",
             }, "<30%");
         }
         // Star animation
