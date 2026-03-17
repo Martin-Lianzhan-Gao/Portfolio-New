@@ -1,8 +1,8 @@
 'use client'
 
-import { useRef, useMemo } from 'react'
+import { useRef, useMemo, useEffect } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls, MeshTransmissionMaterial } from '@react-three/drei'
+import { MeshTransmissionMaterial } from '@react-three/drei'
 import * as THREE from 'three'
 
 // Types
@@ -90,14 +90,62 @@ const ClusterGroup = () => {
     const groupRef = useRef<THREE.Group>(null)
     const floatPhase = useMemo(() => Math.random() * Math.PI * 2, [])
 
-    useFrame((state) => {
+    // Physics animation state management
+    const targetRotation = useRef({ x: 0, y: 0 })
+    const currentRotation = useRef({ x: 0, y: 0 })
+
+    // Extremely lightweight scroll listener, only calculates target value, does not directly operate DOM
+    useEffect(() => {
+        // Initialise rotation
+        const initY = window.scrollY * 0.0015
+        const initX = window.scrollY * 0.0007
+        // Set initial rotation value for both target and current rotation
+        targetRotation.current.y = initY
+        targetRotation.current.x = initX
+        currentRotation.current.y = initY
+        currentRotation.current.x = initX
+
+        const handleScroll = () => {
+            // Ensure window.scrollY increases (scrolling down the page) when the angle is a positive accumulation,
+            // so that it can be completely superimposed on the clockwise direction,
+            // and will not fight back and forth, causing a reverse direction.
+            targetRotation.current.y = window.scrollY * 0.0015
+            targetRotation.current.x = window.scrollY * 0.0007
+        }
+
+        // Initialize directly to handle react strict mode running effect twice correctly
+        handleScroll()
+
+        window.addEventListener('scroll', handleScroll, { passive: true })
+        return () => window.removeEventListener('scroll', handleScroll)
+    }, [])
+
+    // Physics interpolation calculation in the rendering loop
+    useFrame((state, delta) => {
         if (!groupRef.current) return
+
         const t = state.clock.getElapsedTime()
-        // groupRef.current.rotation.y = t * 0.08
-        // groupRef.current.rotation.x = Math.sin(t * 0.04) * 0.08
+
+        // Damping algorithm (3.5 is damping hardness, smaller is smoother, larger is tighter)
+        currentRotation.current.y = THREE.MathUtils.lerp(
+            currentRotation.current.y,
+            targetRotation.current.y,
+            delta * 3.5
+        )
+        currentRotation.current.x = THREE.MathUtils.lerp(
+            currentRotation.current.x,
+            targetRotation.current.x,
+            delta * 3.5
+        )
+
+        // Self rotation on y-axis
+        groupRef.current.rotation.y = currentRotation.current.y + t * 0.2
+        // Self rotation on x-axis
+        groupRef.current.rotation.x = currentRotation.current.x + Math.sin(t * 0.4) * 0.05
+
+        // Float up and down on y-axis
         groupRef.current.position.y = Math.sin(t * 0.4 + floatPhase) * 0.06
     })
-
     return (
         <group ref={groupRef} scale={0.55}>
             {BALLOON_DEFS.map((def, i) => (
@@ -111,7 +159,7 @@ const ClusterGroup = () => {
 const BalloonCluster = () => (
     <div className="w-full h-full">
         <Canvas
-            camera={{ position: [0, 0, 4.2], fov: 38 }}
+            camera={{ position: [0, 0, 5.5], fov: 38 }}
             dpr={[1, 2]}
             shadows
             gl={{
@@ -121,16 +169,6 @@ const BalloonCluster = () => (
                 toneMappingExposure: 1.2,
             }}
         >
-            {/* Core Interaction */}
-            <OrbitControls
-                enableZoom={false}       // Disable zoom to prevent layout distortion
-                enablePan={false}        // Disable pan to prevent balloons from flying out of the viewport
-                enableDamping={true}     // Enable damping for smooth, inertial movement
-                dampingFactor={0.05}     // Set damping factor for smooth, weighted movement
-            // autoRotate={true}        // Optional: Enable extremely slow global rotation
-            // autoRotateSpeed={0.5}    // Set rotation speed
-            />
-
             <ambientLight intensity={0.40} />
 
             {/* Key Light*/}
