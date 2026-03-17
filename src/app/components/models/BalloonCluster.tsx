@@ -2,10 +2,11 @@
 
 import { useRef, useMemo } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
+import { OrbitControls } from '@react-three/drei'
 import * as THREE from 'three'
 
-// --- Types ---
-type BalloonColor = 'silver' | 'gunmetal' | 'indigo'
+// Types
+type BalloonColor = 'silver' | 'gunmetal' | 'bubble'
 
 type BalloonDef = {
     position: [number, number, number]
@@ -14,61 +15,74 @@ type BalloonDef = {
 }
 
 
-// --- Balloon Layout (磁力聚合与互斥间距版) ---
-// 模拟物理场：所有球被原点(0,0,0)吸引，但由于排斥场存在，产生 0.05~0.1 的物理缝隙
+// Balloon Layout
 const BALLOON_DEFS: BalloonDef[] = [
-    // --- 核心层 (Core Anchor) ---
-    // 放在绝对中心，作为万有引力的锚点，填补内部空洞
+    // Core Anchor: center of the cluster
     { position: [0.00, 0.00, 0.00], radius: 0.38, color: 'gunmetal' },
 
-    // --- 内壳层：大球体 (Inner Shell: Large Spheres) ---
-    // 围绕中心形成一个松散的球体阵列，坐标向外推开，确保相互之间留有排斥间隙
-    { position: [0.55, 0.50, 0.52], radius: 0.46, color: 'silver' }, // 右上前
-    { position: [-0.50, 0.52, 0.55], radius: 0.45, color: 'gunmetal' }, // 左上前
-    { position: [0.52, -0.55, 0.50], radius: 0.47, color: 'gunmetal' }, // 右下前
-    { position: [-0.55, -0.50, 0.52], radius: 0.44, color: 'silver' }, // 左下前
+    // Inner Shell: Large Spheres attached to the core anchor
+    { position: [0.55, 0.50, 0.52], radius: 0.46, color: 'silver' },
+    { position: [-0.50, 0.52, 0.55], radius: 0.45, color: 'gunmetal' },
+    { position: [0.52, -0.55, 0.50], radius: 0.47, color: 'gunmetal' },
+    { position: [-0.55, -0.50, 0.52], radius: 0.44, color: 'silver' },
 
-    { position: [0.50, 0.55, -0.55], radius: 0.45, color: 'gunmetal' }, // 右上后 (与前排反色)
-    { position: [-0.55, 0.50, -0.52], radius: 0.46, color: 'silver' }, // 左上后
-    { position: [0.55, -0.52, -0.50], radius: 0.44, color: 'silver' }, // 右下后
-    { position: [-0.52, -0.55, -0.55], radius: 0.47, color: 'gunmetal' }, // 左下后
+    { position: [0.50, 0.55, -0.55], radius: 0.45, color: 'gunmetal' },
+    { position: [-0.55, 0.50, -0.52], radius: 0.46, color: 'silver' },
+    { position: [0.55, -0.52, -0.50], radius: 0.44, color: 'silver' },
+    { position: [-0.52, -0.55, -0.55], radius: 0.47, color: 'gunmetal' },
 
-    // --- 外壳层：小型卫星球体 (Outer Shell: Small Satellites) ---
-    // 从各个方向被中心吸引，但被大球挡在外围，镶嵌在三维的凹槽缝隙中
-    // X轴外围阻击
-    { position: [1.05, 0.10, -0.05], radius: 0.18, color: 'silver' },
+    // Outer Shell: Small Satellites
+    { position: [1.05, 0.10, -0.05], radius: 0.18, color: 'bubble' },
     { position: [-1.02, -0.05, 0.10], radius: 0.16, color: 'gunmetal' },
-    // Y轴外围阻击
     { position: [-0.05, 1.08, 0.00], radius: 0.20, color: 'silver' },
     { position: [0.10, -1.05, -0.05], radius: 0.15, color: 'gunmetal' },
-    // Z轴外围阻击
-    { position: [0.00, -0.10, 1.10], radius: 0.19, color: 'gunmetal' },
+    { position: [0.00, -0.10, 1.10], radius: 0.19, color: 'bubble' },
     { position: [0.05, 0.05, -1.08], radius: 0.17, color: 'silver' },
 
-    // --- 随机点缀的微型球 (Micro Fillers) ---
-    // 增加画面细节，模仿参考图中那些极小的点缀
-    { position: [0.70, 0.80, -0.20], radius: 0.12, color: 'gunmetal' },
-    { position: [-0.75, -0.20, 0.75], radius: 0.14, color: 'silver' },
-    { position: [0.20, -0.85, 0.70], radius: 0.13, color: 'silver' },
+    // Micro Fillers for decoration
+    { position: [0.70, 0.80, 0.00], radius: 0.12, color: 'gunmetal' },
+    { position: [-0.75, 0.00, 0.95], radius: 0.14, color: 'silver' },
+    { position: [0.20, -0.85, 1.00], radius: 0.13, color: 'silver' },
 ]
 
 const COLORS: Record<BalloonColor, string> = {
     silver: '#CBCBCB',
     gunmetal: '#323232',
-    indigo: '#2D1B6E',
+    bubble: '#FFFFFF',
 }
 
-// --- Single Balloon Mesh ---
-const BalloonMesh = ({ def }: { def: BalloonDef }) => (
-    <mesh position={def.position} castShadow receiveShadow>
-        <sphereGeometry args={[def.radius, 64, 64]} />
-        <meshStandardMaterial
-            color={COLORS[def.color]}
-            roughness={0.88} // 极佳的哑光质感参数
-            metalness={0.0}
-        />
-    </mesh>
-)
+// Single Balloon Mesh
+const BalloonMesh = ({ def }: { def: BalloonDef }) => {
+    const isBubble = def.color === 'bubble'
+
+    return (
+        // 气泡不应该投射死黑的阴影，所以 castShadow 取决于它是不是气泡
+        <mesh position={def.position} castShadow={!isBubble} receiveShadow>
+            <sphereGeometry args={[def.radius, 64, 64]} />
+
+            {isBubble ? (
+                // Bubble Material
+                <meshPhysicalMaterial
+                    color="#ffffff"          // Basic color of the transmission light
+                    transmission={1}         // Fully transmission like the bubble
+                    transparent={true}
+                    roughness={0.05}         // Smooth surface
+                    ior={1.33}                // As the refractive index of soap film
+                    thickness={0.1}          // Simulate the thin film thickness, affecting the refraction calculation
+                    envMapIntensity={3.0}    // Reflection strength 
+                    clearcoat={1}            // Enhance the reflection
+                />
+            ) : (
+                // Material for other spheres
+                <meshStandardMaterial
+                    color={COLORS[def.color as keyof typeof COLORS]}
+                    roughness={0.88}
+                    metalness={0.0}
+                />
+            )}
+        </mesh>
+    )
+}
 
 // --- Animated Cluster Group ---
 const ClusterGroup = () => {
@@ -78,8 +92,8 @@ const ClusterGroup = () => {
     useFrame((state) => {
         if (!groupRef.current) return
         const t = state.clock.getElapsedTime()
-        groupRef.current.rotation.y = t * 0.08
-        groupRef.current.rotation.x = Math.sin(t * 0.04) * 0.08
+        // groupRef.current.rotation.y = t * 0.08
+        // groupRef.current.rotation.x = Math.sin(t * 0.04) * 0.08
         groupRef.current.position.y = Math.sin(t * 0.4 + floatPhase) * 0.06
     })
 
@@ -106,6 +120,15 @@ const BalloonCluster = () => (
                 toneMappingExposure: 1.2,
             }}
         >
+            {/* --- 核心交互注入 --- */}
+            <OrbitControls
+                enableZoom={false}       // 纪律：禁止滚轮缩放，防止破坏布局比例
+                enablePan={false}        // 纪律：禁止右键平移，防止气球飞出视口
+                enableDamping={true}     // 开启物理阻尼（惯性滑行）
+                dampingFactor={0.05}     // 阻尼系数，0.05 是一种非常顺滑、有重量感的数值
+            // autoRotate={true}        // 可选：开启极其缓慢的全局自转
+            // autoRotateSpeed={0.5}    // 自转速度设定
+            />
             <ambientLight intensity={0.40} />
 
             {/* Key Light — 彻底修复阴影锯齿的核心战场 */}
