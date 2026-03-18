@@ -6,17 +6,17 @@ import { MeshTransmissionMaterial } from '@react-three/drei'
 import * as THREE from 'three'
 
 // Types
-type BalloonColor = 'silver' | 'gunmetal' | 'crystal'
+type SphereColor = 'silver' | 'gunmetal' | 'crystal'
 
-type BalloonDef = {
+type SphereDef = {
     position: [number, number, number]
     radius: number
-    color: BalloonColor
+    color: SphereColor
 }
 
 
 // Balloon Layout
-const BALLOON_DEFS: BalloonDef[] = [
+const BALLOON_DEFS: SphereDef[] = [
     // Core Anchor: center of the cluster
     { position: [0.00, 0.00, 0.00], radius: 0.38, color: 'gunmetal' },
 
@@ -44,23 +44,23 @@ const BALLOON_DEFS: BalloonDef[] = [
     { position: [0.20, -0.85, 1.00], radius: 0.13, color: 'crystal' },
 ]
 
-const COLORS: Record<BalloonColor, string> = {
+const COLORS: Record<SphereColor, string> = {
     silver: '#CBCBCB',
     gunmetal: '#323232',
     crystal: '#FFFFFF',
 }
 
 // Single Balloon Mesh
-const BalloonMesh = ({ def }: { def: BalloonDef }) => {
-    const isBubble = def.color === 'crystal'
+const SphereMesh = ({ def }: { def: SphereDef }) => {
+    const isCrystal = def.color === 'crystal'
 
     return (
-        // CastShadow is false for bubble to prevent self-shadowing
-        <mesh position={def.position} castShadow={!isBubble} receiveShadow>
+        // CastShadow is false for crystal to prevent self-shadowing
+        <mesh position={def.position} castShadow={!isCrystal} receiveShadow>
             <sphereGeometry args={[def.radius, 64, 64]} />
 
-            {isBubble ? (
-                // Bubble Material
+            {isCrystal ? (
+                // Crystal Material
                 <MeshTransmissionMaterial
                     color="#ffffff"
                     transmission={1}         // 100% transmission allowed
@@ -87,6 +87,7 @@ const BalloonMesh = ({ def }: { def: BalloonDef }) => {
 
 // Animated Cluster Group 
 const ClusterGroup = () => {
+    // Reference the sphere cluster group
     const groupRef = useRef<THREE.Group>(null)
     const floatPhase = useMemo(() => Math.random() * Math.PI * 2, [])
 
@@ -94,21 +95,19 @@ const ClusterGroup = () => {
     const targetRotation = useRef({ x: 0, y: 0 })
     const currentRotation = useRef({ x: 0, y: 0 })
 
-    // Extremely lightweight scroll listener, only calculates target value, does not directly operate DOM
+    // Extremely lightweight scroll listener
     useEffect(() => {
-        // Initialise rotation
+        // Initialise rotation angle based on scroll position
         const initY = window.scrollY * 0.0015
         const initX = window.scrollY * 0.0007
-        // Set initial rotation value for both target and current rotation
+        // Set initial rotation angle to both target and current rotation for the first render
         targetRotation.current.y = initY
         targetRotation.current.x = initX
         currentRotation.current.y = initY
         currentRotation.current.x = initX
 
         const handleScroll = () => {
-            // Ensure window.scrollY increases (scrolling down the page) when the angle is a positive accumulation,
-            // so that it can be completely superimposed on the clockwise direction,
-            // and will not fight back and forth, causing a reverse direction.
+            // Update target rotation angle based on scroll position when scrolling
             targetRotation.current.y = window.scrollY * 0.0015
             targetRotation.current.x = window.scrollY * 0.0007
         }
@@ -126,7 +125,7 @@ const ClusterGroup = () => {
 
         const t = state.clock.getElapsedTime()
 
-        // Damping algorithm (3.5 is damping hardness, smaller is smoother, larger is tighter)
+        // Define the rotation behaviour by interpolating the current rotation to the target rotation with appropriate damping value
         currentRotation.current.y = THREE.MathUtils.lerp(
             currentRotation.current.y,
             targetRotation.current.y,
@@ -149,14 +148,14 @@ const ClusterGroup = () => {
     return (
         <group ref={groupRef} scale={0.55}>
             {BALLOON_DEFS.map((def, i) => (
-                <BalloonMesh key={i} def={def} />
+                <SphereMesh key={i} def={def} />
             ))}
         </group>
     )
 }
 
 // Canvas Root
-const BalloonCluster = () => (
+const SphereCluster = () => (
     <div className="w-full h-full">
         <Canvas
             camera={{ position: [0, 0, 5.5], fov: 38 }}
@@ -197,4 +196,4 @@ const BalloonCluster = () => (
     </div>
 )
 
-export default BalloonCluster
+export default SphereCluster;
