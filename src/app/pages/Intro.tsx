@@ -6,7 +6,7 @@ import { useGSAP } from "@gsap/react";
 import SplitText from "gsap/SplitText";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import ScrollDown from "../components/ui/ScrollDown";
-import ParticleSphere from "../components/ui/ParticleSphere";
+import ParticleSphere from "../components/models/ParticleSphere";
 
 gsap.registerPlugin(SplitText, ScrollTrigger);
 
