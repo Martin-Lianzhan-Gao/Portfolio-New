@@ -138,20 +138,20 @@ const ClusterGroup = ({ progressRef }: { progressRef: React.RefObject<number> })
         const currentScale = startScale + (maxScale - startScale) * progress
         groupRef.current.scale.setScalar(currentScale)
 
-        // Define the rotation behaviour by interpolating the current rotation to the target rotation with appropriate damping value
+        // Define the scroll rotation behaviour by interpolating the current rotation to the target rotation with appropriate damping value
         currentRotation.current.y = THREE.MathUtils.lerp(
             currentRotation.current.y,
             targetRotation.current.y,
-            delta * 3.5
+            delta * 2.5
         )
         currentRotation.current.x = THREE.MathUtils.lerp(
             currentRotation.current.x,
             targetRotation.current.x,
-            delta * 3.5
+            delta * 2.5
         )
 
         // Self rotation on y-axis
-        groupRef.current.rotation.y = currentRotation.current.y + t * 0.2
+        groupRef.current.rotation.y = currentRotation.current.y + t * 0.25
         // Self rotation on x-axis
         groupRef.current.rotation.x = currentRotation.current.x + Math.sin(t * 0.4) * 0.05
 
