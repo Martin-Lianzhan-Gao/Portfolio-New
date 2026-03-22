@@ -29,6 +29,7 @@ const Skills = () => {
             isLandscape: '(orientation: landscape)'
         }, (context) => {
             const { isLandscape } = context.conditions as { isLandscape: boolean }
+            const isTouch = window.matchMedia("(hover: none)").matches;
             // Initialise the window size and position based on the orientation
             gsap.set(windowRef.current, {
                 width: isLandscape ? '30vw' : '60vw',
@@ -45,24 +46,18 @@ const Skills = () => {
                     trigger: containerRef.current,
                     start: "top bottom",
                     end: "bottom bottom",
-                    scrub: window.matchMedia("(hover: none)").matches ? 1 : 1.5, // smooth transition
+                    scrub: isTouch ? 1 : 1.5 // smooth transition
                 }
             })
 
             // Step 1: Emerge window
             tl.to(windowRef.current, {
-                duration: isLandscape ? 1 : 0,
+                width: "100%",
+                ease: "power1.inOut",
+                onUpdate: function () {
+                    progressRef.current = this.progress();
+                }
             })
-
-                // Expand to full screen
-                .to(windowRef.current, {
-                    width: "100%",
-                    duration: 2.5,
-                    ease: "power1.inOut",
-                    onUpdate: function () {
-                        progressRef.current = this.progress();
-                    }
-                })
         })
 
         return () => mm.revert()
@@ -70,7 +65,7 @@ const Skills = () => {
 
     return (
         <div ref={containerRef} className="relative w-full h-[300vh] bg-[#F5F5F7]" id="skills-section">
-            <div className="sticky top-0 w-full h-[100dvh] overflow-hidden flex bg-[#F5F5F7] rounded-t-[2rem]">
+            <div className="sticky top-0 w-full h-[100dvh] overflow-hidden bg-[#F5F5F7] rounded-t-[2rem] flex flex-col items-center">
                 <div className='w-full max-w-vw-safe mt-20'>
                     <h1 className='ml-6 mr-6 md:mr-12 md:ml-12 font-cormorant-garamond text-[min(15.5vw,18vh)] uppercase'>My Skills</h1>
                 </div>
