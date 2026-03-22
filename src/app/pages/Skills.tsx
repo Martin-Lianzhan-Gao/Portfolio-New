@@ -17,7 +17,7 @@ const Skills = () => {
     const containerRef = useRef<HTMLDivElement>(null)
     const windowRef = useRef<HTMLDivElement>(null)
 
-    const [scrollProgress, setScrollProgress] = useState(0)
+    const progressRef = useRef(0)
 
     useGSAP(() => {
         if (!containerRef.current || !windowRef.current) return
@@ -29,75 +29,59 @@ const Skills = () => {
             isLandscape: '(orientation: landscape)'
         }, (context) => {
             const { isLandscape } = context.conditions as { isLandscape: boolean }
-
+            // Initialise the window size and position based on the orientation
             gsap.set(windowRef.current, {
-                width: isLandscape ? '25vw' : '40vw',
-                aspectRatio: '1/1',
-                borderRadius: '9999px', // capsule
-                opacity: 0,
-                scale: 0.5,
-                left: isLandscape ? '-20vw' : '-30vw',
-                xPercent: isLandscape ? 0 : -50,
-                top: '40%',
-                yPercent: -50,
+                width: isLandscape ? '10vw' : '60vw',
+                height: isLandscape ? '30vw' : '100vw',
+                borderRadius: isLandscape ? '9999px' : '100px', // capsule
+                left: '50%',
+                xPercent: -50,
+                top: '70%',
+                yPercent: -50
             })
-
+            // Set up timeline for the window animation
             const tl = gsap.timeline({
                 scrollTrigger: {
                     trigger: containerRef.current,
                     start: "top bottom",
                     end: "bottom bottom",
                     scrub: 1.5, // smooth transition
-                    onUpdate: (self) => setScrollProgress(self.progress)
+                    onUpdate: (self) => progressRef.current = self.progress
                 }
             })
 
-            // Emerge window
+            // Step 1: Emerge window
             tl.to(windowRef.current, {
-                opacity: 1,
-                scale: 1,
-                left: isLandscape ? '3rem' : '50%',
-                xPercent: isLandscape ? 0 : -50,
-
-                duration: 1.5,
+                width: isLandscape ? '30vw' : '100vw',
+                duration: 2,
                 ease: "power2.out"
             })
-
-                // Pause on hold
-                .to({}, { duration: 2.5 })
 
                 // Expand to full screen
                 .to(windowRef.current, {
                     width: "100%",
-                    height: "100dvh",
-                    aspectRatio: "auto",
-                    borderRadius: "0px",
-                    left: "50%",
-                    xPercent: -50,
-                    top: "50%",
-                    yPercent: -50,
                     duration: 2.5,
                     ease: "power1.inOut"
                 })
+                // Pause on hold
+                .to({}, { duration: 0.5 })
         })
 
         return () => mm.revert()
     }, { scope: containerRef })
 
     return (
-        <div ref={containerRef} className="relative w-full h-[300vh] bg-[#0d0d0d]" id="skills-section">
-            {/* 
-              Sticky container traps the view while scrolling the outer 200vh container.
-              The animation finishes at 50% of the scroll (when top hits top), 
-              leaving 100vh for the user to interact with the expanded full screen. 
-            */}
-            <div className="sticky top-0 w-full h-[100dvh] overflow-hidden flex items-center bg-[#0d0d0d]">
+        <div ref={containerRef} className="relative w-full h-[300vh] bg-[#F5F5F7]" id="skills-section">
+            <div className="sticky top-0 w-full h-[100dvh] overflow-hidden flex bg-[#F5F5F7] rounded-t-[2rem]">
+                <div className='w-full max-w-vw-safe mt-20'>
+                    <h1 className='ml-6 mr-6 md:mr-12 md:ml-12 font-cormorant-garamond text-[min(15.5vw,18vh)] uppercase'>My Skills</h1>
+                </div>
                 <div
                     ref={windowRef}
-                    className="absolute border-black z-10 overflow-hidden flex items-center justify-center will-change-transform bg-[#111111]"
+                    className="absolute z-10 overflow-hidden flex items-center justify-center will-change-transform bg-[#f1f1f1]"
                 >
-                    <div className="w-full h-full absolute inset-0 flex items-center justify-center">
-                        <SphereCluster />
+                    <div className="shrink-0 w-[100vw] h-full flex items-center justify-center pointer-events-none">
+                        <SphereCluster progressRef={progressRef} />
                     </div>
                 </div>
             </div>

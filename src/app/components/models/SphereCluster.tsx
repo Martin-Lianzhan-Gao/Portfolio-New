@@ -128,16 +128,13 @@ const ClusterGroup = ({ progressRef }: { progressRef: React.RefObject<number> })
 
         const progress = progressRef.current
 
-        // --- 核心：响应式缩放逻辑 ---
-
-        // 1. 计算“70% 占比”下的极限缩放值
-        // 集群直径约 2.6，所以缩放系数 = (视口短边 * 0.7) / 2.6
+        // Calculate the maximum scale based on the viewport size
         const maxScale = (Math.min(viewport.width, viewport.height) * 0.7) / 2.6
 
-        // 2. 初始缩放（小圆窗时期）建议为 maxScale 的 45%
+        // Calculate the initial scale based on the viewport size
         const startScale = maxScale * 0.45
 
-        // 3. 线性插值
+        // Interpolate the current scale to the target scale
         const currentScale = startScale + (maxScale - startScale) * progress
         groupRef.current.scale.setScalar(currentScale)
 
