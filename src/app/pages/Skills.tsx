@@ -45,7 +45,7 @@ const Skills = () => {
                     trigger: containerRef.current,
                     start: "top bottom",
                     end: "bottom bottom",
-                    scrub: 1.5, // smooth transition
+                    scrub: window.matchMedia("(hover: none)").matches ? 1 : 1.5, // smooth transition
                     onUpdate: (self) => progressRef.current = self.progress
                 }
             })
@@ -59,10 +59,8 @@ const Skills = () => {
                 .to(windowRef.current, {
                     width: "100%",
                     duration: 2.5,
-                    ease: "power1.inOut"
+                    ease: "none"
                 })
-                // Pause on hold
-                .to({}, { duration: 0.5 })
         })
 
         return () => mm.revert()
@@ -87,4 +85,4 @@ const Skills = () => {
     )
 }
 
-export default Skills
+export default Skills;
