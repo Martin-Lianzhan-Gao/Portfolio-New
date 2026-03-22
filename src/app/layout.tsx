@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Montserrat, Inter, Inria_Sans } from "next/font/google";
+import { Geist, Geist_Mono, Montserrat, Inter, Inria_Sans, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header";
 
@@ -34,6 +34,13 @@ const inriaSans = Inria_Sans({
     style: ['normal', 'italic']
 })
 
+const cormorantGaramond = Cormorant_Garamond({
+    variable: "--font-cormorant-garamond",
+    subsets: ["latin"],
+    weight: ['300', '400', '700'],
+    style: ['normal', 'italic']
+})
+
 export const metadata: Metadata = {
     title: "Martin's Portfolio",
     description: "Martin's experimental portfolio",
@@ -56,7 +63,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body
-                className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} ${inter.variable} ${inriaSans.variable} antialiased`}
+                className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} ${inter.variable} ${inriaSans.variable} ${cormorantGaramond.variable} antialiased`}
             >
                 <Header />
                 {children}

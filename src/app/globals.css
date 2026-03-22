@@ -15,6 +15,7 @@
     --font-montserrat: var(--font-montserrat);
     --font-inter: var(--font-inter);
     --font-inria-sans: var(--font-inria-sans);
+    --font-cormorant-garamond: var(--font-cormorant-garamond);
     /* Max Safe Width */
     --spacing-vw-safe: 120rem;
 }
