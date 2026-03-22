@@ -46,7 +46,6 @@ const Skills = () => {
                     start: "top bottom",
                     end: "bottom bottom",
                     scrub: window.matchMedia("(hover: none)").matches ? 1 : 1.5, // smooth transition
-                    onUpdate: (self) => progressRef.current = self.progress
                 }
             })
 
@@ -59,7 +58,10 @@ const Skills = () => {
                 .to(windowRef.current, {
                     width: "100%",
                     duration: 2.5,
-                    ease: "none"
+                    ease: "power1.inOut",
+                    onUpdate: function () {
+                        progressRef.current = this.progress();
+                    }
                 })
         })
 
