@@ -173,7 +173,7 @@ const Description = () => {
                         Translated CS fundamentals into production-ready applications through real-world projects and industry works.
                     </p>
                     <div className="mt-6 md:mt-12 w-full md:w-5/6 lg:w-4/5 xl:w-2/3">
-                        <a ref={buttonRef} href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="border-2 border-white px-4 py-2 md:px-6 md:py-3 xl:px-8 xl:py-4 inline-flex flex-row items-center gap-4 text-xl md:text-3xl lg:text-[1.3rem] xl:text-[1.8rem] text-white hover:bg-white hover:text-black hover:border-white transition-all duration-300 cursor-pointer group">
+                        <a ref={buttonRef} href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="border-2 border-white rounded-full px-4 py-2 md:px-6 md:py-3 xl:px-8 xl:py-4 inline-flex flex-row items-center gap-4 text-xl md:text-3xl lg:text-[1.3rem] xl:text-[1.8rem] text-white hover:bg-white hover:text-black hover:border-white transition-all duration-300 cursor-pointer group">
                             <span className="font-regular tracking-wide font-inria-sans">DOWNLOAD RESUME</span>
                             <ArrowUpRight strokeWidth={1.8} strokeLinecap='butt'
                                 strokeLinejoin='miter' className="w-[1em] h-[1em] translate-y-[0.03em] group-hover:translate-x-[0.1em] group-hover:-translate-y-[0.1em] transition-transform duration-300" />

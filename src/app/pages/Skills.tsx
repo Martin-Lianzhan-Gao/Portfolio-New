@@ -31,7 +31,7 @@ const Skills = () => {
             const { isLandscape } = context.conditions as { isLandscape: boolean }
             // Initialise the window size and position based on the orientation
             gsap.set(windowRef.current, {
-                width: isLandscape ? '10vw' : '60vw',
+                width: isLandscape ? '30vw' : '60vw',
                 height: isLandscape ? '30vw' : '100vw',
                 borderRadius: isLandscape ? '9999px' : '100px', // capsule
                 left: '50%',
@@ -52,9 +52,7 @@ const Skills = () => {
 
             // Step 1: Emerge window
             tl.to(windowRef.current, {
-                width: isLandscape ? '30vw' : '100vw',
-                duration: 2,
-                ease: "power2.out"
+                duration: isLandscape ? 1 : 0,
             })
 
                 // Expand to full screen
