@@ -55,6 +55,8 @@ export const metadata: Metadata = {
     },
 };
 
+import SmoothScrolling from "./components/SmoothScrolling";
+
 export default function RootLayout({
     children,
 }: Readonly<{
@@ -65,8 +67,10 @@ export default function RootLayout({
             <body
                 className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} ${inter.variable} ${inriaSans.variable} ${cormorantGaramond.variable} antialiased`}
             >
-                <Header />
-                {children}
+                <SmoothScrolling>
+                    <Header />
+                    {children}
+                </SmoothScrolling>
             </body>
         </html>
     );

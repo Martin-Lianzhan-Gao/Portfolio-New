@@ -16,6 +16,7 @@
     "@splinetool/runtime": "^1.12.51",
     "gsap": "^3.13.0",
     "jotai": "^2.15.0",
+    "lenis": "^1.3.19",
     "lucide-react": "^0.562.0",
     "next": "^16.1.6",
     "react": "^19.2.4",
