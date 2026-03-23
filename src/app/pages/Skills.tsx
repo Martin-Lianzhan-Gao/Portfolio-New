@@ -18,7 +18,6 @@ const Skills = () => {
     const containerRef = useRef<HTMLDivElement>(null)
     const windowRef = useRef<HTMLDivElement>(null)
     const progressRef = useRef(0)
-    const groupRef = useRef<THREE.Group>(null)
 
     useGSAP(() => {
         if (!containerRef.current || !windowRef.current) return
@@ -30,7 +29,7 @@ const Skills = () => {
             isLandscape: '(orientation: landscape)'
         }, (context) => {
             const { isLandscape } = context.conditions as { isLandscape: boolean }
-            // const isTouch = window.matchMedia("(hover: none)").matches;
+            const isTouch = window.matchMedia("(hover: none)").matches;
             // Initialise the window size and position based on the orientation
             gsap.set(windowRef.current, {
                 width: '100vw',
@@ -42,25 +41,46 @@ const Skills = () => {
                 backgroundColor: isLandscape ? '#F1F1F1' : 'transparent',
                 borderRadius: '9999px'
             })
-            // Set up timeline for the window animation
-            const tl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: "top bottom",
-                    end: "bottom bottom",
-                    scrub: true // smooth transition
-                }
-            })
+            if (isTouch) {
+                // Set up timeline for the window animation on touch devices
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: "top top",
+                    }
+                })
 
-            tl.fromTo(windowRef.current, {
-                clipPath: 'inset(0vw 35vw 0vw 35vw round 9999px)',
-            }, {
-                clipPath: 'inset(0vw 0vw 0vw 0vw round 9999px)',
-                ease: "power1.inOut",
-                onUpdate: function () {
-                    progressRef.current = this.progress();
-                }
-            })
+                tl.fromTo(windowRef.current, {
+                    clipPath: 'inset(0vw 35vw 0vw 35vw round 9999px)',
+                }, {
+                    clipPath: 'inset(0vw 0vw 0vw 0vw round 9999px)',
+                    duration: 1,
+                    ease: "power2.out",
+                    onUpdate: function () {
+                        progressRef.current = this.progress();
+                    }
+                })
+            } else {
+                // Set up timeline for the window animation on desktop
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: "top bottom",
+                        end: "bottom bottom",
+                        scrub: true // smooth transition
+                    }
+                })
+
+                tl.fromTo(windowRef.current, {
+                    clipPath: 'inset(0vw 35vw 0vw 35vw round 9999px)',
+                }, {
+                    clipPath: 'inset(0vw 0vw 0vw 0vw round 9999px)',
+                    ease: "power1.inOut",
+                    onUpdate: function () {
+                        progressRef.current = this.progress();
+                    }
+                })
+            }
         })
 
         return () => mm.revert()
