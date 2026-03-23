@@ -1,10 +1,11 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import dynamic from 'next/dynamic'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import ScrollTrigger from 'gsap/ScrollTrigger'
+import * as THREE from 'three'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -16,8 +17,8 @@ const SphereCluster = dynamic(() => import('../components/models/SphereCluster')
 const Skills = () => {
     const containerRef = useRef<HTMLDivElement>(null)
     const windowRef = useRef<HTMLDivElement>(null)
-
     const progressRef = useRef(0)
+    const groupRef = useRef<THREE.Group>(null)
 
     useGSAP(() => {
         if (!containerRef.current || !windowRef.current) return
@@ -29,16 +30,17 @@ const Skills = () => {
             isLandscape: '(orientation: landscape)'
         }, (context) => {
             const { isLandscape } = context.conditions as { isLandscape: boolean }
-            const isTouch = window.matchMedia("(hover: none)").matches;
+            // const isTouch = window.matchMedia("(hover: none)").matches;
             // Initialise the window size and position based on the orientation
             gsap.set(windowRef.current, {
-                width: isLandscape ? '30vw' : '60vw',
+                width: '100vw',
                 height: isLandscape ? '30vw' : '100vw',
-                borderRadius: isLandscape ? '9999px' : '100px', // capsule
                 left: '50%',
                 xPercent: -50,
                 top: '70%',
-                yPercent: -50
+                yPercent: -50,
+                backgroundColor: isLandscape ? '#F1F1F1' : 'transparent',
+                borderRadius: '9999px'
             })
             // Set up timeline for the window animation
             const tl = gsap.timeline({
@@ -46,13 +48,14 @@ const Skills = () => {
                     trigger: containerRef.current,
                     start: "top bottom",
                     end: "bottom bottom",
-                    scrub: isTouch ? 1 : 1.5 // smooth transition
+                    scrub: true // smooth transition
                 }
             })
 
-            // Step 1: Emerge window
-            tl.to(windowRef.current, {
-                width: "100%",
+            tl.fromTo(windowRef.current, {
+                clipPath: 'inset(0vw 35vw 0vw 35vw round 9999px)',
+            }, {
+                clipPath: 'inset(0vw 0vw 0vw 0vw round 9999px)',
                 ease: "power1.inOut",
                 onUpdate: function () {
                     progressRef.current = this.progress();
