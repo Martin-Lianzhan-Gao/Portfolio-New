@@ -68,7 +68,7 @@ const Description = () => {
                 trigger: textRef.current,
                 start: "top 85%",
                 end: "bottom 55%",
-                scrub: 1,
+                scrub: true,
                 fastScrollEnd: true,
                 preventOverlaps: true
             }
