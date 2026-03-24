@@ -1,6 +1,5 @@
-import { useRef, useMemo, useEffect } from 'react'
+import { useRef, useMemo, useEffect, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { MeshTransmissionMaterial } from '@react-three/drei'
 import * as THREE from 'three'
 
 // Types
@@ -59,18 +58,17 @@ const SphereMesh = ({ def }: { def: SphereDef }) => {
             <sphereGeometry args={[def.radius, 64, 64]} />
 
             {isCrystal ? (
-                // Crystal Material
-                <MeshTransmissionMaterial
+                <meshPhysicalMaterial
                     color="#ffffff"
-                    transmission={1}         // 100% transmission allowed
+                    transmission={1}
                     transparent={true}
-                    roughness={0}            // Absolutely smooth
-                    ior={1.6}                // Reflection Rate
-                    thickness={1.0}          // Thickness of the material
-                    envMapIntensity={3.5}    // Environment map intensity
+                    roughness={0}
+                    ior={1.6}
+                    thickness={1.0}
+                    envMapIntensity={3.5}
                     attenuationColor="#ffffff"
-                    attenuationDistance={1.8}  // Light attenuation distance
-                    dispersion={4}         // Dispersion effect
+                    attenuationDistance={1.8}
+                    dispersion={4}
                 />
             ) : (
                 // Material for other spheres
@@ -85,40 +83,16 @@ const SphereMesh = ({ def }: { def: SphereDef }) => {
 }
 
 // Animated Cluster Group 
-const ClusterGroup = ({ progressRef }: { progressRef: React.RefObject<number> }) => {
+const ClusterGroup = ({ progressRef, speedRef }: { progressRef: React.RefObject<number>, speedRef: React.RefObject<number> }) => {
     // Reference the sphere cluster group
     const groupRef = useRef<THREE.Group>(null)
     const floatPhase = useMemo(() => Math.random() * Math.PI * 2, [])
 
-    // Physics animation state management
-    const targetRotation = useRef({ x: 0, y: 0 })
-    const currentRotation = useRef({ x: 0, y: 0 })
+    // 用于保存跨帧平滑后的速度，以及由速度累加出的额外旋转角度
+    const smoothedVelocity = useRef(0)
+    const rotationOffset = useRef({ x: 0, y: 0 })
 
     const { viewport } = useThree();
-
-    // Extremely lightweight scroll listener
-    useEffect(() => {
-        // Initialise rotation angle based on scroll position
-        const initY = window.scrollY * 0.0015
-        const initX = window.scrollY * 0.0007
-        // Set initial rotation angle to both target and current rotation for the first render
-        targetRotation.current.y = initY
-        targetRotation.current.x = initX
-        currentRotation.current.y = initY
-        currentRotation.current.x = initX
-
-        const handleScroll = () => {
-            // Update target rotation angle based on scroll position when scrolling
-            targetRotation.current.y = window.scrollY * 0.0015
-            targetRotation.current.x = window.scrollY * 0.0007
-        }
-
-        // Initialize directly to handle react strict mode running effect twice correctly
-        handleScroll()
-
-        window.addEventListener('scroll', handleScroll, { passive: true })
-        return () => window.removeEventListener('scroll', handleScroll)
-    }, [])
 
     // Physics interpolation calculation in the rendering loop
     useFrame((state, delta) => {
@@ -128,7 +102,7 @@ const ClusterGroup = ({ progressRef }: { progressRef: React.RefObject<number> })
 
         const progress = progressRef.current
 
-        // Calculate the maximum scale based on the viewport size
+        // Calculate max scale value
         const maxScale = (Math.min(viewport.width, viewport.height) * 0.7) / 2.6
 
         // Calculate the initial scale based on the viewport size
@@ -138,22 +112,34 @@ const ClusterGroup = ({ progressRef }: { progressRef: React.RefObject<number> })
         const currentScale = startScale + (maxScale - startScale) * progress
         groupRef.current.scale.setScalar(currentScale)
 
-        // Define the rotation behaviour by interpolating the current rotation to the target rotation with appropriate damping value
-        currentRotation.current.y = THREE.MathUtils.lerp(
-            currentRotation.current.y,
-            targetRotation.current.y,
-            delta * 16
-        )
-        currentRotation.current.x = THREE.MathUtils.lerp(
-            currentRotation.current.x,
-            targetRotation.current.x,
-            delta * 16
-        )
 
-        // Self rotation on y-axis
-        groupRef.current.rotation.y = currentRotation.current.y + t * 0.6
-        // Self rotation on x-axis
-        groupRef.current.rotation.x = currentRotation.current.x + Math.sin(t * 0.6) * 0.05
+        // ----------- 新增的真实物理惯性滚动旋转逻辑 -----------
+
+        // 限制最大旋转动量，防止触控板暴力滑动导致速度飙升，引起视觉抽搐（轮辐错觉）
+        const MAX_VELOCITY = 0.3;
+        const targetVelocity = THREE.MathUtils.clamp(speedRef.current, -MAX_VELOCITY, MAX_VELOCITY);
+
+        // 核心修复：自动衰减残留的物理速度！
+        // 当你暴力滑动直接越过整个 Skills 区域到达底部时，ScrollTrigger 会取消激活并停止触发 onUpdate。
+        // 这会导致被记录的最后一个极大速度永久卡在 speedRef.current 里，如果不自我衰减，球体会无限极速自转。
+        speedRef.current = THREE.MathUtils.lerp(speedRef.current, 0, delta * 10);
+
+        // 1. 平滑过渡速度 (Lerp): 实现滚动停止后依然带滑行的惯性
+        // 使用 delta 控制 lerp 可保持阻尼在不同高刷屏上的体验一致
+        smoothedVelocity.current = THREE.MathUtils.lerp(
+            smoothedVelocity.current,
+            targetVelocity,
+            delta * 5 // 5 为阻尼系数，越小滑行越久，越大刹车越快
+        );
+
+        // 2. 速度积分累加偏移量: 速度是角度的变化量，必须不断累加
+        // * delta 保证帧率独立；* 40 控制滚动在旋转上的力度放大系数
+        rotationOffset.current.y += smoothedVelocity.current * delta * 40;
+        rotationOffset.current.x += smoothedVelocity.current * delta * 15;
+
+        // 3. 结果合并: 基础时间自传 + 滚动累加偏移
+        groupRef.current.rotation.y = t * 0.6 + rotationOffset.current.y;
+        groupRef.current.rotation.x = Math.sin(t * 0.6) * 0.05 + rotationOffset.current.x;
 
         // Float up and down on y-axis
         groupRef.current.position.y = Math.sin(t * 0.6 + floatPhase) * 0.06
@@ -169,45 +155,70 @@ const ClusterGroup = ({ progressRef }: { progressRef: React.RefObject<number> })
 }
 
 // Canvas Root
-const SphereCluster = ({ progressRef }: { progressRef: React.RefObject<number> }) => (
-    <div className="w-full h-full">
-        <Canvas
-            camera={{ position: [0, 0, 5.5], fov: 38 }}
-            dpr={[1, 2]}
-            shadows
-            gl={{
-                alpha: true,
-                antialias: true,
-                toneMapping: THREE.ACESFilmicToneMapping,
-                toneMappingExposure: 1.2,
-            }}
-        >
-            <ambientLight intensity={0.40} />
+const SphereCluster = ({ progressRef, speedRef }: { progressRef: React.RefObject<number>, speedRef: React.RefObject<number> }) => {
+    // 视口可见性状态
+    const [inView, setInView] = useState(true);
+    const containerRef = useRef<HTMLDivElement>(null);
 
-            {/* Key Light*/}
-            <directionalLight
-                position={[-3, 4, 3]}
-                intensity={2.8}
-                color="#ffffff"
-                castShadow
-                shadow-mapSize={[2048, 2048]} // Increase shadow map resolution
-                shadow-bias={-0.0005}         // Fine-tune depth bias to eliminate self-shadowing
+    // 交叉观察器 (Intersection Observer)
+    // 当这个 Canvas 容器完全离开用户屏幕时，将其标记为不可见
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                setInView(entry.isIntersecting);
+            },
+            { rootMargin: '100px 0px', threshold: 0 } // 上下留 100px 的余量以防边缘突然出现
+        );
+
+        if (containerRef.current) {
+            observer.observe(containerRef.current);
+        }
+
+        return () => observer.disconnect();
+    }, []);
+
+    return (
+        <div ref={containerRef} className="w-full h-full">
+            <Canvas
+                frameloop={inView ? 'always' : 'demand'} // 不可见时完全挂起渲染循环 (0 CPU/GPU 消耗)
+                camera={{ position: [0, 0, 5.5], fov: 38 }}
+                dpr={[1, 1.5]}
+                shadows
+                gl={{
+                    alpha: true,
+                    antialias: true,
+                    toneMapping: THREE.ACESFilmicToneMapping,
+                    toneMappingExposure: 1.2,
+                }}
             >
-                {/* Constrain shadow camera frustum to the cluster's bounding box */}
-                <orthographicCamera attach="shadow-camera" args={[-2, 2, 2, -2, 0.1, 10]} />
-            </directionalLight>
+                <ambientLight intensity={0.40} />
 
-            <directionalLight
-                position={[4, -3, -4]}
-                intensity={0.8}
-                color="#b0c4de"
-            />
+                {/* Key Light*/}
+                <directionalLight
+                    position={[-3, 4, 3]}
+                    intensity={2.8}
+                    color="#ffffff"
+                    castShadow
+                    shadow-mapSize={[1024, 1024]} // Reduced shadow map resolution for performance
+                    shadow-bias={-0.0005}         // Fine-tune depth bias to eliminate self-shadowing
+                >
+                    {/* Constrain shadow camera frustum to the cluster's bounding box */}
+                    <orthographicCamera attach="shadow-camera" args={[-2, 2, 2, -2, 0.1, 10]} />
+                </directionalLight>
 
-            <pointLight position={[0, -5, -4]} intensity={0.8} color="#ffffff" />
+                <directionalLight
+                    position={[4, -3, -4]}
+                    intensity={0.8}
+                    color="#b0c4de"
+                />
 
-            <ClusterGroup progressRef={progressRef} />
-        </Canvas>
-    </div>
-)
+                <pointLight position={[0, -5, -4]} intensity={0.8} color="#ffffff" />
+
+                <ClusterGroup progressRef={progressRef} speedRef={speedRef} />
+            </Canvas>
+        </div>
+    );
+}
 
 export default SphereCluster;
+

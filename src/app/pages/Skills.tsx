@@ -5,7 +5,6 @@ import dynamic from 'next/dynamic'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import ScrollTrigger from 'gsap/ScrollTrigger'
-import * as THREE from 'three'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -18,6 +17,8 @@ const Skills = () => {
     const containerRef = useRef<HTMLDivElement>(null)
     const windowRef = useRef<HTMLDivElement>(null)
     const progressRef = useRef(0)
+    const speedRef = useRef(0)
+
 
     useGSAP(() => {
         if (!containerRef.current || !windowRef.current) return
@@ -29,7 +30,7 @@ const Skills = () => {
             isLandscape: '(orientation: landscape)'
         }, (context) => {
             const { isLandscape } = context.conditions as { isLandscape: boolean }
-            const isTouch = window.matchMedia("(hover: none)").matches;
+
             // Initialise the window size and position based on the orientation
             gsap.set(windowRef.current, {
                 width: '100vw',
@@ -41,46 +42,32 @@ const Skills = () => {
                 backgroundColor: isLandscape ? '#F1F1F1' : 'transparent',
                 borderRadius: '9999px'
             })
-            if (isTouch) {
-                // Set up timeline for the window animation on touch devices
-                const tl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: containerRef.current,
-                        start: "top top",
-                    }
-                })
 
-                tl.fromTo(windowRef.current, {
-                    clipPath: 'inset(0vw 35vw 0vw 35vw round 9999px)',
-                }, {
-                    clipPath: 'inset(0vw 0vw 0vw 0vw round 9999px)',
-                    duration: 1,
-                    ease: "power2.out",
-                    onUpdate: function () {
-                        progressRef.current = this.progress();
+            // Set up timeline for the window animation on touch devices
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: containerRef.current,
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 1,
+                    fastScrollEnd: true,
+                    preventOverlaps: true,
+                    onUpdate: (self) => {
+                        speedRef.current = self.getVelocity() * 0.0001;
                     }
-                })
-            } else {
-                // Set up timeline for the window animation on desktop
-                const tl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: containerRef.current,
-                        start: "top bottom",
-                        end: "bottom bottom",
-                        scrub: true // smooth transition
-                    }
-                })
+                }
+            })
 
-                tl.fromTo(windowRef.current, {
-                    clipPath: 'inset(0vw 35vw 0vw 35vw round 9999px)',
-                }, {
-                    clipPath: 'inset(0vw 0vw 0vw 0vw round 9999px)',
-                    ease: "power1.inOut",
-                    onUpdate: function () {
-                        progressRef.current = this.progress();
-                    }
-                })
-            }
+            tl.fromTo(windowRef.current, {
+                clipPath: 'inset(0vw 35vw 0vw 35vw round 9999px)',
+            }, {
+                clipPath: 'inset(0vw 0vw 0vw 0vw round 9999px)',
+                duration: 1,
+                ease: "power1.Out",
+                onUpdate: function () {
+                    progressRef.current = this.progress();
+                }
+            })
         })
 
         return () => mm.revert()
@@ -97,7 +84,7 @@ const Skills = () => {
                     className="absolute z-10 overflow-hidden flex items-center justify-center will-change-transform bg-[#f1f1f1]"
                 >
                     <div className="shrink-0 w-[100vw] h-full flex items-center justify-center pointer-events-none">
-                        <SphereCluster progressRef={progressRef} />
+                        <SphereCluster progressRef={progressRef} speedRef={speedRef} />
                     </div>
                 </div>
             </div>
