@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Montserrat, Inter, Inria_Sans, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header";
+import SmoothScrolling from "./components/SmoothScrolling";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -54,8 +55,6 @@ export const metadata: Metadata = {
         }]
     },
 };
-
-import SmoothScrolling from "./components/SmoothScrolling";
 
 export default function RootLayout({
     children,
