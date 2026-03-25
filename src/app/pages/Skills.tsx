@@ -14,10 +14,11 @@ const SphereCluster = dynamic(() => import('../components/models/SphereCluster')
 })
 
 const Skills = () => {
-    const containerRef = useRef<HTMLDivElement>(null)
-    const windowRef = useRef<HTMLDivElement>(null)
-    const progressRef = useRef(0)
-    const speedRef = useRef(0)
+    const titleRef = useRef<HTMLHeadingElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const windowRef = useRef<HTMLDivElement>(null);
+    const progressRef = useRef(0);
+    const speedRef = useRef(0);
 
 
     useGSAP(() => {
@@ -37,7 +38,7 @@ const Skills = () => {
                 height: isLandscape ? '30vw' : '100vw',
                 left: '50%',
                 xPercent: -50,
-                top: '70%',
+                top: isLandscape ? '70%' : '55%',
                 yPercent: -50,
                 backgroundColor: isLandscape ? '#F1F1F1' : 'transparent',
                 borderRadius: '9999px'
@@ -77,7 +78,7 @@ const Skills = () => {
         <div ref={containerRef} className="relative w-full h-[300vh] bg-[#F5F5F7]" id="skills-section">
             <div className="sticky top-0 w-full h-[100dvh] overflow-hidden bg-[#F5F5F7] rounded-t-[2rem] flex flex-col items-center">
                 <div className='w-full max-w-vw-safe mt-20'>
-                    <h1 className='ml-6 mr-6 md:mr-12 md:ml-12 font-cormorant-garamond text-[min(15.5vw,18vh)] uppercase'>My Skills</h1>
+                    <h1 className='ml-6 mr-6 md:mr-12 md:ml-12 font-cormorant-garamond text-[min(15.5vw,18vh)] uppercase' ref={titleRef}>My Skills</h1>
                 </div>
                 <div
                     ref={windowRef}
