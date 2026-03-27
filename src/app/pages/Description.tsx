@@ -139,8 +139,8 @@ const Description = () => {
                 { clipPath: "polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)" },
                 {
                     clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-                    duration: 0.8,
-                    ease: "power3.in",
+                    duration: 0.6,
+                    ease: "power4.in",
                     scrollTrigger: {
                         trigger: buttonRef.current,
                         start: "top 90%",
@@ -173,7 +173,7 @@ const Description = () => {
                         Translated CS fundamentals into production-ready applications through real-world projects and industry works.
                     </p>
                     <div className="mt-6 md:mt-12 w-full md:w-5/6 lg:w-4/5 xl:w-2/3">
-                        <a ref={buttonRef} href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="relative overflow-hidden border-2 border-white rounded-full px-4 py-2 md:px-6 md:py-3 xl:px-8 xl:py-4 inline-flex flex-row items-center gap-4 text-xl md:text-3xl lg:text-[1.3rem] xl:text-[1.8rem] text-white hover:border-white transition-colors duration-300 cursor-pointer group">
+                        <a ref={buttonRef} href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="relative overflow-hidden border-2 border-white rounded-full px-4 py-2 md:px-6 md:py-3 xl:px-8 xl:py-4 inline-flex items-center gap-4 text-xl md:text-3xl lg:text-[1.3rem] xl:text-[1.8rem] text-white group">
                             <div className="absolute inset-x-0 bottom-0 h-0 bg-white transition-all duration-300 ease-out group-hover:h-full"></div>
                             <span className="relative z-10 font-regular tracking-wide font-inria-sans group-hover:text-black transition-colors duration-300">DOWNLOAD RESUME</span>
                             <ArrowUpRight strokeWidth={2} strokeLinecap='butt'
