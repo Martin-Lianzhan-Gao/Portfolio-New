@@ -102,11 +102,18 @@ const ClusterGroup = ({ progressRef, speedRef }: { progressRef: React.RefObject<
 
         const progress = progressRef.current
 
-        // Calculate max scale value
-        const maxScale = (Math.min(viewport.width, viewport.height) * 0.7) / 2.6
+        // The original canvas height was effectively bounded by the width due to aspect-ratio (36% in landscape, 100% in portrait)
+        // Since React Three Fiber maps FOV to canvas height, a taller full-screen canvas stretches the elements physically.
+        // To precisely counteract this and maintain original screen-pixel proportions, we multiply by the ratio (oldHeight / newHeight).
+        const isLandscape = viewport.width > viewport.height;
+        const aspect = viewport.width / viewport.height;
+        const compensation = isLandscape ? aspect * 0.3 : aspect * 1.0;
+
+        // Base scale relies strictly on the constant viewport height to avoid double-shrinking when aspect ratio drops
+        const maxScale = (viewport.height * 0.8 / 2.6) * compensation;
 
         // Calculate the initial scale based on the viewport size
-        const startScale = maxScale * 0.45
+        const startScale = maxScale * 0.7
 
         // Interpolate the current scale to the target scale
         const currentScale = startScale + (maxScale - startScale) * progress
