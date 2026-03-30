@@ -66,23 +66,31 @@ const Skills = () => {
             }
         })
 
-        // 1) Sphere cluster animation (Headless Proxy Tween)
-        // Animates a dummy proxy object over the first 2 "time" units (maps to first 2/3 of 300dvh = 200dvh scroll)
-        // This avoids expensive DOM reflows like clipPath and sizing, pure numerical update!
+        // 1) Phase 1: Sphere cluster amplifies (duration 2, time 0 -> 2)
         const proxy = { progress: 0 };
         tl.to(proxy, {
             progress: 1,
-            duration: 2,
+            duration: 1,
             ease: "power1.Out",
             onUpdate: () => {
                 progressRef.current = proxy.progress;
             }
         }, 0)
 
-        // 2) Text phase: starts at time unit 2, lasts 1 "time" unit (maps to last 1/3 of 300dvh = 100dvh)
-        // Text panel rises from below, title pushed off the top
-        tl.to(textRef.current, { y: '0%', ease: 'none', duration: 1 }, 2)
-        tl.to(titleRef.current, { y: '-40dvh', ease: 'none', duration: 1 }, 2)
+        // 2) Phase 2: Text panel rises from below, title pushed off the top (duration 2, time 2 -> 4)
+        tl.to(textRef.current, { y: '0%', ease: 'none', duration: 2 }, 2)
+        tl.to(titleRef.current, { y: '-40dvh', ease: 'none', duration: 2 }, 2)
+
+        // 3) Phase 3: Text panel moves up by 2/3, Sphere shrinks to half of startScale (duration 1, time 4 -> 5)
+        tl.to(textRef.current, { y: '-15%', ease: 'none', duration: 1 }, 4)
+        tl.to(proxy, {
+            progress: -1.167, // Math trick: progress -1.167 mathematically yields exactly half of startScale!
+            duration: 1,
+            ease: "power1.inOut",
+            onUpdate: () => {
+                progressRef.current = proxy.progress;
+            }
+        }, 4)
 
         return () => {
             titleSplit.revert();
@@ -94,8 +102,8 @@ const Skills = () => {
     const otherSkills = ['Git', 'Figma', 'Docker', 'Agile / Scrum', 'Linux', 'CI/CD']
 
     return (
-        <div ref={containerRef} className="relative w-full h-[400dvh] bg-[#F5F5F7]" id="skills-section">
-            <div className="sticky top-0 w-full h-[100dvh] overflow-hidden bg-[#F5F5F7] rounded-t-[2rem] flex flex-col">
+        <div ref={containerRef} className="relative w-full h-[500dvh] bg-[#F5F5F7]" id="skills-section">
+            <div className="sticky top-0 w-full h-[100dvh] overflow-hidden bg-[#F5F5F7] flex flex-col">
                 { /* Title */}
                 <div className='w-full max-w-vw-safe mx-auto mt-20 relative z-10'>
                     <h1
@@ -106,17 +114,17 @@ const Skills = () => {
                     </h1>
                 </div>
 
-                {/* Sphere cluster */}
+                {/* Sphere Cluster Models */}
                 <div className="absolute inset-0 z-20 overflow-hidden flex items-center justify-center will-change-transform bg-transparent">
                     <div className="shrink-0 w-full h-full flex items-center justify-center pointer-events-none">
                         <SphereCluster progressRef={progressRef} speedRef={speedRef} />
                     </div>
                 </div>
 
-                {/* Initially translated 100% down (off-screen), clipped by parent overflow-hidden */}
+                {/* Skills panel */}
                 <div
                     ref={textRef}
-                    className="absolute inset-x-0 bottom-0 h-[100dvh] z-30 flex flex-col"
+                    className="absolute inset-x-0 bottom-0 h-[150dvh] z-30 flex flex-col"
                     style={{ backgroundColor: 'rgba(245, 245, 247, 0.8)' }}
                 >
                     {/* Divider top */}
@@ -183,10 +191,17 @@ const Skills = () => {
                         </div>
                     </div>
 
-                    {/* Divider bottom */}
                     <hr className="border-t-2 border-black w-full shrink-0" />
-                </div>
 
+                    {/* Additional Tail Section */}
+                    <div className="w-full max-w-vw-safe mx-auto flex-1 flex items-center px-6 md:px-12 gap-8 md:gap-16">
+                        <div className="w-1/4 shrink-0">
+                            {/* Empty spacer or future content to maintain height consistency */}
+                        </div>
+                        <div className="flex flex-wrap gap-2 md:gap-3">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     )
