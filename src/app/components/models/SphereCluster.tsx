@@ -148,8 +148,8 @@ const ClusterGroup = ({ progressRef, speedRef }: { progressRef: React.RefObject<
         groupRef.current.rotation.y = t * 0.6 + rotationOffset.current.y;
         groupRef.current.rotation.x = Math.sin(t * 0.6) * 0.05 + rotationOffset.current.x;
 
-        // Float up and down on y-axis
-        groupRef.current.position.y = Math.sin(t * 0.6 + floatPhase) * 0.06
+        // Float up and down on y-axis, and shift the entire group down slightly (-0.25) to balance visual weight
+        groupRef.current.position.y = Math.sin(t * 0.6 + floatPhase) * 0.06 - 0.25
     })
 
     return (
