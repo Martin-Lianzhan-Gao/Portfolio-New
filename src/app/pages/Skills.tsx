@@ -6,6 +6,7 @@ import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import SplitText from 'gsap/SplitText'
 import ScrollTrigger from 'gsap/ScrollTrigger'
+import { skillsData } from '../data/skillsData'
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
@@ -79,7 +80,7 @@ const Skills = () => {
 
         // 2) Phase 2: Text panel rises from below, title pushed off the top (duration 2, time 2 -> 4)
         tl.to(textRef.current, { y: '0%', ease: 'none', duration: 2 }, 2)
-        tl.to(titleRef.current, { y: '-40dvh', ease: 'none', duration: 2 }, 2)
+        tl.to(titleRef.current, { y: '-80dvh', ease: 'none', duration: 2 }, 2)
 
         // 3) Phase 3: Text panel moves up by 2/3, Sphere shrinks to half of startScale (duration 1, time 4 -> 5)
         tl.to(textRef.current, { y: '-15%', ease: 'none', duration: 1 }, 4)
@@ -96,10 +97,6 @@ const Skills = () => {
             titleSplit.revert();
         }
     }, { scope: containerRef })
-
-    const frontEndSkills = ['React', 'Next.js', 'TypeScript', 'GSAP', 'Three.js', 'WebGL', 'Tailwind CSS']
-    const backEndSkills = ['Node.js', 'Python', 'PostgreSQL', 'REST APIs', 'GraphQL', 'Redis']
-    const otherSkills = ['Git', 'Figma', 'Docker', 'Agile / Scrum', 'Linux', 'CI/CD']
 
     return (
         <div ref={containerRef} className="relative w-full h-[500dvh] bg-[#F5F5F7]" id="skills-section">
@@ -124,82 +121,42 @@ const Skills = () => {
                 {/* Skills panel */}
                 <div
                     ref={textRef}
-                    className="absolute inset-x-0 bottom-0 h-[150dvh] z-30 flex flex-col"
-                    style={{ backgroundColor: 'rgba(245, 245, 247, 0.8)' }}
+                    className="absolute inset-x-0 bottom-0 h-[150dvh] z-30 flex flex-col bg-[#F5F5F7]/80"
                 >
                     {/* Divider top */}
-                    <hr className="border-t-2 border-black w-full shrink-0" />
+                    <hr className="border-t-[1px] border-black w-full shrink-0" />
 
-                    {/* Front End */}
-                    <div className="w-full max-w-vw-safe mx-auto flex-1 flex items-center px-6 md:px-12 gap-8 md:gap-16">
-                        <div className="w-1/4 shrink-0">
-                            <p className="font-inter text-xl md:text-3xl font-medium uppercase tracking-tight">
-                                Front<br />End
-                            </p>
+                    {skillsData.map((category) => (
+                        <div key={category.title} className="contents">
+                            <div className="w-full max-w-vw-safe mx-auto flex-1 flex flex-col justify-around md:justify-center px-6 md:px-12 py-4">
+                                <div className="w-full mb-3 md:mb-5">
+                                    <span className="font-inter uppercase text-black/80 font-medium">{category.title}</span>
+                                </div>
+                                <div className="w-full flex flex-col md:flex-row items-start gap-4 md:gap-16">
+                                    <div className="w-full md:w-1/2 shrink-0">
+                                        <p className="font-inter text-lg leading-snug xl:text-xl 2xl:text-[1.75rem] tracking-tight text-black/90">
+                                            {category.introduction.en}
+                                        </p>
+                                    </div>
+                                    <div className="w-full md:w-1/2 flex flex-wrap gap-2 md:gap-3 items-start content-start">
+                                        {category.skills.map(skill => (
+                                            <span
+                                                key={skill}
+                                                className="font-inter border-[1px] border-black rounded-full px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-sm font-regular bg-transparent"
+                                            >
+                                                {skill}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                            <hr className="border-t-[1px] border-black w-full shrink-0" />
                         </div>
-                        <div className="flex flex-wrap gap-2 md:gap-3">
-                            {frontEndSkills.map(skill => (
-                                <span
-                                    key={skill}
-                                    className="font-inter border-2 border-black rounded-full px-3 py-1 md:px-5 md:py-2 text-xs md:text-base font-regular"
-                                >
-                                    {skill}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
+                    ))}
 
-                    <hr className="border-t-2 border-black w-full shrink-0" />
-
-                    {/* Back End */}
-                    <div className="w-full max-w-vw-safe mx-auto flex-1 flex items-center px-6 md:px-12 gap-8 md:gap-16">
-                        <div className="w-1/4 shrink-0">
-                            <p className="font-inter text-xl md:text-3xl font-medium uppercase tracking-tight">
-                                Back<br />End
-                            </p>
-                        </div>
-                        <div className="flex flex-wrap gap-2 md:gap-3">
-                            {backEndSkills.map(skill => (
-                                <span
-                                    key={skill}
-                                    className="font-inter border-2 border-black rounded-full px-3 py-1 md:px-5 md:py-2 text-xs md:text-base font-regular"
-                                >
-                                    {skill}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-
-                    <hr className="border-t-2 border-black w-full shrink-0" />
-
-                    {/* Others */}
-                    <div className="w-full max-w-vw-safe mx-auto flex-1 flex items-center px-6 md:px-12 gap-8 md:gap-16">
-                        <div className="w-1/4 shrink-0">
-                            <p className="font-inter text-xl md:text-3xl font-medium uppercase tracking-tight">
-                                Others
-                            </p>
-                        </div>
-                        <div className="flex flex-wrap gap-2 md:gap-3">
-                            {otherSkills.map(skill => (
-                                <span
-                                    key={skill}
-                                    className="font-inter border-2 border-black rounded-full px-3 py-1 md:px-5 md:py-2 text-xs md:text-base font-regular"
-                                >
-                                    {skill}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-
-                    <hr className="border-t-2 border-black w-full shrink-0" />
-
-                    {/* Additional Tail Section */}
-                    <div className="w-full max-w-vw-safe mx-auto flex-1 flex items-center px-6 md:px-12 gap-8 md:gap-16">
-                        <div className="w-1/4 shrink-0">
-                            {/* Empty spacer or future content to maintain height consistency */}
-                        </div>
-                        <div className="flex flex-wrap gap-2 md:gap-3">
-                        </div>
+                    {/* Additional Tail Section (to preserve exactly 5 sections for layout consistency) */}
+                    <div className="w-full max-w-vw-safe mx-auto flex-1 flex flex-col justify-center px-6 md:px-12">
+                        {/* Empty spacer or future content to maintain height consistency */}
                     </div>
                 </div>
             </div>
