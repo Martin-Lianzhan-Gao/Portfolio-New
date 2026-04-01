@@ -129,16 +129,16 @@ const Skills = () => {
                     {skillsData.map((category) => (
                         <div key={category.title} className="contents">
                             <div className="w-full max-w-vw-safe mx-auto flex-1 flex flex-col justify-around md:justify-center px-6 md:px-12 py-4">
-                                <div className="w-full mb-3 md:mb-5">
+                                <div className="w-full mb-4 md:mb-6">
                                     <span className="font-inter uppercase text-black/80 font-medium">{category.title}</span>
                                 </div>
-                                <div className="w-full flex flex-col md:flex-row items-start gap-4 md:gap-16">
+                                <div className="w-full flex flex-col md:flex-row items-center gap-6 md:gap-16">
                                     <div className="w-full md:w-1/2 shrink-0">
-                                        <p className="font-inter text-lg leading-snug xl:text-xl 2xl:text-[1.75rem] tracking-tight text-black/90">
+                                        <p className="font-inter text-lg leading-snug xl:text-xl 2xl:text-[1.5rem] tracking-tight text-black/90">
                                             {category.introduction.en}
                                         </p>
                                     </div>
-                                    <div className="w-full md:w-1/2 flex flex-wrap gap-2 md:gap-3 items-start content-start">
+                                    <div className="w-full md:w-1/2 flex flex-wrap gap-2 md:gap-3">
                                         {category.skills.map(skill => (
                                             <span
                                                 key={skill}
@@ -154,7 +154,7 @@ const Skills = () => {
                         </div>
                     ))}
 
-                    {/* Additional Tail Section (to preserve exactly 5 sections for layout consistency) */}
+                    {/* Additional Tail Section */}
                     <div className="w-full max-w-vw-safe mx-auto flex-1 flex flex-col justify-center px-6 md:px-12">
                         {/* Empty spacer or future content to maintain height consistency */}
                     </div>
