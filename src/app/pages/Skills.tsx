@@ -99,10 +99,10 @@ const Skills = () => {
     }, { scope: containerRef })
 
     return (
-        <div ref={containerRef} className="relative w-full h-[500dvh] bg-[#F5F5F7]" id="skills-section">
-            <div className="sticky top-0 w-full h-[100dvh] overflow-hidden bg-[#F5F5F7] flex flex-col">
+        <div ref={containerRef} className="relative z-30 w-full h-[500dvh] bg-[#F5F5F7] rounded-t-[2rem] -mt-8 md:-mt-12" id="skills-section">
+            <div className="sticky top-0 w-full h-[100dvh] overflow-hidden bg-[#F5F5F7] rounded-t-[2rem] flex flex-col">
                 { /* Title */}
-                <div className='w-full max-w-vw-safe mx-auto mt-20 relative z-10'>
+                <div className='w-full max-w-vw-safe mx-auto mt-24 relative z-10'>
                     <h1
                         className='ml-6 mr-6 md:mr-12 md:ml-12 font-inter font-medium text-[min(14vw,15dvh)] uppercase'
                         ref={titleRef}
