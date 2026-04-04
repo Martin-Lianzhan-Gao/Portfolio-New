@@ -44,12 +44,6 @@ const Skills = () => {
             { y: "0%", opacity: 1, filter: 'blur(0px)', scale: 1, stagger: 0.02, duration: 1.6, ease: 'power3.out' }
         );
 
-        // Set initial state for text panel (pushed below the sticky viewport, clipped by overflow-hidden)
-        gsap.set(textRef.current, { y: '100%' });
-
-        // Text panel is pushed below the sticky viewport, clipped by overflow-hidden
-        gsap.set(textRef.current, { y: '100%' });
-
         // Master timeline for the entire scrolling container
         // Container height is 400dvh, Sticky element is 100dvh.
         // "top top" to "bottom bottom" means total scroll distance is 300dvh.
@@ -78,14 +72,15 @@ const Skills = () => {
             }
         }, 0)
 
-        // 2) Phase 2: Text panel rises from below, title pushed off the top (duration 2, time 2 -> 4)
-        tl.to(textRef.current, { y: '0%', ease: 'none', duration: 2 }, 2)
+        // 2) Phase 2: Text panel rises from below, title pushed off the top
+        // With h-max and top-full, traveling -100% pulls its exact whole height up into view!
+        tl.to(textRef.current, { y: '-100%', ease: 'none', duration: 2 }, 2)
         tl.to(titleRef.current, { y: '-80dvh', ease: 'none', duration: 2 }, 2)
 
-        // 3) Phase 3: Text panel moves up by 2/3, Sphere shrinks to half of startScale (duration 1, time 4 -> 5)
-        tl.to(textRef.current, { y: '-15%', ease: 'none', duration: 1 }, 4)
+        // 3) Phase 3: Text panel moves up by 2/3, Sphere shrinks to half of startScale
+        tl.to(textRef.current, { y: '-115%', ease: 'none', duration: 1 }, 4)
         tl.to(proxy, {
-            progress: -1.167, // Math trick: progress -1.167 mathematically yields exactly half of startScale!
+            progress: -1.167,
             duration: 1,
             ease: "power1.inOut",
             onUpdate: () => {
@@ -121,14 +116,14 @@ const Skills = () => {
                 {/* Skills panel */}
                 <div
                     ref={textRef}
-                    className="absolute inset-x-0 bottom-0 h-[150dvh] z-30 flex flex-col bg-[#F5F5F7]/80"
+                    className="absolute inset-x-0 top-full min-h-[150dvh] h-max z-30 flex flex-col bg-[#F5F5F7]/80 pb-12"
                 >
                     {/* Divider top */}
                     <hr className="border-t-[1px] border-black w-full shrink-0" />
 
                     {skillsData.map((category) => (
                         <div key={category.title} className="contents">
-                            <div className="w-full max-w-vw-safe mx-auto flex-1 flex flex-col justify-around md:justify-center px-6 md:px-12 py-4">
+                            <div className="w-full max-w-vw-safe mx-auto flex-1 flex flex-col justify-around md:justify-center px-6 md:px-12 py-8 lg:py-12">
                                 <div className="w-full mb-4 md:mb-6">
                                     <span className="font-inter uppercase text-black/80 font-medium">{category.title}</span>
                                 </div>
