@@ -45,8 +45,6 @@ const Skills = () => {
         );
 
         // Master timeline for the entire scrolling container
-        // Container height is 400dvh, Sticky element is 100dvh.
-        // "top top" to "bottom bottom" means total scroll distance is 300dvh.
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: containerRef.current,
@@ -94,8 +92,8 @@ const Skills = () => {
     }, { scope: containerRef })
 
     return (
-        <div ref={containerRef} className="relative z-30 w-full h-[500dvh] bg-[#F5F5F7] rounded-t-[2rem] -mt-8 md:-mt-12" id="skills-section">
-            <div className="sticky top-0 w-full h-[100dvh] overflow-hidden bg-[#F5F5F7] rounded-t-[2rem] flex flex-col">
+        <div ref={containerRef} className="relative z-30 w-full h-[500dvh] bg-[#F5F5F7] -mt-8 md:-mt-12" id="skills-section">
+            <div className="sticky top-0 w-full h-[100dvh] overflow-hidden bg-[#F5F5F7] flex flex-col">
                 { /* Title */}
                 <div className='w-full max-w-vw-safe mx-auto mt-24 relative z-10'>
                     <h1
