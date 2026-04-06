@@ -38,6 +38,6 @@ export const skillsData: SkillCategory[] = [
             cn: "整合多种工程化技能，构建一套完备、高效且即插即用的开发与自动化引擎。",
             en: "A comprehensive, plug-and-play engineering engine designed to streamline development and automation through a diverse and integrated toolset."
         },
-        skills: ["Git", "GitHub Actions", "Docker", "CI/CD", "Linux", "Figma", "Claude Code / Codex", "Agile"]
+        skills: ["Git", "GitHub Actions", "Docker", "CI/CD", "Linux", "Figma", "AI CLI Agent", "Agile"]
     }
 ];
