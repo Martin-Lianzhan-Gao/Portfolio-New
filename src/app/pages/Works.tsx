@@ -30,7 +30,7 @@ const Works = () => {
     );
 
     return (
-        <div ref={containerRef} className="relative z-40 w-full min-h-[100dvh] bg-[#0d0d0d] -mt-8 md:-mt-12 overflow-hidden flex flex-col justify-start" id="works-section">
+        <div ref={containerRef} className="relative z-40 w-full min-h-[100dvh] bg-[#0d0d0d] overflow-hidden flex flex-col justify-start" id="works-section">
             <div className="flex w-max whitespace-nowrap will-change-transform mt-20 md:mt-32 xl:mt-40 2xl:mt-50" ref={marqueeRef}>
                 {/* 
                   First Full Set 
