@@ -14,7 +14,7 @@ export const skillsData: SkillCategory[] = [
             cn: "深耕 React 生态系统，专注于构建响应式、高性能且类型安全的 Web 应用。具备处理工业级 SaaS 复杂业务逻辑与现代高交互需求的核心能力。",
             en: "Architecting responsive, high-performance, and type-safe web applications within the React ecosystem. Expertly equipped to handle both industrial-grade SaaS development and sophisticated modern interaction requirements."
         },
-        skills: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Shadcn UI", "Radix UI", "Axios"]
+        skills: ["React", "Next.js", "TypeScript", "Tailwind CSS", "SASS", "Shadcn UI", "Radix UI", "Axios", "Fetch API"]
     },
     {
         title: "Creative & Interactive",
@@ -30,7 +30,7 @@ export const skillsData: SkillCategory[] = [
             cn: "稳健且可扩展的服务端工具箱。利用类型驱动的开发模式确保数据流的严谨性，并结合现代云基础设施保障服务的稳定部署。灵活适配多种后端架构模式。",
             en: "A robust and scalable server-side toolkit. Leveraging type-driven development to ensure data integrity, coupled with modern cloud infrastructure for stable deployment—highly adaptable across various backend architectures."
         },
-        skills: ["Node.js", "Python", "PostgreSQL", "Prisma", "tRPC", "Zod", "REST APIs", "AWS", "GCP", "Vercel"]
+        skills: ["Node.js", "Python", "PostgreSQL", "Prisma", "tRPC", "Zod", "REST APIs", "AWS", "GCP", "Vercel", "MongoDB", "OAuth"]
     },
     {
         title: "Workflow & Engineering",
