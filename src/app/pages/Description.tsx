@@ -158,11 +158,11 @@ const Description = () => {
     }, { scope: containerRef });
 
     return (
-        <div ref={containerRef} data-theme="dark" className="theme-dark relative z-20 overflow-x-hidden bg-[#0d0d0d] w-full pb-16 md:pb-48 rounded-t-[2rem] flex flex-col items-center">
+        <div ref={containerRef} data-theme="dark" className="theme-dark relative z-20 overflow-x-hidden bg-[#0d0d0d] w-full pb-16 md:pb-48  flex flex-col items-center">
             <div className="text-white mt-12 pt-20 pb-20 md:pt-36 md:pb-36 w-full max-w-vw-safe flex flex-col justify-center min-h-[100dvh]">
                 <div className="w-full ml-6 mr-6 md:ml-12 md:mr-12 mb-16">
                     <h1 ref={titleRef} className="uppercase text-[min(12vw,18vh)] font-inria-sans font-medium leading-[0.85] text-white">
-                        More<br />About Me
+                        About Me
                     </h1>
                 </div>
                 <div ref={textRef} className="font-inter text-3xl md:text-5xl lg:text-[3.5rem] xl:text-[4rem] uppercase font-light break-words w-full flex flex-col items-end justify-center pr-6 pl-6 md:pr-12 md:pl-12 gap-12 lg:gap-20 leading-snug">
