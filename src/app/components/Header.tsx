@@ -7,7 +7,7 @@ import Logo from './ui/Logo'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const menuItems = ['ABOUT', 'SKILLS', 'WORKS', 'CONTACT']
+const menuItems = ['ABOUT', 'WORKS', 'CONTACT']
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
