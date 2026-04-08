@@ -15,10 +15,9 @@ const Description = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
     const textRef = useRef<HTMLDivElement>(null);
-    const buttonRef = useRef<HTMLDivElement>(null);
 
     useGSAP(() => {
-        if (!titleRef.current || !containerRef.current || !textRef.current || !buttonRef.current) return;
+        if (!titleRef.current || !containerRef.current || !textRef.current) return;
 
         // Title animation (Clipping Mask Reveal)
         const titleSplit = new SplitText(titleRef.current, {
@@ -133,24 +132,6 @@ const Description = () => {
             }, "<70%");
         }
 
-        // Resume Button Entry Animation (fade-in + slide-up, GPU-accelerated)
-        if (buttonRef.current) {
-            gsap.fromTo(buttonRef.current,
-                { opacity: 0, x: -20 },
-                {
-                    opacity: 1,
-                    x: 0,
-                    duration: 0.8,
-                    ease: "power2.out",
-                    scrollTrigger: {
-                        trigger: buttonRef.current,
-                        start: "top 90%",
-                        toggleActions: "play none none reverse"
-                    }
-                }
-            );
-        }
-
         return () => {
             titleSplit.revert();
             textSplit.revert();
@@ -173,14 +154,6 @@ const Description = () => {
                         Bachelor of Computer Science, The University of Queensland (2019-2024)<span className="bullet-dot inline-flex items-center justify-center align-middle w-[0.3em] h-[0.3em] rounded-full mx-2 relative -top-[0.05em]" /><br />
                         Translated CS fundamentals into production-ready applications through real-world projects and industry works.
                     </p>
-                    <div ref={buttonRef} className="mt-6 md:mt-12 w-full md:w-5/6 lg:w-4/5 xl:w-2/3">
-                        <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="relative overflow-hidden border-2 border-white/80 hover:border-white rounded-full px-4 py-2 md:px-6 md:py-3 xl:px-8 xl:py-4 inline-flex items-center gap-4 text-xl md:text-3xl lg:text-[1.3rem] xl:text-[1.8rem] text-white/80 group">
-                            <div className="absolute inset-x-0 bottom-0 h-0 bg-white transition-all duration-300 ease-out group-hover:h-full"></div>
-                            <span className="relative z-10 font-regular tracking-wide font-inria-sans group-hover:text-black transition-colors duration-300">DOWNLOAD RESUME</span>
-                            <ArrowUpRight strokeWidth={2} strokeLinecap='butt'
-                                strokeLinejoin='miter' className="relative z-10 w-[1em] h-[1em] translate-y-[0.03em] group-hover:translate-x-[0.1em] group-hover:-translate-y-[0.1em] transition-all duration-300 group-hover:text-[#E67B4E]" />
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>
