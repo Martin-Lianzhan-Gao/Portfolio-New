@@ -2,6 +2,7 @@
 'use client'
 
 import React, { useRef } from 'react';
+import { ArrowDownRight } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { worksData } from '../data/worksData';
@@ -44,6 +45,46 @@ const Works = () => {
                 );
             }
         })
+
+        // Neo-Brutalist Ledger Entry Animations (The Gate & The Cut)
+        const worksRows = gsap.utils.toArray<HTMLElement>('.works-row');
+        worksRows.forEach((row) => {
+            const divider = row.querySelector('.row-divider');
+            const title = row.querySelector('.row-title');
+            const fades = gsap.utils.toArray('.row-fade-up', row);
+
+            // Init State
+            gsap.set(divider, { scaleX: 0 });
+            gsap.set(title, { yPercent: 120 });
+            gsap.set(fades, { opacity: 0, y: 30 });
+
+            const rowTl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: row,
+                    start: "top 85%", 
+                }
+            });
+
+            rowTl.to(divider, {
+                scaleX: 1,
+                duration: 1.2,
+                ease: "expo.inOut",
+                transformOrigin: "left center" // Razor cut from left to right
+            })
+            .to(title, {
+                yPercent: 0,
+                duration: 1.2,
+                ease: "power4.out"
+            }, "-=0.6") // Ascend monolithic text heavily before cut finishes
+            .to(fades, {
+                y: 0,
+                opacity: 1,
+                duration: 0.8,
+                stagger: 0.1,
+                ease: "power3.out"
+            }, "-=1.0"); // Float up the dust (metadata)
+        })
+
     }, { scope: containerRef });
 
     const MarqueeItem = () => (
@@ -80,10 +121,13 @@ const Works = () => {
             {/* Neo-Brutalist LEDGER / Works List */}
             <div className="w-full flex-col flex items-center relative z-20 pb-20 md:pb-32">
                 {worksData.map((work, idx) => (
-                    <div key={idx} className="group w-full max-w-vw-safe mx-auto flex flex-col border-t border-[#f5f5f7]/15 py-12 lg:py-24 px-6 md:px-12 hover:bg-[#f5f5f7]/[0.02] transition-colors duration-500 cursor-pointer">
+                    <div key={idx} className="works-row group relative w-full max-w-vw-safe mx-auto flex flex-col py-12 lg:py-24 px-6 md:px-12 hover:bg-[#f5f5f7]/[0.02] transition-colors duration-500 cursor-pointer">
+                        
+                        {/* The Animated SVG Cut Line */}
+                        <div className="row-divider absolute top-0 left-0 w-full h-[1px] bg-[#f5f5f7]/15"></div>
 
                         {/* Top Row: Metadata (Breathing Room) */}
-                        <div className="w-full flex justify-start mb-8 lg:mb-16">
+                        <div className="row-fade-up w-full flex justify-start mb-8 lg:mb-16">
                             <span className="font-inter font-medium text-[10px] md:text-xs uppercase tracking-[0.2em] text-[#f5f5f7]/40">
                                 [ {work.date.startDate} - {work.date.endDate} ] / {work.type}
                             </span>
@@ -91,10 +135,10 @@ const Works = () => {
 
                         {/* Bottom Row: Title + Details (Vertically Centered) */}
                         <div className="w-full flex flex-col lg:flex-row items-start lg:items-center justify-between gap-12 lg:gap-24">
-
+                            
                             {/* Left Box (The Visual Monolith) */}
-                            <div className="w-full lg:w-auto shrink-0 flex items-center">
-                                <h3 className="font-inria-sans text-[4rem] sm:text-[5rem] md:text-7xl lg:text-[7rem] xl:text-[8rem] font-bold text-[#f5f5f7] tracking-tighter uppercase leading-[0.85] m-0 mix-blend-difference">
+                            <div className="w-full lg:w-auto shrink-0 flex items-center overflow-hidden py-1">
+                                <h3 className="row-title font-inria-sans text-[4rem] sm:text-[5rem] md:text-7xl lg:text-[7rem] xl:text-[8rem] font-bold text-[#f5f5f7] tracking-tighter uppercase leading-[0.85] m-0 mix-blend-difference">
                                     {work.title}
                                 </h3>
                             </div>
@@ -102,12 +146,12 @@ const Works = () => {
                             {/* Right Box (Context & Action) */}
                             <div className="w-full lg:flex-1 max-w-[600px] flex flex-col gap-10 md:gap-14">
                                 <div className="flex flex-col gap-4 md:gap-5">
-                                    <p className="font-inter text-xs md:text-sm font-bold text-[#f5f5f7]/70 uppercase tracking-[0.15em]">
+                                    <p className="row-fade-up font-inter text-xs md:text-sm font-bold text-[#f5f5f7]/70 uppercase tracking-[0.15em]">
                                         {work.position}
                                     </p>
-
+                                    
                                     {/* Skills with Orange Dot Separators */}
-                                    <div className="font-inter text-[10px] md:text-xs text-[#f5f5f7]/40 uppercase tracking-[0.15em] leading-[2] flex flex-wrap items-center">
+                                    <div className="row-fade-up font-inter text-[10px] md:text-xs text-[#f5f5f7]/40 uppercase tracking-[0.15em] leading-[2] flex flex-wrap items-center">
                                         {work.techStack.map((tech, i) => (
                                             <span key={i} className="flex items-center shrink-0">
                                                 {tech}
@@ -119,8 +163,8 @@ const Works = () => {
                                     </div>
                                 </div>
 
-                                <a href="#resume" onClick={(e) => e.preventDefault()} className="font-inter font-semibold text-[10px] md:text-xs uppercase tracking-[0.25em] text-[#f5f5f7]/60 group-hover:text-white transition-colors duration-300 flex items-center w-max">
-                                    [ <span className="transform transition-transform duration-500 group-hover:translate-x-1 group-hover:translate-y-1 group-hover:text-[#E67B4E] block mx-2 text-sm">&#x2198;</span> DETAILS IN RESUME ]
+                                <a href="#resume" onClick={(e) => e.preventDefault()} className="row-fade-up font-inter font-semibold text-[10px] md:text-xs uppercase tracking-[0.25em] text-[#f5f5f7]/60 group-hover:text-white transition-colors duration-300 flex items-center w-max">
+                                    [ <ArrowDownRight className="w-3 h-3 md:w-3.5 md:h-3.5 transform transition-transform duration-500 group-hover:translate-x-1 group-hover:translate-y-1 group-hover:text-[#E67B4E] block mx-2" strokeWidth={2.5} /> DETAILS IN RESUME ]
                                 </a>
                             </div>
                         </div>
