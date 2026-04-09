@@ -3,11 +3,20 @@
 import React, { useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { ArrowUpRight } from 'lucide-react';
 import EclipseMoon from '../components/models/EclipseMoon';
 
 const MegaFooter = () => {
     const containerRef = useRef<HTMLElement>(null);
     const emailRef = useRef<HTMLAnchorElement>(null);
+
+    const scrollToSection = (id: string, e: React.MouseEvent) => {
+        e.preventDefault();
+        const element = document.getElementById(id);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
 
     useGSAP(() => {
         // Subtle Mouse Parallax to separate the Email text Z-depth from the background Canvas
@@ -56,20 +65,23 @@ const MegaFooter = () => {
             <div className="relative z-10 w-full h-full flex flex-col justify-between p-6 pt-24 md:p-12 md:pt-32 lg:p-16 lg:pt-40">
 
                 {/* Top Row: Navigation & Orbit */}
-                <div className="flex w-full justify-between items-start">
+                <div className="flex w-full justify-between items-start md:items-center">
 
                     {/* Left: Swiss Grid Menu */}
-                    <div className="flex gap-16 md:gap-32">
+                    <div className="flex gap-16 md:gap-32 items-start">
                         <span className="font-inter text-[10px] md:text-sm font-bold uppercase tracking-[0.2em] text-[#f5f5f7]/40">Menu</span>
                         <div className="flex flex-col gap-3 font-inter text-[10px] md:text-sm font-bold uppercase tracking-[0.2em] text-[#f5f5f7]/70">
-                            <a href="#works" className="hover:text-[#E67B4E] transition-colors duration-300">↗ Work</a>
-                            <a href="#about" className="hover:text-[#E67B4E] transition-colors duration-300">↗ About</a>
-                            <a href="mailto:hello@martingao.com" className="hover:text-[#E67B4E] transition-colors duration-300">↗ Contact</a>
+                            <div onClick={(e) => scrollToSection('works', e)} className="hover:text-[#E67B4E] transition-colors duration-300 flex items-center gap-1 group/link max-w-fit cursor-pointer">
+                                <ArrowUpRight className="w-3 h-3 md:w-4 md:h-4 group-hover/link:-translate-y-[2px] group-hover/link:translate-x-[2px] transition-transform duration-300" strokeWidth={2.5} /> Work
+                            </div>
+                            <div onClick={(e) => scrollToSection('about', e)} className="hover:text-[#E67B4E] transition-colors duration-300 flex items-center gap-1 group/link max-w-fit cursor-pointer">
+                                <ArrowUpRight className="w-3 h-3 md:w-4 md:h-4 group-hover/link:-translate-y-[2px] group-hover/link:translate-x-[2px] transition-transform duration-300" strokeWidth={2.5} /> About
+                            </div>
                         </div>
                     </div>
 
                     {/* Right: Circle Scroll Up (Rotary Simulation) */}
-                    <div className="hidden md:flex flex-col items-center justify-center group cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+                    <div className="hidden md:flex flex-col items-center justify-center group cursor-pointer" onClick={(e) => scrollToSection('top', e)}>
                         <div className="relative w-24 h-24 flex items-center justify-center rounded-full border border-[#f5f5f7]/15 group-hover:border-[#E67B4E]/50 transition-colors duration-500 bg-[#f5f5f7]/[0.01] backdrop-blur-sm">
                             <span className="font-inria-sans text-xl font-light text-[#f5f5f7]/50 group-hover:text-[#E67B4E] group-hover:-translate-y-1 transition-all duration-500">↑</span>
                             {/* Curved Text Simulation via SVG */}
