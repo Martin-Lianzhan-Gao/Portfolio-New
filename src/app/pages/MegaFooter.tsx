@@ -37,9 +37,10 @@ const MegaFooter = () => {
         <footer ref={containerRef} className="fixed bottom-0 left-0 w-full h-[100dvh] z-0 bg-[#000000] text-[#f5f5f7] flex flex-col justify-between overflow-hidden">
 
             {/* The Void: Cinematic Eclipse Asymmetric Anchor */}
-            {/* Massively scaled and anchored to the top-right corner, clipping off-screen */}
-            <div className="absolute top-[-10%] right-[-10%] w-[60vmax] h-[60vmax] opacity-90 pointer-events-none mix-blend-screen z-0 scale-[1.2]">
-                <div className="w-full h-full transform translate-x-[5%] -translate-y-[5%]">
+            <div className="absolute opacity-90 pointer-events-none mix-blend-screen z-0
+                            portrait:w-[180vw] portrait:h-[180vw] portrait:top-1/2 portrait:right-0 portrait:translate-x-1/2 portrait:-translate-y-1/2
+                            landscape:w-[130vh] landscape:h-[130vh] landscape:top-[-15vh] landscape:right-[-15vh] landscape:translate-x-0 landscape:translate-y-0">
+                <div className="w-full h-full">
                     <EclipseMoon />
                 </div>
             </div>
