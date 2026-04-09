@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Montserrat, Inter, Inria_Sans, Cormorant_Garamond } 
 import "./globals.css";
 import Header from "./components/Header";
 import SmoothScrolling from "./components/SmoothScrolling";
+import MegaFooter from "./pages/MegaFooter";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -64,10 +65,16 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body
-                className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} ${inter.variable} ${inriaSans.variable} ${cormorantGaramond.variable} antialiased`}
+                className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} ${inter.variable} ${inriaSans.variable} ${cormorantGaramond.variable} antialiased bg-[#000000]`}
             >
-                <Header />
-                {children}
+                <div className="relative z-10 bg-[#0d0d0d] rounded-b-[2rem] md:rounded-b-[4rem] overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.8)] min-h-screen">
+                    <Header />
+                    {children}
+                </div>
+
+                <div className="theme-dark relative w-full h-[100dvh] pointer-events-none z-0"></div>
+
+                <MegaFooter />
             </body>
         </html>
     );
