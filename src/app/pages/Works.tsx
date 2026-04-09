@@ -62,6 +62,7 @@ const Works = () => {
                 scrollTrigger: {
                     trigger: row,
                     start: "top 85%", 
+                    toggleActions: "play none none reverse",
                 }
             });
 
@@ -96,7 +97,7 @@ const Works = () => {
     );
 
     return (
-        <div ref={containerRef} className="relative z-40 w-full min-h-[100dvh] bg-[#0d0d0d] overflow-hidden flex flex-col justify-start" id="works-section">
+        <div ref={containerRef} id="works" className="theme-dark relative z-40 w-full min-h-[100dvh] bg-[#0d0d0d] overflow-hidden flex flex-col justify-start">
             <div className="flex w-max whitespace-nowrap will-change-transform mt-20 md:mt-32 xl:mt-40 2xl:mt-50 mb-24 md:mb-40 lg:mb-56" ref={marqueeRef}>
                 {/* 
                   First Full Set 
