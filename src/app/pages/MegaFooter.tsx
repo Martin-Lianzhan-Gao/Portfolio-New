@@ -55,11 +55,11 @@ const MegaFooter = () => {
             </div>
 
             {/* Macro Watermark (The Texture) */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full flex justify-center pointer-events-none select-none z-0">
+            {/* <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full flex justify-center pointer-events-none select-none z-0">
                 <span className="font-inria-sans text-[12vw] font-bold text-[#f5f5f7]/[0.02] whitespace-nowrap tracking-tighter">
                     ARCHITECTURE
                 </span>
-            </div>
+            </div> */}
 
             {/* Layout Grid (Z-index 10 / Safe area) */}
             <div className="relative z-10 w-full h-full flex flex-col justify-between p-6 pt-24 md:p-12 md:pt-32 lg:p-16 lg:pt-40">
@@ -69,8 +69,8 @@ const MegaFooter = () => {
 
                     {/* Left: Swiss Grid Menu */}
                     <div className="flex gap-16 md:gap-32 items-start">
-                        <span className="font-inter text-[10px] md:text-sm font-bold uppercase tracking-[0.2em] text-[#f5f5f7]/40">Menu</span>
-                        <div className="flex flex-col gap-3 font-inter text-[10px] md:text-sm font-bold uppercase tracking-[0.2em] text-[#f5f5f7]/70">
+                        <span className="font-inter text-[11px] md:text-sm font-bold uppercase tracking-[0.2em] text-[#f5f5f7]/40">Menu</span>
+                        <div className="flex flex-col gap-4 font-inter text-[11px] md:text-sm font-bold uppercase tracking-[0.2em] text-[#f5f5f7]/70">
                             <div onClick={(e) => scrollToSection('works', e)} className="hover:text-[#E67B4E] transition-colors duration-300 flex items-center gap-1 group/link max-w-fit cursor-pointer">
                                 <ArrowUpRight className="w-3 h-3 md:w-4 md:h-4 group-hover/link:-translate-y-[2px] group-hover/link:translate-x-[2px] transition-transform duration-300" strokeWidth={2.5} /> Work
                             </div>
@@ -100,7 +100,7 @@ const MegaFooter = () => {
 
                 {/* Center Row: Massive Email CTO */}
                 <div className="flex w-full justify-start items-center flex-1 py-10 md:py-0">
-                    <a ref={emailRef} href="mailto:[EMAIL_ADDRESS]" className="font-inter font-light text-[12vw] tracking-tighter leading-[0.85] text-[#f5f5f7] hover:text-[#E67B4E] transition-colors duration-500 z-20">
+                    <a ref={emailRef} href="mailto:gaolianzhan@gmail.com" className="font-inter font-light text-[12vw] tracking-tighter leading-[0.85] text-[#f5f5f7] hover:text-[#E67B4E] transition-colors duration-500 z-20">
                         gaolianzhan<br />@gmail.com
                     </a>
                 </div>
