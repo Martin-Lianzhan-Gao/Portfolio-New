@@ -61,7 +61,7 @@ const Works = () => {
             const rowTl = gsap.timeline({
                 scrollTrigger: {
                     trigger: row,
-                    start: "top 85%", 
+                    start: "top 85%",
                     toggleActions: "play none none reverse",
                 }
             });
@@ -72,18 +72,18 @@ const Works = () => {
                 ease: "expo.inOut",
                 transformOrigin: "left center" // Razor cut from left to right
             })
-            .to(title, {
-                yPercent: 0,
-                duration: 1.2,
-                ease: "power4.out"
-            }, "-=0.6") // Ascend monolithic text heavily before cut finishes
-            .to(fades, {
-                y: 0,
-                opacity: 1,
-                duration: 0.8,
-                stagger: 0.1,
-                ease: "power3.out"
-            }, "-=1.0"); // Float up the dust (metadata)
+                .to(title, {
+                    yPercent: 0,
+                    duration: 1.2,
+                    ease: "power4.out"
+                }, "-=0.6") // Ascend monolithic text heavily before cut finishes
+                .to(fades, {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.8,
+                    stagger: 0.1,
+                    ease: "power3.out"
+                }, "-=1.0"); // Float up the dust (metadata)
         })
 
     }, { scope: containerRef });
@@ -123,7 +123,7 @@ const Works = () => {
             <div className="w-full flex-col flex items-center relative z-20 pb-20 md:pb-32">
                 {worksData.map((work, idx) => (
                     <div key={idx} className="works-row group relative w-full max-w-vw-safe mx-auto flex flex-col py-12 lg:py-24 px-6 md:px-12 hover:bg-[#f5f5f7]/[0.02] transition-colors duration-500 cursor-pointer">
-                        
+
                         {/* The Animated SVG Cut Line */}
                         <div className="row-divider absolute top-0 left-0 w-full h-[1px] bg-[#f5f5f7]/15"></div>
 
@@ -136,7 +136,7 @@ const Works = () => {
 
                         {/* Bottom Row: Title + Details (Vertically Centered) */}
                         <div className="w-full flex flex-col lg:flex-row items-start lg:items-center justify-between gap-12 lg:gap-24">
-                            
+
                             {/* Left Box (The Visual Monolith) */}
                             <div className="w-full lg:w-auto shrink-0 flex items-center overflow-hidden py-1">
                                 <h3 className="row-title font-inria-sans text-[4rem] sm:text-[5rem] md:text-7xl lg:text-[7rem] xl:text-[8rem] font-bold text-[#f5f5f7] tracking-tighter uppercase leading-[0.85] m-0 mix-blend-difference">
@@ -150,7 +150,7 @@ const Works = () => {
                                     <p className="row-fade-up font-inter text-xs md:text-sm font-bold text-[#f5f5f7]/70 uppercase tracking-[0.15em]">
                                         {work.position}
                                     </p>
-                                    
+
                                     {/* Skills with Orange Dot Separators */}
                                     <div className="row-fade-up font-inter text-[10px] md:text-xs text-[#f5f5f7]/40 uppercase tracking-[0.15em] leading-[2] flex flex-wrap items-center">
                                         {work.techStack.map((tech, i) => (
