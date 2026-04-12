@@ -22,6 +22,9 @@ const MegaFooter = () => {
     useGSAP(() => {
         // Subtle Mouse Parallax to separate the Email text Z-depth from the background Canvas
         const ctx = gsap.context(() => {
+            // Skip parallax on touch devices — it's designed for continuous mouse tracking
+            if (window.matchMedia('(pointer: coarse)').matches) return;
+
             const handleMouseMove = (e: MouseEvent) => {
                 const { clientX, clientY } = e;
                 const x = (clientX / window.innerWidth - 0.5) * 30;
@@ -64,10 +67,10 @@ const MegaFooter = () => {
                 </div>
             </div>
 
-            {/* Macro Watermark (The Texture) */}
+            {/* Macro Slogan Watermark (Joy Of Missing Out) */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full flex justify-center pointer-events-none select-none z-0">
                 <span className="font-inria-sans text-[12vw] font-bold text-[#f5f5f7]/[0.02] whitespace-nowrap tracking-tighter">
-                    JIMO
+                    JOMO
                 </span>
             </div>
 
