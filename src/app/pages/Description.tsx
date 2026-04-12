@@ -7,7 +7,7 @@ import SplitText from "gsap/SplitText";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import Heart from "../components/icons/Heart";
 import Star from "../components/icons/Star";
-import { ArrowUpRight } from "lucide-react";
+
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -148,7 +148,7 @@ const Description = () => {
                 </div>
                 <div ref={textRef} className="font-inter text-3xl md:text-5xl lg:text-[3.5rem] xl:text-[4rem] uppercase font-light break-words w-full flex flex-col items-end justify-center pr-6 pl-6 md:pr-12 md:pl-12 gap-12 lg:gap-20 leading-snug">
                     <p className="w-full md:w-5/6 lg:w-4/5 xl:w-2/3">
-                        Full-stack engineer. Visually uncompromising. <span className="inline-flex items-center justify-center align-middle px-2 relative -top-[0.08em]"><Heart /></span>I don't separate how a system works from how it looks — both are engineering problems, both have correct answers. <span className="inline-flex items-center justify-center align-middle px-2 relative -top-[0.08em]"><Star /></span>I write code the way this page looks — nothing that doesn't need to be here.
+                        Full-stack engineer. Visually uncompromising<span className="inline-flex items-center justify-center align-middle px-2 relative -top-[0.08em]"><Heart /></span>I don't separate how a system works from how it looks — both are engineering problems, both have correct answers<span className="inline-flex items-center justify-center align-middle px-2 relative -top-[0.08em]"><Star /></span>I write code the way this page looks — nothing that doesn't need to be here.
                     </p>
                     <p className="w-full md:w-5/6 lg:w-4/5 xl:w-2/3">
                         Bachelor of Computer Science, The University of Queensland (2019-2024)<span className="bullet-dot inline-flex items-center justify-center align-middle w-[0.3em] h-[0.3em] rounded-full mx-2 relative -top-[0.05em]" /><br />
