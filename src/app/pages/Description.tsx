@@ -109,7 +109,7 @@ const Description = () => {
                 opacity: 1,
                 rotation: 0,
                 ease: "back.out(3.5)",
-            }, "<30%");
+            }, 0.08);
         }
         // Star animation
         if (starSpan) {
@@ -119,7 +119,7 @@ const Description = () => {
                 rotation: 180,
                 opacity: 1,
                 ease: "power3.out",
-            }, "<50%");
+            }, 0.48);
         }
 
         // Dot animation
@@ -129,7 +129,7 @@ const Description = () => {
                 scale: 1,
                 opacity: 1,
                 ease: "elastic.out(1.8, 0.4)",
-            }, "<70%");
+            }, 0.98);
         }
 
         return () => {
@@ -148,11 +148,11 @@ const Description = () => {
                 </div>
                 <div ref={textRef} className="font-inter text-3xl md:text-5xl lg:text-[3.5rem] xl:text-[4rem] uppercase font-light break-words w-full flex flex-col items-end justify-center pr-6 pl-6 md:pr-12 md:pl-12 gap-12 lg:gap-20 leading-snug">
                     <p className="w-full md:w-5/6 lg:w-4/5 xl:w-2/3">
-                        A software engineer specializing in the end-to-end development of scalable web applications<span className="inline-flex items-center justify-center align-middle px-2 relative -top-[0.08em]"><Heart /></span>By merging robust full-stack architecture with precise UI/UX principles<span className="inline-flex items-center justify-center align-middle px-2 relative -top-[0.08em]"><Star /></span>I build high-performance, user-centered digital experiences.
+                        Full-stack engineer. Visually uncompromising. <span className="inline-flex items-center justify-center align-middle px-2 relative -top-[0.08em]"><Heart /></span>I don't separate how a system works from how it looks — both are engineering problems, both have correct answers. <span className="inline-flex items-center justify-center align-middle px-2 relative -top-[0.08em]"><Star /></span>I write code the way this page looks — nothing that doesn't need to be here.
                     </p>
                     <p className="w-full md:w-5/6 lg:w-4/5 xl:w-2/3">
                         Bachelor of Computer Science, The University of Queensland (2019-2024)<span className="bullet-dot inline-flex items-center justify-center align-middle w-[0.3em] h-[0.3em] rounded-full mx-2 relative -top-[0.05em]" /><br />
-                        Translated CS fundamentals into production-ready applications through real-world projects and industry works.
+                        Theory was the starting point, not the destination.
                     </p>
                 </div>
             </div>
