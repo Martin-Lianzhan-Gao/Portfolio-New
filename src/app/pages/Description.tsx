@@ -67,7 +67,7 @@ const Description = () => {
                 trigger: textRef.current,
                 start: "top 85%",
                 end: "bottom 55%",
-                scrub: 1.5,
+                scrub: 2.5,
                 fastScrollEnd: true,
                 preventOverlaps: true
             }
@@ -81,7 +81,7 @@ const Description = () => {
             {
                 x: 0,
                 color: "rgba(255,255,255,1)",
-                stagger: 0.02,
+                stagger: 0.03,
                 ease: "power2.out",
             }, 0
         );
