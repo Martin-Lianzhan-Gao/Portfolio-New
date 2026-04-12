@@ -149,19 +149,36 @@ const Header = () => {
     };
 
     const handleItemClick = contextSafe((index: number, id: string, e: React.MouseEvent) => {
-        // wipe away the underline on click for visual confirmation
         if (underlineRefs.current[index]) {
-            gsap.set(underlineRefs.current[index], { transformOrigin: 'right center' })
-            gsap.to(underlineRefs.current[index], {
-                scaleX: 0,
-                duration: 0.4,
-                ease: 'power3.out'
-            })
+            const isTouch = window.matchMedia('(pointer: coarse)').matches;
+            if (isTouch) {
+                const tl = gsap.timeline();
+                tl.set(underlineRefs.current[index], { scaleX: 0, transformOrigin: 'left center' })
+                tl.to(underlineRefs.current[index], {
+                    scaleX: 1,
+                    duration: 0.2,
+                    ease: 'power2.out'
+                })
+                tl.to(underlineRefs.current[index], {
+                    scaleX: 0,
+                    transformOrigin: 'right center',
+                    duration: 0.35,
+                    ease: 'power3.inOut'
+                }, '+=0.05')
+            } else {
+                gsap.set(underlineRefs.current[index], { transformOrigin: 'right center' })
+                gsap.to(underlineRefs.current[index], {
+                    scaleX: 0,
+                    duration: 0.4,
+                    ease: 'power3.out'
+                })
+            }
         }
         scrollToSection(id, e);
     })
 
     const handleMouseEnter = contextSafe((index: number) => {
+        if (window.matchMedia('(pointer: coarse)').matches) return;
         if (underlineRefs.current[index]) {
             gsap.set(underlineRefs.current[index], { transformOrigin: 'left center' })
             gsap.to(underlineRefs.current[index], {
@@ -173,6 +190,7 @@ const Header = () => {
     })
 
     const handleMouseLeave = contextSafe((index: number) => {
+        if (window.matchMedia('(pointer: coarse)').matches) return;
         if (underlineRefs.current[index]) {
             gsap.set(underlineRefs.current[index], { transformOrigin: 'right center' })
             gsap.to(underlineRefs.current[index], {
