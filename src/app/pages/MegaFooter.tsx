@@ -82,14 +82,14 @@ const MegaFooter = () => {
 
                     {/* Left: Swiss Grid Menu */}
                     <div className="flex gap-16 md:gap-32 items-start">
-                        <span className="font-inter text-[11px] md:text-sm font-bold uppercase tracking-[0.2em] text-[#f5f5f7]/40">Menu</span>
+                        <span className="font-inter text-[11px] md:text-sm font-bold uppercase tracking-[0.2em] text-[#f5f5f7]/40">SOCIALS</span>
                         <div className="flex flex-col gap-4 font-inter text-[11px] md:text-sm font-bold uppercase tracking-[0.2em] text-[#f5f5f7]/70">
-                            <div onClick={(e) => scrollToSection('works', e)} className="hover:text-[#E67B4E] transition-colors duration-300 flex items-center gap-1 group/link max-w-fit cursor-pointer">
-                                <ArrowUpRight className="w-3 h-3 md:w-4 md:h-4 group-hover/link:-translate-y-[2px] group-hover/link:translate-x-[2px] transition-transform duration-300" strokeWidth={2.5} /> Work
-                            </div>
-                            <div onClick={(e) => scrollToSection('about', e)} className="hover:text-[#E67B4E] transition-colors duration-300 flex items-center gap-1 group/link max-w-fit cursor-pointer">
-                                <ArrowUpRight className="w-3 h-3 md:w-4 md:h-4 group-hover/link:-translate-y-[2px] group-hover/link:translate-x-[2px] transition-transform duration-300" strokeWidth={2.5} /> About
-                            </div>
+                            <a href="https://github.com/Martin-Lianzhan-Gao" target="_blank" rel="noopener noreferrer" className="hover:text-[#E67B4E] transition-colors duration-300 flex items-center gap-1 group/link max-w-fit cursor-pointer">
+                                <ArrowUpRight className="w-3 h-3 md:w-4 md:h-4 group-hover/link:-translate-y-[2px] group-hover/link:translate-x-[2px] transition-transform duration-300" strokeWidth={2.5} /> GitHub
+                            </a>
+                            <a href="https://www.linkedin.com/in/martin-lianzhan-gao" target="_blank" rel="noopener noreferrer" className="hover:text-[#E67B4E] transition-colors duration-300 flex items-center gap-1 group/link max-w-fit cursor-pointer">
+                                <ArrowUpRight className="w-3 h-3 md:w-4 md:h-4 group-hover/link:-translate-y-[2px] group-hover/link:translate-x-[2px] transition-transform duration-300" strokeWidth={2.5} /> LinkedIn
+                            </a>
                         </div>
                     </div>
 
