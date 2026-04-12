@@ -72,7 +72,7 @@ export default function RootLayout({
                     {children}
                 </div>
 
-                <div className="theme-dark relative w-full h-[100dvh] pointer-events-none z-0"></div>
+                <div id="contact" className="theme-dark relative w-full h-[100dvh] pointer-events-none z-0"></div>
 
                 <MegaFooter />
             </body>
