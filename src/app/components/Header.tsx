@@ -346,6 +346,14 @@ const Header = () => {
         }
     })
 
+    // Handle logo click: scroll to top, close mobile menu if open
+    const handleLogoClick = contextSafe((e: React.MouseEvent, id: string) => {
+        if (isMenuOpen) {
+            toggleMenu();
+        }
+        scrollToSection(id, e);
+    })
+
     // Handle mobile menu item click
     const handleMobileMenuClick = contextSafe((index: number, id: string, e: React.MouseEvent) => {
         // Brutalist strike-through feedback
@@ -366,7 +374,7 @@ const Header = () => {
         <>
             <div ref={headerRef} className="fixed top-0 w-full h-auto flex flex-row items-center justify-center mt-6 z-100 font-inter font-medium">
                 <div className='w-full max-w-vw-safe flex flex-row items-center justify-between'>
-                    <div ref={brandRef} className="relative z-50 w-auto ml-6 md:ml-12 flex flex-row items-center">
+                    <div ref={brandRef} className="relative z-50 w-auto ml-6 md:ml-12 flex flex-row items-center cursor-pointer" onClick={(e) => handleLogoClick(e, 'top')}>
                         <div className='mr-2 w-[36px] h-[18px] md:w-[42px] md:h-[21px]'>
                             <Logo ref={logoRef} color="black" />
                         </div>
