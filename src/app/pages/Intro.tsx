@@ -104,7 +104,7 @@ const Intro = () => {
     });
 
     return (
-        <div id="top" className="sticky top-0 z-0 w-full h-[100dvh] overflow-hidden bg-white">
+        <div id="top" className="sticky top-0 z-10 w-full h-[100dvh] overflow-hidden bg-white">
             {/* Particle Sphere Background */}
             <div
                 ref={particleSphereContainerRef}
