@@ -67,13 +67,8 @@ export default function RootLayout({
             <body
                 className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} ${inter.variable} ${inriaSans.variable} ${cormorantGaramond.variable} antialiased bg-[#000000]`}
             >
-                <div className="relative z-10 bg-[#0d0d0d] rounded-b-[2rem] md:rounded-b-[4rem] overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.8)] min-h-screen">
-                    <Header />
-                    {children}
-                </div>
-
-                <div id="contact" className="theme-dark relative w-full h-[100dvh] pointer-events-none z-0"></div>
-
+                <Header />
+                {children}
                 <MegaFooter />
             </body>
         </html>
