@@ -266,7 +266,7 @@ const DynamicNebula = () => {
     )
 }
 
-const ParticleSphere = () => {
+const OrganicNebula = () => {
     return (
         <div className="w-full h-full pointer-events-none">
             <Canvas
@@ -281,4 +281,4 @@ const ParticleSphere = () => {
     )
 }
 
-export default ParticleSphere
+export default OrganicNebula;
