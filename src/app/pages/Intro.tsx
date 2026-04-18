@@ -1,147 +1,143 @@
 'use client'
 
-import { useRef, PointerEvent } from "react";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
-import SplitText from "gsap/SplitText";
-import ScrollTrigger from "gsap/ScrollTrigger";
-import ScrollDown from "../components/ui/ScrollDown";
-import ParticleSphere from "../components/models/ParticleSphere";
+import { useRef } from 'react';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import ScrollTrigger from 'gsap/ScrollTrigger';
+import { ArrowDown } from 'lucide-react';
+import ParticleSphere from '../components/models/ParticleSphere';
 
-gsap.registerPlugin(SplitText, ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger);
 
 const Intro = () => {
     const particleSphereContainerRef = useRef<HTMLDivElement>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
+    const introTopRef = useRef<HTMLDivElement>(null);
+    const introBottomRef = useRef<HTMLDivElement>(null);
 
-    const emailRef = useRef<HTMLAnchorElement>(null);
-    const copyrightRef = useRef<HTMLParagraphElement>(null);
-    const scrollDownRef = useRef<HTMLParagraphElement>(null);
-
-    const underlineRef = useRef<HTMLSpanElement>(null);
-
-    const { contextSafe } = useGSAP();
-
+    // Initial Appearance Animation
     useGSAP(() => {
         const tl = gsap.timeline();
 
-        // Particle Sphere (Starts at 0s)
-        tl.to(particleSphereContainerRef.current, {
-            opacity: 1, // Full opacity for the black particles
-            duration: 4,
-            ease: "power2.inOut"
-        }, 0);
-
-        // The Monolith Title using SplitText
-        const split = new SplitText(titleRef.current, { type: 'chars' });
-
-        // Pre-computation: Force GPU Hardware Acceleration
-        gsap.set(split.chars, { willChange: 'transform, filter, opacity' });
-
-        tl.fromTo(split.chars,
-            { y: 50, opacity: 0, filter: 'blur(10px)' },
-            { y: 0, opacity: 1, filter: 'blur(0px)', stagger: 0.05, duration: 1.5, ease: 'power3.out' },
-            1.0
-        );
-
-        const secondaryElements = [emailRef.current, copyrightRef.current, scrollDownRef.current].filter(Boolean); // Filter out any nulls
-
-        if (secondaryElements.length > 0) {
-            tl.fromTo(secondaryElements,
-                { opacity: 0, y: 20 },
-                { opacity: 1, y: 0, duration: 1.2, ease: "power2.out", stagger: 0.15 },
-                "-=2.0" // Overlap value to start BEFORE the Title animation fully completes
+        if (particleSphereContainerRef.current) {
+            // 1. Scene appears slowly from darkness
+            tl.fromTo(particleSphereContainerRef.current,
+                { opacity: 0 },
+                { opacity: 1, duration: 2.8, ease: "power2.inOut", delay: 0.5 }
             );
-        }
 
-        // Strict Cleanup Discipline
-        return () => {
-            split.revert();
-        };
-    });
+            // 2. Editorial Top Layer Entrance
+            tl.fromTo([titleRef.current, introTopRef.current].filter(Boolean),
+                { opacity: 0, y: 15 },
+                { opacity: 1, y: 0, duration: 1.5, ease: "power3.out", stagger: 0.1 },
+                "-=1.5"
+            );
+
+            // 3. Editorial Bottom Layer Entrance
+            if (introBottomRef.current) {
+                tl.fromTo(introBottomRef.current,
+                    { opacity: 0, y: 15 },
+                    { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" },
+                    "-=1.0"
+                );
+            }
+        }
+    }, []);
 
     // Handle Mobile Height Jitter (Fix for iOS Chrome/Safari URL bar hide/show)
     useGSAP(() => {
-        // Prevent ScrollTrigger from recalculating too aggressively on fast mobile scrolls
         ScrollTrigger.config({
-            ignoreMobileResize: true // true ignores resize events triggered by UI bar hide/show
+            ignoreMobileResize: true
         });
 
         const setFixedMobileHeight = () => {
-            const el = particleSphereContainerRef.current?.parentElement;
+            const el = document.getElementById('top');
             if (!el) return;
 
-            if (window.innerWidth < 768) { // Only apply to mobile devices
+            if (window.innerWidth < 768) {
                 gsap.set(el, {
-                    height: window.innerHeight // Snap to exact absolute pixel height to avoid 100dvh changing
+                    height: window.innerHeight
                 });
             } else {
-                gsap.set(el, { clearProps: "height" }); // revert to CSS on desktop
+                gsap.set(el, { clearProps: "height" });
             }
         };
 
         setFixedMobileHeight();
         window.addEventListener('resize', setFixedMobileHeight);
         return () => window.removeEventListener('resize', setFixedMobileHeight);
-    });
-
-    const handleUnderlineHover = contextSafe((e: PointerEvent<HTMLAnchorElement>) => {
-        if (e.pointerType !== 'mouse') return;
-        gsap.to(underlineRef.current, {
-            scaleX: 1,
-            duration: 0.8,
-            ease: "expo.out"
-        });
-    });
-
-    const handleUnderlineLeave = contextSafe((e: PointerEvent<HTMLAnchorElement>) => {
-        if (e.pointerType !== 'mouse') return;
-        gsap.to(underlineRef.current, {
-            scaleX: 0,
-            duration: 0.8,
-            ease: "expo.out"
-        });
-    });
+    }, []);
 
     return (
-        <div id="top" className="relative z-20 w-full h-[100dvh] overflow-hidden bg-white">
-            {/* Particle Sphere Background */}
+        <div id="top" className="relative z-20 w-full h-[100dvh] overflow-hidden bg-[#0a0a0a]"
+            style={{
+                backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px)',
+                backgroundSize: '4rem 4rem',
+                backgroundPosition: 'center center'
+            }}>
+
+            {/* Field Organism Nebula Background */}
             <div
                 ref={particleSphereContainerRef}
-                className="absolute z-10 opacity-0 pointer-events-none 
-                    portrait:w-[160vw] portrait:h-[160vw] portrait:top-1/2 portrait:right-0 portrait:translate-x-1/2 portrait:-translate-y-1/2 
-                    landscape:w-[80vw] landscape:h-[80vw] landscape:top-0 landscape:left-1/2 landscape:-translate-x-1/2 landscape:-translate-y-1/3 lg:landscape:-translate-y-1/2"
+                className="absolute inset-0 w-full h-full z-10 opacity-0 pointer-events-none"
             >
                 <ParticleSphere />
             </div>
 
-            {/* Foreground Content Layer */}
-            <div className="relative z-20 w-full h-full flex flex-col pointer-events-none items-center">
-                <div className="w-full h-full flex flex-col justify-center max-w-vw-safe relative">
-                    {/* Title */}
-                    <div className="w-full px-6 md:px-12 text-center -translate-y-[5vh] md:-translate-y-[8vh]">
-                        <h1 ref={titleRef} className="font-inria-sans text-[min(15.5vw,22vh)] leading-[0.85] font-bold uppercase tracking-tight m-0 break-words">
-                            MARTIN GAO.
-                        </h1>
+            {/* Foreground Content Layer - The Editorial Sandwich Layout */}
+            <div className="relative z-20 w-full h-[100dvh] flex flex-col items-center pointer-events-none">
+                <div className="w-full h-full max-w-vw-safe px-6 md:px-12 flex flex-col justify-between">
+
+                    {/* 1. TOP LAYER: Masthead (approx 20%) */}
+                    <div className="w-full pt-28 md:pt-36 flex flex-col md:flex-row md:justify-between items-start md:items-end z-30">
+                        {/* Title Main */}
+                        <div className="flex-shrink-0">
+                            <h1 ref={titleRef} className="font-inria-sans text-[min(13.5vw,16vh)] md:text-[min(10vw,14vh)] leading-[0.82] font-medium uppercase tracking-tight m-0 text-[#f5f5f7]">
+                                MARTINGAO
+                            </h1>
+                        </div>
+
+                        {/* Editorial Support Text Right/Bottom */}
+                        <div ref={introTopRef} className="mt-5 md:mt-0 md:pb-2 lg:pb-4 max-w-[320px] md:max-w-[360px] lg:max-w-[420px] text-left md:text-right">
+                            <p className="font-inter font-medium text-[13px] sm:text-[14px] md:text-[16px] lg:text-[20px] uppercase tracking-[0.08em] text-[#f5f5f7]/80 leading-[1.3] md:leading-[1.16]">
+                                Full-stack engineer with <br className="hidden md:block" />a visual point of view
+                            </p>
+                        </div>
                     </div>
 
-                    {/* Scroll Down Nav and Secondary Information */}
-                    <div className="absolute bottom-0 left-0 w-full h-auto font-semibold text-md lg:text-2xl flex flex-row justify-between items-center mb-6 pointer-events-auto">
-                        <a href="mailto:gaolianzhan@gmail.com" ref={emailRef} target="_blank"
-                            rel="noopener noreferrer"
-                            className="relative group hidden md:ml-12 md:block"
-                            onPointerEnter={handleUnderlineHover}
-                            onPointerLeave={handleUnderlineLeave}>
-                            gaolianzhan@gmail.com
-                            <span ref={underlineRef} className="absolute left-0 -bottom-1 w-full h-[3px] bg-black" style={{ transformOrigin: 'left center', transform: 'scaleX(0)' }}></span>
-                        </a>
-                        <p ref={copyrightRef} className="ml-6">©2026</p>
-                        <ScrollDown ref={scrollDownRef} className="mr-6 md:mr-12" />
+                    {/* 2. CENTER STAGE: Deep Space (approx 60%) */}
+                    <div className="flex-1 w-full pointer-events-none flex flex-col items-center justify-center">
+                        {/* 
+                            This negative space embraces the ParticleSphere rendered underneath. 
+                            Left entirely empty allowing maximum contrast and uninterrupted visual focus onto the manifold fields.
+                        */}
                     </div>
+
+                    {/* 3. BOTTOM LAYER: Signoff Footer (approx 20%) */}
+                    <div ref={introBottomRef} className="w-full pb-8 md:pb-12 flex flex-col md:flex-row md:justify-between items-start md:items-end font-inter font-medium text-[12px] sm:text-[13px] md:text-[16px] lg:text-[18px] text-[#f5f5f7]/80 uppercase tracking-[0.1em] z-30 pointer-events-auto">
+
+                        <div className="hidden md:block">
+                            <p>Working across code and visual systems</p>
+                        </div>
+
+                        {/* Interactive Editorial Scroll Cue */}
+                        <div className="group flex flex-row items-center gap-2 lg:gap-3 cursor-pointer hover:text-[#f5f5f7] transition-colors duration-300 pointer-events-auto mt-auto md:mt-0" onClick={() => {
+                            const descSection = document.getElementById('about');
+                            if (descSection) descSection.scrollIntoView({ behavior: 'smooth' });
+                        }}>
+                            <span>Scroll to explore</span>
+                            <ArrowDown
+                                strokeWidth={3.5}
+                                className="w-3.5 h-3.5 md:w-4 md:h-4 transition-all duration-300 group-hover:text-[#e67b4e] group-hover:translate-y-1"
+                            />
+                        </div>
+                    </div>
+
                 </div>
             </div>
+
         </div>
-    )
-}
+    );
+};
 
 export default Intro;
