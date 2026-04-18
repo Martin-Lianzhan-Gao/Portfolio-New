@@ -58,7 +58,7 @@ const MegaFooter = () => {
     return (
         <>
             {/* The transparent placeholder that provides scrolling height in regular document flow to reveal the fixed footer below it */}
-            <div id="contact" className="theme-dark relative w-full h-[100dvh] pointer-events-none z-0"></div>
+            <div id="contact" className="relative w-full h-[100dvh] pointer-events-none z-0"></div>
 
             <footer ref={containerRef} className="fixed bottom-0 left-0 w-full h-[100dvh] z-0 bg-[#000000] text-[#f5f5f7] flex flex-col justify-between overflow-hidden">
 
