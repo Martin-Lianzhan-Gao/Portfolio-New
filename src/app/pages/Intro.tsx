@@ -5,7 +5,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { ArrowDown } from 'lucide-react';
-import ParticleSphere from '../components/models/ParticleSphere';
+import OrganicNebula from '../components/models/OrganicNebula';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -81,7 +81,7 @@ const Intro = () => {
                 ref={particleSphereContainerRef}
                 className="absolute inset-0 w-full h-full z-10 opacity-0 pointer-events-none"
             >
-                <ParticleSphere />
+                <OrganicNebula />
             </div>
 
             {/* Foreground Content Layer - The Editorial Sandwich Layout */}
