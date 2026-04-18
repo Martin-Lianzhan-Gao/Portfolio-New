@@ -32,7 +32,7 @@ const Header = () => {
     const mgTextRef = useRef<HTMLParagraphElement>(null)
     const menuItemTextRefs = useRef<(HTMLParagraphElement | null)[]>([])
     const isMenuOpenRef = useRef(isMenuOpen)
-    const currentHeaderColor = useRef<string>("black")
+    const currentHeaderColor = useRef<string>("#f5f5f7")
 
     // Refs for header entering animation
     const headerRef = useRef<HTMLDivElement>(null)
@@ -51,7 +51,7 @@ const Header = () => {
     const updateHeaderColor = contextSafe((color: string) => {
         currentHeaderColor.current = color;
         if (!isMenuOpenRef.current) {
-            const strokeTargets = [logoRef.current, hamburgerTopRef.current, hamburgerBottomRef.current].filter(Boolean);
+            const strokeTargets = [logoRef.current, hamburgerTopRef.current, hamburgerBottomRef.current, xLine1Ref.current, xLine2Ref.current].filter(Boolean);
             const colorTargets = [mgTextRef.current, ...menuItemTextRefs.current].filter(Boolean);
             const bgTargets = [...underlineRefs.current, rippleRef.current].filter(Boolean);
 
@@ -62,20 +62,6 @@ const Header = () => {
     });
 
     useGSAP(() => {
-        const darkSections = document.querySelectorAll('.theme-dark');
-
-        darkSections.forEach(section => {
-            ScrollTrigger.create({
-                trigger: section,
-                start: "top 50px",
-                end: "bottom 50px",
-                onEnter: () => updateHeaderColor("white"),
-                onLeave: () => updateHeaderColor("black"),
-                onEnterBack: () => updateHeaderColor("white"),
-                onLeaveBack: () => updateHeaderColor("black"),
-            });
-        });
-
         const mm = gsap.matchMedia();
         const entranceDelay = 1.8;
 
@@ -219,7 +205,7 @@ const Header = () => {
                 )
             }
             // Organic color bleed into black accompanying the white overlay
-            const strokeTargets = [logoRef.current, hamburgerTopRef.current, hamburgerBottomRef.current].filter(Boolean);
+            const strokeTargets = [logoRef.current, hamburgerTopRef.current, hamburgerBottomRef.current, xLine1Ref.current, xLine2Ref.current].filter(Boolean);
             const colorTargets = [mgTextRef.current, ...menuItemTextRefs.current].filter(Boolean);
             const bgTargets = [...underlineRefs.current, rippleRef.current].filter(Boolean);
 
@@ -334,7 +320,7 @@ const Header = () => {
 
             // Color bleed back to theme state
             const targetColor = currentHeaderColor.current;
-            const strokeTargets = [logoRef.current, hamburgerTopRef.current, hamburgerBottomRef.current].filter(Boolean);
+            const strokeTargets = [logoRef.current, hamburgerTopRef.current, hamburgerBottomRef.current, xLine1Ref.current, xLine2Ref.current].filter(Boolean);
             const colorTargets = [mgTextRef.current, ...menuItemTextRefs.current].filter(Boolean);
             const bgTargets = [...underlineRefs.current, rippleRef.current].filter(Boolean);
 
@@ -376,9 +362,9 @@ const Header = () => {
                 <div className='w-full max-w-vw-safe flex flex-row items-center justify-between'>
                     <div ref={brandRef} className="relative z-50 w-auto ml-6 md:ml-12 flex flex-row items-center cursor-pointer" onClick={(e) => handleLogoClick(e, 'top')}>
                         <div className='mr-2 w-[36px] h-[18px] md:w-[42px] md:h-[21px]'>
-                            <Logo ref={logoRef} color="black" />
+                            <Logo ref={logoRef} color="#f5f5f7" />
                         </div>
-                        <p ref={mgTextRef} className="hidden md:block font-montserrat font-medium text-3xl text-black">
+                        <p ref={mgTextRef} className="hidden md:block font-montserrat font-medium text-3xl text-[#f5f5f7]">
                             MG
                         </p>
                     </div>
@@ -390,7 +376,7 @@ const Header = () => {
                                 <div
                                     ref={(el) => { navItemRefs.current[index] = el }}
                                     key={item}
-                                    className='relative cursor-pointer text-black uppercase'
+                                    className='relative cursor-pointer text-[#f5f5f7] uppercase'
                                     onClick={(e) => handleItemClick(index, item, e)}
                                     onMouseEnter={() => handleMouseEnter(index)}
                                     onMouseLeave={() => handleMouseLeave(index)}
@@ -398,7 +384,7 @@ const Header = () => {
                                     <p ref={(el) => { menuItemTextRefs.current[index] = el }}>{item}</p>
                                     <span
                                         ref={(el) => { underlineRefs.current[index] = el }}
-                                        className='absolute bottom-0 left-0 w-full h-[2px] bg-black'
+                                        className='absolute bottom-0 left-0 w-full h-[2px] bg-[#f5f5f7]'
                                         style={{ transform: 'scaleX(0)' }}
                                     />
                                 </div>
@@ -413,7 +399,7 @@ const Header = () => {
                             {/* Ripple Effect Circle */}
                             <div
                                 ref={rippleRef}
-                                className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black opacity-0 pointer-events-none'
+                                className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#f5f5f7] opacity-0 pointer-events-none'
                             />
 
                             {/* Hamburger Icon */}
@@ -425,7 +411,7 @@ const Header = () => {
                                         y1="3"
                                         x2="40"
                                         y2="3"
-                                        stroke="black"
+                                        stroke="#f5f5f7"
                                         strokeWidth="3"
                                         strokeLinecap="square"
                                     />
@@ -435,7 +421,7 @@ const Header = () => {
                                         y1="12"
                                         x2="40"
                                         y2="12"
-                                        stroke="black"
+                                        stroke="#f5f5f7"
                                         strokeWidth="3"
                                         strokeLinecap="square"
                                     />
@@ -450,7 +436,7 @@ const Header = () => {
                                         y1="0"
                                         x2="23"
                                         y2="23"
-                                        stroke="black"
+                                        stroke="#f5f5f7"
                                         strokeWidth="3"
                                         strokeLinecap="square"
                                     />
@@ -460,7 +446,7 @@ const Header = () => {
                                         y1="0"
                                         x2="0"
                                         y2="23"
-                                        stroke="black"
+                                        stroke="#f5f5f7"
                                         strokeWidth="3"
                                         strokeLinecap="square"
                                     />
