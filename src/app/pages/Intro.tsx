@@ -69,12 +69,17 @@ const Intro = () => {
     }, []);
 
     return (
-        <div id="top" className="relative z-20 w-full h-[100dvh] overflow-hidden bg-[#0a0a0a]"
-            style={{
-                backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px)',
-                backgroundSize: '4rem 4rem',
-                backgroundPosition: 'center center'
-            }}>
+        <div id="top" className="relative z-20 w-full h-[100dvh] overflow-hidden bg-[#0a0a0a]">
+            {/* Grid Layer with Fade-out Mask */}
+            <div className="absolute inset-0 w-full h-full pointer-events-none"
+                style={{
+                    backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px)',
+                    backgroundSize: '4rem 4rem',
+                    backgroundPosition: 'center center',
+                    maskImage: 'linear-gradient(to bottom, black 65%, transparent 100%)',
+                    WebkitMaskImage: 'linear-gradient(to bottom, black 65%, transparent 100%)'
+                }}
+            />
 
             {/* Field Organism Nebula Background */}
             <div
@@ -84,55 +89,45 @@ const Intro = () => {
                 <OrganicNebula />
             </div>
 
-            {/* Foreground Content Layer - The Editorial Sandwich Layout */}
-            <div className="relative z-20 w-full h-[100dvh] flex flex-col items-center pointer-events-none">
+            {/* Depth Content Layer - Z-index 0 to sit behind the Nebula */}
+            <div className="relative z-0 w-full h-[100dvh] flex flex-col items-center pointer-events-none">
                 <div className="w-full h-full max-w-vw-safe px-6 md:px-12 flex flex-col justify-between">
 
-                    {/* 1. TOP LAYER: Masthead (approx 20%) */}
-                    <div className="w-full pt-28 md:pt-36 flex flex-col md:flex-row md:justify-between items-start md:items-end z-30">
-                        {/* Title Main */}
-                        <div className="flex-shrink-0">
-                            <h1 ref={titleRef} className="font-inria-sans text-[min(13.5vw,16vh)] md:text-[min(10vw,14vh)] leading-[0.82] font-medium uppercase tracking-tight m-0 text-[#f5f5f7]">
-                                MARTINGAO
-                            </h1>
-                        </div>
-
-                        {/* Editorial Support Text Right/Bottom */}
-                        <div ref={introTopRef} className="mt-5 md:mt-0 md:pb-2 lg:pb-4 max-w-[320px] md:max-w-[360px] lg:max-w-[420px] text-left md:text-right">
-                            <p className="font-inter font-medium text-[13px] sm:text-[14px] md:text-[16px] lg:text-[20px] uppercase tracking-[0.08em] text-[#f5f5f7]/80 leading-[1.3] md:leading-[1.16]">
-                                Full-stack engineer with <br className="hidden md:block" />a visual point of view
+                    {/* TOP LAYER: Big Title in the blank space */}
+                    <div className="w-full pt-[20vh] md:pt-[14vh] flex flex-col items-center justify-center text-center">
+                        <h1 ref={titleRef} className="font-inria-sans font-medium text-[17vw] lg:text-[14vw] 2xl:text-[12vw] min-[1800px]:text-[10vw] uppercase tracking-tight text-[#f5f5f7]/80 leading-none">
+                            MARTINGAO<span className="text-[#e67b4e]">.</span>
+                        </h1>
+                        <div ref={introTopRef} className="mt-4 md:mt-6">
+                            <p className="font-inter font-light text-[12px] md:text-[16px] uppercase tracking-[0.3em] text-[#f5f5f7]/60 ml-[0.3em]">
+                                ENGINEER <span className="text-[#e67b4e]/60 mx-2">/</span> VISUALS
                             </p>
                         </div>
                     </div>
 
-                    {/* 2. CENTER STAGE: Deep Space (approx 60%) */}
-                    <div className="flex-1 w-full pointer-events-none flex flex-col items-center justify-center">
-                        {/* 
-                            This negative space embraces the ParticleSphere rendered underneath. 
-                            Left entirely empty allowing maximum contrast and uninterrupted visual focus onto the manifold fields.
-                        */}
-                    </div>
+                    {/* BOTTOM LAYER: Grounding Metadata & Scroll */}
+                    <div ref={introBottomRef} className="w-full pb-8 md:pb-12 flex flex-row justify-between items-end font-inter font-light text-[10px] md:text-[13px] uppercase tracking-[0.2em] text-[#f5f5f7]/50 pointer-events-auto">
 
-                    {/* 3. BOTTOM LAYER: Signoff Footer (approx 20%) */}
-                    <div ref={introBottomRef} className="w-full pb-8 md:pb-12 flex flex-col md:flex-row md:justify-between items-start md:items-end font-inter font-medium text-[12px] sm:text-[13px] md:text-[16px] lg:text-[18px] text-[#f5f5f7]/80 uppercase tracking-[0.1em] z-30 pointer-events-auto">
-
-                        <div className="hidden md:block">
-                            <p>Working across code and visual systems</p>
+                        {/* Bottom Left: Location / Status (Hidden on very small screens to avoid clutter) */}
+                        <div className="text-left">
+                            <p className="leading-[1.6]">
+                                BASED IN BNE, AUS <br />
+                                <span className="text-[#f5f5f7]/40">WORKING WORLDWIDE</span>
+                            </p>
                         </div>
 
-                        {/* Interactive Editorial Scroll Cue */}
-                        <div className="group flex flex-row items-center gap-2 lg:gap-3 cursor-pointer hover:text-[#f5f5f7] transition-colors duration-300 pointer-events-auto mt-auto md:mt-0" onClick={() => {
+                        {/* Bottom Right: Scroll Action */}
+                        <div className="group flex flex-row items-center gap-3 cursor-pointer hover:text-[#f5f5f7] transition-colors duration-300 ml-auto" onClick={() => {
                             const descSection = document.getElementById('about');
                             if (descSection) descSection.scrollIntoView({ behavior: 'smooth' });
                         }}>
-                            <span>Scroll to explore</span>
+                            <span className="hidden md:block">DISCOVER</span>
                             <ArrowDown
-                                strokeWidth={3.5}
-                                className="w-3.5 h-3.5 md:w-4 md:h-4 transition-all duration-300 group-hover:text-[#e67b4e] group-hover:translate-y-1"
+                                strokeWidth={2}
+                                className="w-4 h-4 text-[#f5f5f7]/50 transition-all duration-300 group-hover:text-[#e67b4e] group-hover:translate-y-1"
                             />
                         </div>
                     </div>
-
                 </div>
             </div>
 
