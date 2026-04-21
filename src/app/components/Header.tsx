@@ -29,7 +29,6 @@ const Header = () => {
     const secondaryTextRefs = useRef<(HTMLDivElement | null)[]>([])
 
     // Refs for desktop components to animate colors
-    const mgTextRef = useRef<HTMLParagraphElement>(null)
     const menuItemTextRefs = useRef<(HTMLParagraphElement | null)[]>([])
     const isMenuOpenRef = useRef(isMenuOpen)
     const currentHeaderColor = useRef<string>("#f5f5f7")
@@ -52,7 +51,7 @@ const Header = () => {
         currentHeaderColor.current = color;
         if (!isMenuOpenRef.current) {
             const strokeTargets = [logoRef.current, hamburgerTopRef.current, hamburgerBottomRef.current, xLine1Ref.current, xLine2Ref.current].filter(Boolean);
-            const colorTargets = [mgTextRef.current, ...menuItemTextRefs.current].filter(Boolean);
+            const colorTargets = [...menuItemTextRefs.current].filter(Boolean);
             const bgTargets = [...underlineRefs.current, rippleRef.current].filter(Boolean);
 
             gsap.to(strokeTargets, { stroke: color, duration: 0.4, ease: "power2.inOut" });
@@ -206,7 +205,7 @@ const Header = () => {
             }
             // Organic color bleed into black accompanying the white overlay
             const strokeTargets = [logoRef.current, hamburgerTopRef.current, hamburgerBottomRef.current, xLine1Ref.current, xLine2Ref.current].filter(Boolean);
-            const colorTargets = [mgTextRef.current, ...menuItemTextRefs.current].filter(Boolean);
+            const colorTargets = [...menuItemTextRefs.current].filter(Boolean);
             const bgTargets = [...underlineRefs.current, rippleRef.current].filter(Boolean);
 
             tl.to(strokeTargets, { stroke: "black", duration: 0.5, ease: "power2.inOut" }, 0)
@@ -321,7 +320,7 @@ const Header = () => {
             // Color bleed back to theme state
             const targetColor = currentHeaderColor.current;
             const strokeTargets = [logoRef.current, hamburgerTopRef.current, hamburgerBottomRef.current, xLine1Ref.current, xLine2Ref.current].filter(Boolean);
-            const colorTargets = [mgTextRef.current, ...menuItemTextRefs.current].filter(Boolean);
+            const colorTargets = [...menuItemTextRefs.current].filter(Boolean);
             const bgTargets = [...underlineRefs.current, rippleRef.current].filter(Boolean);
 
             tl.to(strokeTargets, { stroke: targetColor, duration: 0.5, ease: "power2.inOut" }, 0.1)
@@ -364,9 +363,6 @@ const Header = () => {
                         <div className='mr-2 w-[36px] h-[18px] md:w-[42px] md:h-[21px]'>
                             <Logo ref={logoRef} color="#f5f5f7" />
                         </div>
-                        <p ref={mgTextRef} className="hidden md:block font-montserrat font-medium text-3xl text-[#f5f5f7]">
-                            MG
-                        </p>
                     </div>
 
                     <div className='w-auto mr-6 md:mr-12'>
