@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Montserrat, Inter, Inria_Sans, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header";
-import SmoothScrolling from "./components/SmoothScrolling";
 import MegaFooter from "./pages/MegaFooter";
+import Cursor from "./components/ui/Cursor";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -67,6 +67,7 @@ export default function RootLayout({
             <body
                 className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} ${inter.variable} ${inriaSans.variable} ${cormorantGaramond.variable} antialiased bg-[#0a0a0a]`}
             >
+                <Cursor />
                 <Header />
                 {children}
                 <MegaFooter />
