@@ -8,12 +8,13 @@ import { useCursorStore } from '@/hooks/useCursorStore'
 const SQUASH_STRETCH_RATIO = 0.008   // 速度到形变的转换乘数
 const MAX_SCALE_X = 1.8             // 运动方向拉伸上限
 const MIN_SCALE_Y = 0.65             // 垂直方向挤压下限
-const BASE_SCALE_NORMAL = 1       // 默认缩放倍率
+const BASE_SCALE_NORMAL = 0.6       // 默认缩放倍率
 const BASE_SCALE_HOVER = 2        // Hover命中缩放倍率
 const SLEEP_THRESHOLD = 0.1         // 判定物理休眠的速度阈值
 
 export default function Cursor() {
     const cursorRef = useRef<HTMLDivElement>(null)
+    const baseScaleRef = useRef({ value: BASE_SCALE_NORMAL })
 
     // 仅用于环境降级控制 (低频)
     const [isEnabled, setIsEnabled] = useState(false)
@@ -25,7 +26,6 @@ export default function Cursor() {
         lastVisualX: 0,
         lastVisualY: 0,
         currentRotation: 0,
-        currentBaseScale: BASE_SCALE_NORMAL,
         isSleeping: true
     })
 
@@ -54,7 +54,13 @@ export default function Cursor() {
         if (!cursorRef.current) return
 
         // 初始化强制居中
-        gsap.set(cursorRef.current, { xPercent: -50, yPercent: -50 })
+        gsap.set(cursorRef.current, {
+            xPercent: -50,
+            yPercent: -50,
+            scaleX: BASE_SCALE_NORMAL,
+            scaleY: BASE_SCALE_NORMAL,
+        })
+        baseScaleRef.current.value = BASE_SCALE_NORMAL
 
         // 核心：创建 GSAP 极速 Setter
         const setX = gsap.quickTo(cursorRef.current, "x", { duration: 0.15, ease: "power3" })
@@ -64,6 +70,12 @@ export default function Cursor() {
         const unsubHover = useCursorStore.subscribe((storeState, prevStoreState) => {
             if (storeState.isHovering !== prevStoreState.isHovering) {
                 state.current.isSleeping = false
+                gsap.killTweensOf(baseScaleRef.current)
+                gsap.to(baseScaleRef.current, {
+                    value: storeState.isHovering ? BASE_SCALE_HOVER : BASE_SCALE_NORMAL,
+                    duration: 0.22,
+                    ease: "power2.out"
+                })
             }
         })
 
@@ -84,8 +96,9 @@ export default function Cursor() {
         const onVisibilityChange = () => {
             if (document.hidden && cursorRef.current) {
                 // 失焦安全重置
-                gsap.set(cursorRef.current, { scaleX: BASE_SCALE_NORMAL, scaleY: BASE_SCALE_NORMAL, rotation: 0 })
-                state.current.currentBaseScale = BASE_SCALE_NORMAL
+                gsap.killTweensOf(baseScaleRef.current)
+                baseScaleRef.current.value = BASE_SCALE_NORMAL
+                gsap.to(cursorRef.current, { scaleX: 1, scaleY: 1, rotation: 0, duration: 0.2 })
                 state.current.isSleeping = true
             }
         }
@@ -131,21 +144,23 @@ export default function Cursor() {
             // transient 读取低频交互状态
             const isHovering = useCursorStore.getState().isHovering
             const targetBaseScale = isHovering ? BASE_SCALE_HOVER : BASE_SCALE_NORMAL
-
-            // 【核心修复】：平滑插值 (Lerp) 当前的 Base Scale，消除所有的尺寸跳变
-            state.current.currentBaseScale += (targetBaseScale - state.current.currentBaseScale) * 0.15
-            const currentBase = state.current.currentBaseScale
+            const currentBaseScale = baseScaleRef.current.value
 
             // 4. 休眠判定 (短路高成本计算)
             if (velocity < SLEEP_THRESHOLD) {
-                // 如果速度归零，且尺寸插值已经完成（逼近目标值），则进入彻底休眠
-                if (Math.abs(targetBaseScale - currentBase) < 0.005) {
+                const currentScaleX = gsap.getProperty(cursorRef.current, "scaleX") as number
+                if (
+                    Math.abs(targetBaseScale - currentBaseScale) < 0.005 &&
+                    Math.abs(targetBaseScale - currentScaleX) < 0.01
+                ) {
                     state.current.isSleeping = true
-                    // 彻底归位，角度归零（此时由于已经是正圆，角度归零在视觉上是无缝的）
-                    gsap.set(cursorRef.current, {
+                    // 平滑回正：消除挤压，角度归零
+                    gsap.to(cursorRef.current, {
                         scaleX: targetBaseScale,
                         scaleY: targetBaseScale,
-                        rotation: 0
+                        rotation: 0,
+                        duration: 0.4,
+                        ease: "power2.out"
                     })
                     return
                 }
@@ -157,9 +172,9 @@ export default function Cursor() {
             }
 
             // Squash & Stretch 计算并施加极值限制 (Clamp)
-            // 使用丝滑的 currentBase 进行加减，而不是生硬的 targetBaseScale
-            let scaleX = currentBase + velocity * SQUASH_STRETCH_RATIO
-            let scaleY = currentBase - velocity * SQUASH_STRETCH_RATIO
+            const stretch = isHovering ? 0 : velocity * SQUASH_STRETCH_RATIO
+            let scaleX = currentBaseScale + stretch
+            let scaleY = currentBaseScale - stretch
             scaleX = Math.min(Math.max(scaleX, MIN_SCALE_Y), MAX_SCALE_X)
             scaleY = Math.min(Math.max(scaleY, MIN_SCALE_Y), MAX_SCALE_X)
 
@@ -189,7 +204,7 @@ export default function Cursor() {
     return (
         <div
             ref={cursorRef}
-            className="fixed top-0 left-0 w-3 h-3 border border-[#F5F5F7]/70 backdrop-blur-[1px] rounded-full pointer-events-none z-[9999] mix-blend-difference opacity-0"
+            className="fixed top-0 left-0 w-3 h-3 bg-[#F5F5F7] rounded-full pointer-events-none z-[9999] mix-blend-difference opacity-0"
             style={{ willChange: 'transform' }}
         />
     )
