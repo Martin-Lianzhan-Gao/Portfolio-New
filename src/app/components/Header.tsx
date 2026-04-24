@@ -4,6 +4,7 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import Logo from './ui/Logo'
+import { useCursorStore } from '@/hooks/useCursorStore'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -39,6 +40,8 @@ const Header = () => {
     const navItemRefs = useRef<(HTMLDivElement | null)[]>([])
     const mobileMenuBtnRef = useRef<HTMLDivElement>(null)
 
+    const setHovering = useCursorStore(state => state.setHovering);
+
     useEffect(() => {
         isMenuOpenRef.current = isMenuOpen
     }, [isMenuOpen])
@@ -47,18 +50,6 @@ const Header = () => {
 
     const { contextSafe } = useGSAP()
 
-    const updateHeaderColor = contextSafe((color: string) => {
-        currentHeaderColor.current = color;
-        if (!isMenuOpenRef.current) {
-            const strokeTargets = [logoRef.current, hamburgerTopRef.current, hamburgerBottomRef.current, xLine1Ref.current, xLine2Ref.current].filter(Boolean);
-            const colorTargets = [...menuItemTextRefs.current].filter(Boolean);
-            const bgTargets = [...underlineRefs.current, rippleRef.current].filter(Boolean);
-
-            gsap.to(strokeTargets, { stroke: color, duration: 0.4, ease: "power2.inOut" });
-            gsap.to(colorTargets, { color: color, duration: 0.4, ease: "power2.inOut" });
-            gsap.to(bgTargets, { backgroundColor: color, duration: 0.4, ease: "power2.inOut" });
-        }
-    });
 
     useGSAP(() => {
         const mm = gsap.matchMedia();
@@ -374,8 +365,14 @@ const Header = () => {
                                     key={item}
                                     className='relative cursor-pointer text-[#f5f5f7] uppercase'
                                     onClick={(e) => handleItemClick(index, item, e)}
-                                    onMouseEnter={() => handleMouseEnter(index)}
-                                    onMouseLeave={() => handleMouseLeave(index)}
+                                    onMouseEnter={() => {
+                                        handleMouseEnter(index);
+                                        setHovering(true);
+                                    }}
+                                    onMouseLeave={() => {
+                                        handleMouseLeave(index);
+                                        setHovering(false);
+                                    }}
                                 >
                                     <p ref={(el) => { menuItemTextRefs.current[index] = el }}>{item}</p>
                                     <span
@@ -408,7 +405,7 @@ const Header = () => {
                                         x2="40"
                                         y2="3"
                                         stroke="#f5f5f7"
-                                        strokeWidth="3"
+                                        strokeWidth="2.5"
                                         strokeLinecap="square"
                                     />
                                     <line
@@ -418,7 +415,7 @@ const Header = () => {
                                         x2="40"
                                         y2="12"
                                         stroke="#f5f5f7"
-                                        strokeWidth="3"
+                                        strokeWidth="2.5"
                                         strokeLinecap="square"
                                     />
                                 </svg>
@@ -433,7 +430,7 @@ const Header = () => {
                                         x2="23"
                                         y2="23"
                                         stroke="#f5f5f7"
-                                        strokeWidth="3"
+                                        strokeWidth="2.5"
                                         strokeLinecap="square"
                                     />
                                     <line
@@ -443,7 +440,7 @@ const Header = () => {
                                         x2="0"
                                         y2="23"
                                         stroke="#f5f5f7"
-                                        strokeWidth="3"
+                                        strokeWidth="2.5"
                                         strokeLinecap="square"
                                     />
                                 </svg>
@@ -472,14 +469,14 @@ const Header = () => {
                             >
                                 <div className="relative w-fit">
                                     <div
-                                        className='menu-text font-montserrat font-normal text-5xl tracking-normal text-black'
+                                        className='menu-text font-inter font-extralight text-5xl tracking-normal text-black'
                                         style={{ opacity: 0 }}
                                     >
                                         {item}
                                     </div>
                                     <span
                                         ref={(el) => { mobileStrikeRefs.current[index] = el }}
-                                        className="absolute top-[52%] left-[-5%] w-[110%] h-[4px] bg-black -translate-y-1/2 pointer-events-none z-10"
+                                        className="absolute top-[52%] left-[-5%] w-[110%] h-[2px] bg-black -translate-y-1/2 pointer-events-none z-10"
                                         style={{ transform: 'scaleX(0)' }}
                                     />
                                 </div>
