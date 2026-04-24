@@ -3,157 +3,63 @@
 import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import SplitText from "gsap/SplitText";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import Heart from "../components/icons/Heart";
-import Star from "../components/icons/Star";
 
-
-gsap.registerPlugin(ScrollTrigger, SplitText);
+gsap.registerPlugin(ScrollTrigger);
 
 const Description = () => {
     const containerRef = useRef<HTMLDivElement>(null);
-    const titleRef = useRef<HTMLHeadingElement>(null);
-    const textRef = useRef<HTMLDivElement>(null);
+    const contentRef = useRef<HTMLDivElement>(null);
 
     useGSAP(() => {
-        if (!titleRef.current || !containerRef.current || !textRef.current) return;
+        if (!containerRef.current || !contentRef.current) return;
 
-        // Title animation (Clipping Mask Reveal)
-        const titleSplit = new SplitText(titleRef.current, {
-            type: "lines,words",
-            linesClass: "overflow-hidden"
-        });
+        // Fetch all paragraphs for sequential fade-in
+        const paragraphs = gsap.utils.toArray('.desc-paragraph', contentRef.current);
 
-        gsap.fromTo(titleSplit.words,
-            {
-                y: "100%",
-                opacity: 0,
-                filter: 'blur(10px)',
-                scale: 1.05
-            },
-            {
-                y: "0%",
-                opacity: 1,
-                filter: 'blur(0px)',
-                scale: 1,
-                stagger: 0.06,
-                duration: 1.2,
-                ease: 'power3.out',
-                scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: "top 75%",
-                    toggleActions: "play none none reverse"
-                }
-            }
-        );
+        // Reset state
+        gsap.set(paragraphs, { opacity: 0, y: 30 });
 
-        // Paragraph animation (Icon color transition and Text movement & scrubbing)
-        // Split the text into words
-        const textSplit = new SplitText(textRef.current.querySelectorAll('p'), { type: "words" });
-
-        // Find the inline spans containing the icons
-        const inlineSpans = textRef.current.querySelectorAll('span.inline-flex');
-        const heartSpan = inlineSpans[0];
-        const starSpan = inlineSpans[1];
-
-        // Find the dot span
-        const dotSpan = textRef.current.querySelector('span.bullet-dot');
-
-
-        // Create a timeline for text scrubbing
-        const scrubTl = gsap.timeline({
+        // Simple and elegant entrance animation
+        gsap.to(paragraphs, {
+            y: 0,
+            opacity: 1,
+            stagger: 0.15,
+            duration: 1.2,
+            ease: "power3.out",
             scrollTrigger: {
-                trigger: textRef.current,
-                start: "top 85%",
-                end: "bottom 55%",
-                scrub: 2.5,
-                fastScrollEnd: true,
-                preventOverlaps: true
+                trigger: containerRef.current,
+                start: "top 60%", // Triggers when the top of Description hits 60% of viewport height
+                toggleActions: "play none none reverse"
             }
         });
 
-        scrubTl.fromTo(textSplit.words,
-            {
-                color: "rgba(255,255,255,0.15)",
-                x: -25,
-            },
-            {
-                x: 0,
-                color: "rgba(255,255,255,1)",
-                stagger: 0.03,
-                ease: "power2.out",
-            }, 0
-        );
-
-        // Initialize Icons
-        if (heartSpan) {
-            gsap.set(heartSpan, { color: "rgba(255,255,255,0.15)", scale: 0.5, opacity: 0, rotation: -15 });
-            gsap.set(heartSpan.querySelector('svg'), { width: '1em', height: '1em', display: 'inline' });
-        }
-        if (starSpan) {
-            gsap.set(starSpan, { color: "rgba(255,255,255,0.15)", scale: 0.5, opacity: 0 });
-            gsap.set(starSpan.querySelector('svg'), { width: '1em', height: '1em', display: 'inline' });
-        }
-
-        // Initialize Dot
-        if (dotSpan) {
-            gsap.set(dotSpan, { backgroundColor: "rgba(255,255,255,0.15)", scale: 0, opacity: 0 });
-        }
-
-        // Heart animation
-        if (heartSpan) {
-            scrubTl.to(heartSpan, {
-                color: "#ff3366",
-                scale: 1.2,
-                opacity: 1,
-                rotation: 0,
-                ease: "back.out(3.5)",
-            }, 0.08);
-        }
-        // Star animation
-        if (starSpan) {
-            scrubTl.to(starSpan, {
-                color: "#ffd700",
-                scale: 1.1,
-                rotation: 180,
-                opacity: 1,
-                ease: "power3.out",
-            }, 0.48);
-        }
-
-        // Dot animation
-        if (dotSpan) {
-            scrubTl.to(dotSpan, {
-                backgroundColor: "#E67B4E",
-                scale: 1,
-                opacity: 1,
-                ease: "elastic.out(1.8, 0.4)",
-            }, 0.98);
-        }
-
-        return () => {
-            titleSplit.revert();
-            textSplit.revert();
-        };
     }, { scope: containerRef });
 
     return (
-        <div ref={containerRef} id="about" data-theme="dark" className="relative z-20 overflow-x-hidden bg-[#0d0d0d] w-full md:pb-48  flex flex-col items-center">
-            <div className="text-white mt-12 pt-20 pb-20 md:pt-36 md:pb-36 w-full max-w-vw-safe flex flex-col justify-center min-h-[100dvh]">
-                <div className="w-full ml-6 mr-6 md:ml-12 md:mr-12 mb-16">
-                    <h1 ref={titleRef} className="uppercase text-[min(12vw,18vh)] font-inria-sans font-medium leading-[0.85] text-white">
-                        About Me
-                    </h1>
-                </div>
-                <div ref={textRef} className="font-inter text-3xl md:text-5xl lg:text-[3.5rem] xl:text-[4rem] uppercase font-light break-words w-full flex flex-col items-end justify-center pr-6 pl-6 md:pr-12 md:pl-12 gap-12 lg:gap-20 leading-snug">
-                    <p className="w-full md:w-5/6 lg:w-4/5 xl:w-2/3">
-                        Full-stack engineer. Visually uncompromising<span className="inline-flex items-center justify-center align-middle px-2 relative -top-[0.08em]"><Heart /></span>I don't separate how a system works from how it looks — both are engineering problems, both have correct answers<span className="inline-flex items-center justify-center align-middle px-2 relative -top-[0.08em]"><Star /></span>I write code the way this page looks — nothing that doesn't need to be here.
+        <div ref={containerRef} id="about" data-theme="dark" className="relative z-20 overflow-x-hidden bg-[#0a0a0a] w-full pb-20 md:pb-48 pt-24 md:pt-40 flex flex-col items-center">
+            <div className="w-full max-w-vw-safe px-6 md:px-12 flex flex-col justify-center min-h-[60dvh]">
+                <div 
+                    ref={contentRef} 
+                    className="font-inter font-light tracking-wide flex flex-col gap-8 lg:gap-12 text-left w-full max-w-[800px] mx-auto"
+                >
+                    <p className="desc-paragraph text-[#f5f5f7]/90 text-[1.2rem] sm:text-2xl md:text-3xl lg:text-4xl leading-[1.6] md:leading-[1.6] lg:leading-[1.6]">
+                        I engineer digital experiences without separating logic from aesthetics. In my workflow, the architecture of a system and its visual fidelity are not independent variables, but a singular pursuit of uncompromising execution.
                     </p>
-                    <p className="w-full md:w-5/6 lg:w-4/5 xl:w-2/3">
-                        Bachelor of Computer Science, The University of Queensland (2019-2024)<span className="bullet-dot inline-flex items-center justify-center align-middle w-[0.3em] h-[0.3em] rounded-full mx-2 relative -top-[0.05em]" /><br />
-                        Theory was the starting point, not the destination.
+                    
+                    <p className="desc-paragraph text-[#f5f5f7]/90 text-[1.2rem] sm:text-2xl md:text-3xl lg:text-4xl leading-[1.6] md:leading-[1.6] lg:leading-[1.6]">
+                        The interfaces I build are exact. They scale gracefully, perform flawlessly under pressure, and leave no room for arbitrary design choices. Every transition and layout is treated as a strict mathematical constraint.
                     </p>
+                    
+                    {/* Minimalist Metadata Footer inside Description */}
+                    <div className="desc-paragraph flex flex-col mt-6 md:mt-10 pt-8 border-t border-[#f5f5f7]/10">
+                        <span className="font-inter text-[10px] md:text-xs font-bold text-[#f5f5f7]/40 uppercase tracking-[0.2em] mb-3">
+                            Education
+                        </span>
+                        <p className="font-inter text-sm md:text-base lg:text-lg text-[#f5f5f7]/60 leading-[1.6]">
+                            Bachelor of Computer Science, The University of Queensland (2019-2024). <br className="hidden sm:block" />Theory provided the baseline — the execution is entirely my own.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
