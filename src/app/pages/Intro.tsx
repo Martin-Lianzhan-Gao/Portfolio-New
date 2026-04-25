@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
@@ -10,13 +10,73 @@ import { useCursorStore } from "@/hooks/useCursorStore"
 
 gsap.registerPlugin(ScrollTrigger);
 
+// 高亮区域半径 (rem → px at runtime)
+const GLOW_RADIUS_REM = 24;
+// 容器尺寸需要大于直径，留余量避免边缘裁切
+const GLOW_SIZE_REM = GLOW_RADIUS_REM * 2 + 8;
+
 const Intro = () => {
+    const glowOuterRef = useRef<HTMLDivElement>(null);
+    const glowInnerRef = useRef<HTMLDivElement>(null);
     const particleSphereContainerRef = useRef<HTMLDivElement>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
     const introTopRef = useRef<HTMLDivElement>(null);
     const introBottomRef = useRef<HTMLDivElement>(null);
 
     const setHovering = useCursorStore(state => state.setHovering);
+
+    // Grid Glow 鼠标追踪 — 零 repaint：纯 transform composite
+    useEffect(() => {
+        const outer = glowOuterRef.current;
+        const inner = glowInnerRef.current;
+        if (!outer || !inner) return;
+
+        const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (isCoarsePointer || prefersReducedMotion) return;
+
+        // 容器半尺寸偏移量（使 div 中心对准鼠标）
+        const remPx = parseFloat(getComputedStyle(document.documentElement).fontSize);
+        const halfSize = (GLOW_SIZE_REM * remPx) / 2;
+
+        // 内部状态
+        const state = { x: 0, y: 0, opacity: 0 };
+
+        // GSAP quickTo：基于时间的 easing，帧率无关，只修改 JS 对象
+        const setX = gsap.quickTo(state, 'x', { duration: 0.25, ease: 'power2' });
+        const setY = gsap.quickTo(state, 'y', { duration: 0.25, ease: 'power2' });
+        const setOpacity = gsap.quickTo(state, 'opacity', { duration: 0.35, ease: 'power2' });
+
+        const handlePointerMove = (e: PointerEvent) => {
+            if (e.pointerType !== 'mouse') return;
+            setX(e.clientX);
+            setY(e.clientY);
+            setOpacity(1);
+        };
+
+        const handlePointerLeave = () => setOpacity(0);
+
+        // GSAP Ticker 每帧只写 transform + opacity（composite-only）
+        const update = () => {
+            const tx = state.x - halfSize;
+            const ty = state.y - halfSize;
+            // 外层：跟随鼠标
+            outer.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
+            outer.style.opacity = state.opacity.toFixed(3);
+            // 内层：反向抵消，保持网格和底层对齐
+            inner.style.transform = `translate3d(${-tx}px, ${-ty}px, 0)`;
+        };
+
+        gsap.ticker.add(update);
+        window.addEventListener('pointermove', handlePointerMove);
+        document.documentElement.addEventListener('pointerleave', handlePointerLeave);
+
+        return () => {
+            gsap.ticker.remove(update);
+            window.removeEventListener('pointermove', handlePointerMove);
+            document.documentElement.removeEventListener('pointerleave', handlePointerLeave);
+        };
+    }, []);
 
     // Initial Appearance Animation
     useGSAP(() => {
@@ -73,7 +133,7 @@ const Intro = () => {
 
     return (
         <div id="top" className="relative z-20 w-full h-[100dvh] overflow-hidden bg-[#0a0a0a]">
-            {/* Grid Layer with Fade-out Mask */}
+            {/* Grid Layer — 静态暗线 */}
             <div className="absolute inset-0 w-full h-full pointer-events-none"
                 style={{
                     backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px)',
@@ -83,6 +143,33 @@ const Intro = () => {
                     WebkitMaskImage: 'linear-gradient(to bottom, black 65%, transparent 100%)'
                 }}
             />
+
+            {/* Grid Glow — 零 repaint 双层 transform 方案 */}
+            <div
+                ref={glowOuterRef}
+                className="absolute top-0 left-0 pointer-events-none opacity-0"
+                style={{
+                    width: `${GLOW_SIZE_REM}rem`,
+                    height: `${GLOW_SIZE_REM}rem`,
+                    overflow: 'hidden',
+                    willChange: 'transform, opacity',
+                    maskImage: `radial-gradient(${GLOW_RADIUS_REM}rem circle at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0.45) 36%, transparent 72%)`,
+                    WebkitMaskImage: `radial-gradient(${GLOW_RADIUS_REM}rem circle at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0.45) 36%, transparent 72%)`,
+                }}
+            >
+                <div
+                    ref={glowInnerRef}
+                    className="pointer-events-none"
+                    style={{
+                        width: '100vw',
+                        height: '100vh',
+                        willChange: 'transform',
+                        backgroundImage: 'linear-gradient(rgba(136, 210, 255, 0.16) 1px, transparent 1px), linear-gradient(90deg, rgba(136, 210, 255, 0.16) 1px, transparent 1px)',
+                        backgroundSize: '4rem 4rem',
+                        backgroundPosition: 'center center',
+                    }}
+                />
+            </div>
 
             {/* Field Organism Nebula Background */}
             <div

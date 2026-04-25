@@ -235,33 +235,27 @@ const DynamicNebula = () => {
         return geometry
     }, [])
 
+    // 视差平滑缓存（避免突变）
+    const parallax = useRef({ x: 0, y: 0 })
+
     useFrame((state) => {
         if (shaderRef.current) {
             shaderRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
         }
         if (pointsRef.current) {
-            // Apply macro orbit to showcase the overlapping ribbon layers
-            pointsRef.current.rotation.y = state.clock.getElapsedTime() * 0.03
-            pointsRef.current.rotation.z = Math.sin(state.clock.getElapsedTime() * 0.08) * 0.05
+            // Macro orbit
+            const t = state.clock.getElapsedTime()
+            pointsRef.current.rotation.y = t * 0.03
+            pointsRef.current.rotation.z = Math.sin(t * 0.08) * 0.05
 
-            // Removed Pointer Parallax (Task Requirement)
+            // Pointer parallax — 瞬态读取，不触发 React render
+            const { nx, ny } = useCursorStore.getState()
+            parallax.current.x += (nx * 0.06 - parallax.current.x) * 0.04
+            parallax.current.y += (ny * 0.04 - parallax.current.y) * 0.04
+            pointsRef.current.rotation.y += parallax.current.x
+            pointsRef.current.rotation.x = parallax.current.y
         }
     })
-
-    useFrame((state) => {
-        // [核心纪律] 瞬态读取：不使用 Hook 订阅，绝不触发组件 Render
-        const { nx, ny } = useCursorStore.getState()
-
-        // 强制覆盖 R3F 原生事件坐标（因为我们在外层接管了光标系统）
-        state.pointer.set(nx, ny)
-
-        // 如果你的场景需要物理点击或射线检测，必须在每帧主动更新 Raycaster
-        state.raycaster.setFromCamera(state.pointer, state.camera)
-        // --- 应用场景示例 ---
-        // 如果想让粒子受光标排斥：
-        // shaderRef.current.uniforms.uPointer.value.set(nx, ny)
-    })
-
 
     const uniforms = useMemo(() => ({
         uTime: { value: 0 },
