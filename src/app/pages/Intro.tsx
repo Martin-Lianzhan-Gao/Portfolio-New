@@ -39,6 +39,16 @@ const Intro = () => {
         const remPx = parseFloat(getComputedStyle(document.documentElement).fontSize);
         const halfSize = (GLOW_SIZE_REM * remPx) / 2;
 
+        // 内层尺寸与 #top 精确对齐（避免 100vw 包含滚动条的偏差）
+        const syncSize = () => {
+            const topEl = document.getElementById('top');
+            if (!topEl) return;
+            inner.style.width = `${topEl.offsetWidth}px`;
+            inner.style.height = `${topEl.offsetHeight}px`;
+        };
+        syncSize();
+        window.addEventListener('resize', syncSize);
+
         // 内部状态
         const state = { x: 0, y: 0, opacity: 0 };
 
@@ -75,6 +85,7 @@ const Intro = () => {
             gsap.ticker.remove(update);
             window.removeEventListener('pointermove', handlePointerMove);
             document.documentElement.removeEventListener('pointerleave', handlePointerLeave);
+            window.removeEventListener('resize', syncSize);
         };
     }, []);
 
@@ -161,8 +172,6 @@ const Intro = () => {
                     ref={glowInnerRef}
                     className="pointer-events-none"
                     style={{
-                        width: '100vw',
-                        height: '100vh',
                         willChange: 'transform',
                         backgroundImage: 'linear-gradient(rgba(136, 210, 255, 0.16) 1px, transparent 1px), linear-gradient(90deg, rgba(136, 210, 255, 0.16) 1px, transparent 1px)',
                         backgroundSize: '4rem 4rem',
