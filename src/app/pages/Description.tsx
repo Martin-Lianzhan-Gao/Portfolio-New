@@ -36,7 +36,7 @@ const Description = () => {
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: containerRef.current,
-                start: "top 25%",
+                start: "top 30%",
                 toggleActions: "play none none reverse"
             }
         });
@@ -87,12 +87,12 @@ const Description = () => {
     }, { scope: containerRef });
 
     return (
-        <div ref={containerRef} id="about" data-theme="dark" className="relative z-20 overflow-hidden bg-[#0a0a0a] w-full pt-[-2rem] pb-14 md:pb-0 md:pt-18 xl:pt-32 flex flex-col items-center">
+        <div ref={containerRef} id="about" data-theme="dark" className="relative z-20 overflow-hidden bg-[#0a0a0a] w-full pb-14 md:pb-0 md:pt-14 xl:pt-28 flex flex-col items-center">
             <div className="w-full max-w-vw-safe px-0 md:px-12 flex flex-col md:flex-row justify-center md:justify-between items-start md:items-start min-h-[100dvh] md:gap-20">
 
                 {/* Left: Statue Image with Overlays */}
                 <div className="relative w-full md:w-[55%] md:h-[100dvh] xl:w-[50%] 2xl:w-[40%] flex flex-col justify-center items-center md:items-start">
-                    <div className="relative w-full max-w-full scale-[1.2] lg:scale-100 origin-left">
+                    <div className="relative w-full max-w-full scale-[1.2] lg:scale-100 origin-top-left md:origin-left">
                         <img
                             ref={imageRef}
                             src="/images/statue.png"
@@ -123,7 +123,7 @@ const Description = () => {
                 {/* Right: Text Content */}
                 <div
                     ref={contentRef}
-                    className="relative z-20 font-inter font-light tracking-wide flex flex-col justify-center gap-8 lg:gap-12 2xl:gap-24 text-left w-full md:w-[45%] md:h-[100dvh] xl:w-[50%] 2xl:w-[60%] max-w-[800px] px-[8vw] md:px-0 -mt-[15vh] sm:-mt-[20vh] md:mt-0 md:translate-y-14 xl:translate-y-20"
+                    className="relative z-20 font-inter font-light tracking-wide flex flex-col justify-center gap-8 lg:gap-12 2xl:gap-24 text-left w-full md:w-[45%] md:h-[100dvh] xl:w-[50%] 2xl:w-[60%] max-w-[800px] px-[8vw] md:px-0 -mt-[8vh] sm:-mt-[12vh] md:mt-0 md:translate-y-14 xl:translate-y-20"
                 >
                     <p className="desc-copy text-[#f5f5f7]/90 text-[16px] md:text-[20px] xl:text-[22px] leading-[1.6]">
                         I work at the intersection of engineering and visual direction — treating them as one discipline, not two. The interfaces I build are designed to feel precise, responsive, and structurally deliberate.
