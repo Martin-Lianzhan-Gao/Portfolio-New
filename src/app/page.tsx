@@ -5,11 +5,11 @@ import Description from "./pages/Description";
 import Works from "./pages/Works";
 
 export default function Home() {
-  return (
-    <main className="font-inter w-full flex flex-col">
-        <Intro />
-        <Description />
-        <Works />
-    </main>
-  );
+    return (
+        <main className="font-inter">
+            <Intro />
+            <Description />
+            <Works />
+        </main>
+    );
 }
