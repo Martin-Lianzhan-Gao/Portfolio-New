@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import SplitText from "gsap/SplitText";
+import CursorTarget from "../components/ui/CursorTarget";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -93,18 +94,22 @@ const Description = () => {
                 {/* Left: Statue Image with Overlays */}
                 <div className="relative w-full md:w-[55%] md:h-[100dvh] xl:w-[50%] 2xl:w-[40%] flex flex-col justify-center items-center md:items-start">
                     <div className="relative w-full max-w-full scale-[1.2] lg:scale-100 origin-top-left md:origin-left">
-                        <img
-                            ref={imageRef}
-                            src="/images/statue.png"
-                            alt="David Statue"
-                            className="w-full h-auto object-contain mix-blend-lighten"
-                            style={{
-                                // CSS Custom Property for the GSAP sweeping mask animation
-                                '--reveal-offset': '0%',
-                                maskImage: 'linear-gradient(to right, black calc(var(--reveal-offset) - 30%), transparent var(--reveal-offset))',
-                                WebkitMaskImage: 'linear-gradient(to right, black calc(var(--reveal-offset) - 30%), transparent var(--reveal-offset))'
-                            } as React.CSSProperties}
-                        />
+                        <CursorTarget mode='text' label="Not Me">
+                            <img
+                                draggable={false}
+                                ref={imageRef}
+                                src="/images/statue.png"
+                                alt="David Statue"
+                                className="w-full h-auto object-contain mix-blend-lighten select-none"
+                                style={{
+                                    // CSS Custom Property for the GSAP sweeping mask animation
+                                    '--reveal-offset': '0%',
+                                    maskImage: 'linear-gradient(to right, black calc(var(--reveal-offset) - 30%), transparent var(--reveal-offset))',
+                                    WebkitMaskImage: 'linear-gradient(to right, black calc(var(--reveal-offset) - 30%), transparent var(--reveal-offset))'
+                                } as React.CSSProperties}
+                            />
+                        </CursorTarget>
+
 
                         {/* Overlay: Permanent left edge blur into darkness */}
                         <div className="absolute top-0 left-0 w-[30%] md:w-[20%] h-full bg-gradient-to-r from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
@@ -125,9 +130,12 @@ const Description = () => {
                     ref={contentRef}
                     className="relative z-20 font-inter font-light tracking-wide flex flex-col justify-center gap-8 lg:gap-12 2xl:gap-24 text-left w-full md:w-[45%] md:h-[100dvh] xl:w-[50%] 2xl:w-[60%] max-w-[800px] px-[8vw] md:px-0 -mt-[8vh] sm:-mt-[12vh] md:mt-0 md:translate-y-14 xl:translate-y-20"
                 >
-                    <p className="desc-copy text-[#f5f5f7]/90 text-[16px] md:text-[20px] xl:text-[22px] leading-[1.6]">
+
+                    <p
+                        className="desc-copy text-[#f5f5f7]/90 text-[16px] md:text-[20px] xl:text-[22px] leading-[1.6]">
                         I work at the intersection of engineering and visual direction — treating them as one discipline, not two. The interfaces I build are designed to feel precise, responsive, and structurally deliberate.
                     </p>
+
                     <p className="desc-copy text-[#f5f5f7]/90 text-[16px] md:text-[20px] xl:text-[22px] leading-[1.6]">
                         Layout rhythm, motion timing, render performance, interaction feedback — these are the details I invest in. The goal is always an experience that feels coherent, not just functional.
                     </p>
