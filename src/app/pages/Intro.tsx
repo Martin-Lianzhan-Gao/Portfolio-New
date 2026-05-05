@@ -6,7 +6,7 @@ import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { ArrowDown } from 'lucide-react';
 import OrganicNebula from '../components/models/OrganicNebula';
-import { useCursorStore } from "@/hooks/useCursorStore"
+import CursorTarget from '../components/ui/CursorTarget';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -23,7 +23,6 @@ const Intro = () => {
     const introTopRef = useRef<HTMLDivElement>(null);
     const introBottomRef = useRef<HTMLDivElement>(null);
 
-    const setHovering = useCursorStore(state => state.setHovering);
 
     // Grid Glow 鼠标追踪 — 零 repaint：纯 transform composite
     useEffect(() => {
@@ -206,41 +205,40 @@ const Intro = () => {
             <div className="absolute top-0 left-0 w-full h-[100dvh] flex flex-col items-center pointer-events-none z-30">
                 <div className="w-full h-full max-w-vw-safe px-6 md:px-12 pb-8 md:pb-12 flex flex-col justify-end">
                     {/* BOTTOM LAYER: Grounding Metadata & Scroll */}
-                    <div ref={introBottomRef} className="w-full flex flex-row justify-between items-end font-inter font-light text-[12px] md:text-[13px] xl:text-[15px] uppercase tracking-[0.2em] text-[#f5f5f7]/50 pointer-events-auto">
+                    <div ref={introBottomRef} className="w-full flex flex-row justify-between items-end font-inter font-light text-[12px] md:text-[13px] xl:text-[15px] uppercase tracking-[0.2em]  pointer-events-auto">
 
                         {/* Bottom Left: Location / Status */}
                         <div className="text-left">
-                            <p className="leading-[1.6]">
-                                BASED IN BNE, AUS <br />
-                                <span className="text-[#f5f5f7]/40">WORKING WORLDWIDE</span>
-                            </p>
+                            <div className="leading-[1.6]">
+                                <p className='text-[#f5f5f7]/50'>BASED IN BNE, AUS</p>
+                                <p className="text-[#f5f5f7]/40">WORKING WORLDWIDE</p>
+                            </div>
                         </div>
 
                         {/* Bottom Right: Scroll Action */}
-                        <div className="group flex flex-row items-center gap-3 cursor-pointer ml-auto" 
-                             onPointerEnter={() => setHovering(true)}
-                             onPointerLeave={() => setHovering(false)}
-                             onClick={() => {
-                            const descSection = document.getElementById('about');
-                            if (descSection) {
-                                setHovering(false); // Reset hovering on click as page scrolls
-                                descSection.scrollIntoView({ behavior: 'smooth' });
-                            }
-                        }}>
-                            <span className="hidden md:block text-[#f5f5f7]/50 group-hover:text-[#f5f5f7] transition-colors duration-500">DISCOVER</span>
-                            <div className="relative overflow-hidden w-4 h-4 flex items-center justify-center">
-                                {/* First Arrow (Flies down and out) */}
-                                <ArrowDown
-                                    strokeWidth={3}
-                                    className="absolute w-4 h-4 text-[#f5f5f7]/50 transition-all duration-[600ms] ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:text-[#e67b4e] group-hover:translate-y-[150%]"
-                                />
-                                {/* Second Arrow (Flies down and in from top) */}
-                                <ArrowDown
-                                    strokeWidth={3}
-                                    className="absolute w-4 h-4 text-[#e67b4e] -translate-y-[150%] transition-all duration-[600ms] ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:translate-y-0"
-                                />
-                            </div>
-                        </div>
+                        <CursorTarget mode='pointer'>
+                            <div className="group flex flex-row items-center gap-3 cursor-pointer ml-auto"
+                                onClick={() => {
+                                    const descSection = document.getElementById('about');
+                                    if (descSection) {
+                                        descSection.scrollIntoView({ behavior: 'smooth' });
+                                    }
+                                }}>
+                                <span className="hidden md:block text-[#f5f5f7]/50 group-hover:text-[#f5f5f7] transition-colors duration-500">DISCOVER</span>
+                                <div className="relative overflow-hidden w-4 h-4 flex items-center justify-center">
+                                    {/* First Arrow (Flies down and out) */}
+                                    <ArrowDown
+                                        strokeWidth={3}
+                                        className="absolute w-4 h-4 text-[#f5f5f7]/50 transition-all duration-[600ms] ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:text-[#e67b4e] group-hover:translate-y-[150%]"
+                                    />
+                                    {/* Second Arrow (Flies down and in from top) */}
+                                    <ArrowDown
+                                        strokeWidth={3}
+                                        className="absolute w-4 h-4 text-[#e67b4e] -translate-y-[150%] transition-all duration-[600ms] ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:translate-y-0"
+                                    />
+                                </div>
+                            </div></CursorTarget>
+
                     </div>
                 </div>
             </div>

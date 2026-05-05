@@ -4,7 +4,7 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import Logo from './ui/Logo'
-import { useCursorStore } from '@/hooks/useCursorStore'
+import CursorTarget from './ui/CursorTarget'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -39,8 +39,6 @@ const Header = () => {
     const brandRef = useRef<HTMLDivElement>(null)
     const navItemRefs = useRef<(HTMLDivElement | null)[]>([])
     const mobileMenuBtnRef = useRef<HTMLDivElement>(null)
-
-    const setHovering = useCursorStore(state => state.setHovering);
 
     useEffect(() => {
         isMenuOpenRef.current = isMenuOpen
@@ -351,38 +349,40 @@ const Header = () => {
             <div ref={headerRef} className="fixed top-0 w-full h-auto flex flex-row items-center justify-center mt-6 z-100 font-inter font-medium">
                 <div className='w-full max-w-vw-safe flex flex-row items-center justify-between'>
                     <div ref={brandRef} className="relative z-50 w-auto ml-6 md:ml-12 flex flex-row items-center cursor-pointer" onClick={(e) => handleLogoClick(e, 'top')}>
-                        <div className='mr-2 w-[36px] h-[18px] md:w-[42px] md:h-[21px]'>
-                            <Logo ref={logoRef} color="#f5f5f7" />
-                        </div>
+                        <CursorTarget>
+                            <div className='mr-2 w-[36px] h-[18px] md:w-[42px] md:h-[21px]'>
+                                <Logo ref={logoRef} color="#f5f5f7" />
+                            </div>
+                        </CursorTarget>
                     </div>
 
                     <div className='w-auto mr-6 md:mr-12'>
                         { /* Desktop Menu Nav Items */}
-                        <div className='hidden md:flex md:gap-8 md:tracking-widest md:text-lg'>
-                            {menuItems.map((item, index) => (
-                                <div
-                                    ref={(el) => { navItemRefs.current[index] = el }}
-                                    key={item}
-                                    className='relative cursor-pointer text-[#f5f5f7] uppercase'
-                                    onClick={(e) => handleItemClick(index, item, e)}
-                                    onMouseEnter={() => {
-                                        handleMouseEnter(index);
-                                        setHovering(true);
-                                    }}
-                                    onMouseLeave={() => {
-                                        handleMouseLeave(index);
-                                        setHovering(false);
-                                    }}
-                                >
-                                    <p ref={(el) => { menuItemTextRefs.current[index] = el }}>{item}</p>
-                                    <span
-                                        ref={(el) => { underlineRefs.current[index] = el }}
-                                        className='absolute bottom-0 left-0 w-full h-[2px] bg-[#f5f5f7]'
-                                        style={{ transform: 'scaleX(0)' }}
-                                    />
-                                </div>
-                            ))}
-                        </div>
+                        <CursorTarget>
+                            <div className='hidden md:flex md:gap-8 md:tracking-widest md:text-lg'>
+                                {menuItems.map((item, index) => (
+                                    <div
+                                        ref={(el) => { navItemRefs.current[index] = el }}
+                                        key={item}
+                                        className='relative cursor-pointer text-[#f5f5f7] uppercase'
+                                        onClick={(e) => handleItemClick(index, item, e)}
+                                        onMouseEnter={() => {
+                                            handleMouseEnter(index);
+                                        }}
+                                        onMouseLeave={() => {
+                                            handleMouseLeave(index);
+                                        }}
+                                    >
+                                        <p ref={(el) => { menuItemTextRefs.current[index] = el }}>{item}</p>
+                                        <span
+                                            ref={(el) => { underlineRefs.current[index] = el }}
+                                            className='absolute bottom-0 left-0 w-full h-[2px] bg-[#f5f5f7]'
+                                            style={{ transform: 'scaleX(0)' }}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </CursorTarget>
                         {/* Mobile Menu Button */}
                         <div
                             ref={mobileMenuBtnRef}
