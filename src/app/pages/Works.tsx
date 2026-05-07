@@ -98,7 +98,7 @@ const Works = () => {
     );
 
     return (
-        <div ref={containerRef} id="works" className="relative z-20 w-full min-h-[100dvh] bg-[#0a0a0a] overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.8)] flex flex-col justify-start">
+        <div ref={containerRef} id="works" className="relative z-20 w-full min-h-[100dvh] bg-[#0a0a0a] overflow-hidden flex flex-col justify-start pb-20 lg:pb-40">
             <div className="flex w-max whitespace-nowrap will-change-transform mt-20 md:mt-32 xl:mt-40 2xl:mt-50 mb-24 md:mb-40 lg:mb-56" ref={marqueeRef}>
                 {/* 
                   First Full Set 
@@ -121,7 +121,7 @@ const Works = () => {
             </div>
 
             {/* Neo-Brutalist LEDGER / Works List */}
-            <div className="w-full flex-col flex items-center relative z-20 pb-20 md:pb-32">
+            <div className="w-full flex-col flex items-center relative z-20 pb-40 md:pb-64 lg:pb-80">
                 {worksData.map((work, idx) => (
                     <CursorTarget key={idx} mode='combo' label='Details' icon='arrow-up-right'>
                         <div className="works-row group relative w-full max-w-vw-safe mx-auto flex flex-col py-12 lg:py-24 px-6 md:px-12 hover:bg-[#f5f5f7]/[0.02] transition-colors duration-500 cursor-pointer">
@@ -182,38 +182,7 @@ const Works = () => {
                 <div className="w-full max-w-vw-safe mx-auto border-t border-[#f5f5f7]/15"></div>
             </div>
 
-            {/* The Kinetic Marquee Wall (Footer) */}
-            <div className="w-full flex flex-col gap-3 md:gap-4 lg:gap-5 mt-12 md:mt-24 pb-12 overflow-hidden relative z-20">
-                {skillsData.map((category, idx) => {
-                    const MarqueeContent = () => (
-                        <div className="flex items-center shrink-0">
-                            {/* Loop multiple times to ensure array is massive enough for extremely wide 4k screens given the small font size */}
-                            {[...Array(12)].map((_, loopIndex) => (
-                                <React.Fragment key={loopIndex}>
-                                    {category.skills.map((skill, i) => (
-                                        <div key={`${skill}-${i}`} className="flex items-center">
-                                            <span className="font-inter text-base md:text-lg lg:text-xl font-medium tracking-wide text-white/40 leading-none whitespace-nowrap">
-                                                {skill}
-                                            </span>
-                                            <span className="font-mono text-sm md:text-base font-light text-white/30 mx-5 md:mx-8 lg:mx-12">
-                                                +
-                                            </span>
-                                        </div>
-                                    ))}
-                                </React.Fragment>
-                            ))}
-                        </div>
-                    );
 
-                    return (
-                        <div key={category.title} className="flex w-max will-change-transform" ref={el => { footerMarqueeRefs.current[idx] = el }}>
-                            {/* We duplicated MarqueeContent twice to perfectly satisfy the -50% CSS loop transition */}
-                            <MarqueeContent />
-                            <MarqueeContent />
-                        </div>
-                    );
-                })}
-            </div>
         </div>
     )
 }
