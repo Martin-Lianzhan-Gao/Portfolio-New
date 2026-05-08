@@ -3,6 +3,7 @@
 import Intro from "./pages/Intro";
 import Description from "./pages/Description";
 import Works from "./pages/Works";
+import MegaFooter from "./pages/MegaFooter";
 
 export default function Home() {
     return (
@@ -10,6 +11,7 @@ export default function Home() {
             <Intro />
             <Description />
             <Works />
+            <MegaFooter />
         </main>
     );
 }

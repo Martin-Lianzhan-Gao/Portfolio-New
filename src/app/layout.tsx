@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Montserrat, Inter, Inria_Sans, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header";
-import MegaFooter from "./pages/MegaFooter";
 import Cursor from "./components/ui/Cursor";
 
 const geistSans = Geist({
@@ -70,7 +69,6 @@ export default function RootLayout({
                 <Cursor />
                 <Header />
                 {children}
-                <MegaFooter />
             </body>
         </html>
     );
