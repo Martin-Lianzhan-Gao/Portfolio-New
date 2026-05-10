@@ -70,7 +70,7 @@ const Works = () => {
             const fades = gsap.utils.toArray('.row-fade-up', row);
 
             // Init State
-            gsap.set(divider, { scaleX: 0 });
+            if (divider) gsap.set(divider, { scaleX: 0 });
             gsap.set(title, { yPercent: 120 });
             gsap.set(fades, { opacity: 0, y: 30 });
 
@@ -82,17 +82,20 @@ const Works = () => {
                 }
             });
 
-            rowTl.to(divider, {
-                scaleX: 1,
-                duration: 1.2,
-                ease: "expo.inOut",
-                transformOrigin: "left center" // Razor cut from left to right
-            })
-                .to(title, {
+            if (divider) {
+                rowTl.to(divider, {
+                    scaleX: 1,
+                    duration: 1.2,
+                    ease: "expo.inOut",
+                    transformOrigin: "left center" // Razor cut from left to right
+                });
+            }
+
+            rowTl.to(title, {
                     yPercent: 0,
                     duration: 1.2,
                     ease: "power4.out"
-                }, "-=0.6") // Ascend monolithic text heavily before cut finishes
+                }, divider ? "-=0.6" : 0) // Ascend monolithic text heavily before cut finishes
                 .to(fades, {
                     y: 0,
                     opacity: 1,
@@ -113,7 +116,7 @@ const Works = () => {
     );
 
     return (
-        <div ref={containerRef} id="works" className="relative z-20 w-full min-h-[100dvh] bg-[#0a0a0a] overflow-hidden flex flex-col justify-start pb-20 lg:pb-40">
+        <div ref={containerRef} id="works" className="relative z-20 w-full min-h-[100dvh] bg-[#0a0a0a] overflow-hidden flex flex-col justify-start pb-16 md:pb-24 lg:pb-32">
             <div className="flex w-max whitespace-nowrap will-change-transform mt-20 md:mt-32 xl:mt-40 2xl:mt-50 mb-24 md:mb-40 lg:mb-56" ref={marqueeRef}>
                 {/* 
                   First Full Set 
@@ -136,13 +139,15 @@ const Works = () => {
             </div>
 
             {/* Neo-Brutalist LEDGER / Works List */}
-            <div className="w-full flex-col flex items-center relative z-20 pb-40 md:pb-64 lg:pb-80">
+            <div className="w-full flex-col flex items-center relative z-20 pb-28 md:pb-40 lg:pb-56">
                 {worksData.map((work, idx) => (
                     <CursorTarget key={idx} mode='combo' label='Details' icon='arrow-up-right'>
                         <div className="works-row group relative w-full max-w-vw-safe mx-auto flex flex-col py-12 lg:py-24 px-6 md:px-12 hover:bg-[#f5f5f7]/[0.02] transition-colors duration-500 cursor-pointer">
 
                             {/* The Animated SVG Cut Line */}
-                            <div className="row-divider absolute top-0 left-0 w-full h-[1px] bg-[#f5f5f7]/15"></div>
+                            {idx !== 0 && (
+                                <div className="row-divider absolute top-0 left-0 w-full h-[1px] bg-[#f5f5f7]/15"></div>
+                            )}
 
                             {/* Top Row: Metadata (Breathing Room) */}
                             <div className="row-fade-up w-full flex justify-start mb-8 lg:mb-16">
@@ -192,9 +197,6 @@ const Works = () => {
                         </div>
                     </CursorTarget>
                 ))}
-
-                {/* Final bottom border line wrapper to close the ledger */}
-                <div className="w-full max-w-vw-safe mx-auto border-t border-[#f5f5f7]/15"></div>
             </div>
 
 

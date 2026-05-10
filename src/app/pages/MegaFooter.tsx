@@ -10,13 +10,8 @@ const MegaFooter = () => {
     return (
         <footer id='contact' className="relative w-full bg-[#f5f5f7] text-[#0a0a0a] flex flex-col items-center z-20">
 
-            {/* Top Divider */}
-            <div className="w-full max-w-vw-safe px-6 md:px-12">
-                <div className="w-full h-px bg-[#0a0a0a]/10" />
-            </div>
-
             {/* Main CTA Section */}
-            <div className="w-full max-w-vw-safe px-6 md:px-12 pt-16 md:pt-24 lg:pt-32 pb-20 md:pb-32 lg:pb-40 flex flex-col">
+            <div className="w-full max-w-vw-safe px-6 md:px-12 pt-16 md:pt-20 xl:pt-28 pb-20 md:pb-32 lg:pb-40 flex flex-col">
 
                 {/* Top Row: Availability Label + Social Links */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 md:gap-0 mb-12 md:mb-16 lg:mb-20">

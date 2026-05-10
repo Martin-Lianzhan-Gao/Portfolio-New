@@ -26,10 +26,10 @@ const COPIES = 4
 // 提取到组件外部，避免每次渲染重建函数引用导致 React 卸载/重挂载子树
 const SkillItem = ({ skill }: { skill: string }) => (
     <div className="flex items-center shrink-0">
-        <span className="font-inter text-[2rem] md:text-[3rem] lg:text-[4rem] xl:text-[5rem] 2xl:text-[6rem] font-light text-[#f5f5f7] tracking-wide px-4 md:px-6 lg:px-8 xl:px-10">
+        <span className="font-inter text-[2rem] md:text-[3rem] lg:text-[4rem] xl:text-[5rem] 2xl:text-[6rem] font-light text-[#0a0a0a] tracking-wide px-4 md:px-6 lg:px-8 xl:px-10">
             {skill}
         </span>
-        <span className="font-inter text-[2rem] md:text-[3rem] lg:text-[4rem] xl:text-[5rem] 2xl:text-[6rem] font-extralight text-[#f5f5f7]/30 select-none">
+        <span className="font-inter text-[2rem] md:text-[3rem] lg:text-[4rem] xl:text-[5rem] 2xl:text-[6rem] font-extralight text-[#0a0a0a]/20 select-none">
             +
         </span>
     </div>
@@ -84,7 +84,7 @@ const Skills = () => {
     return (
         <section
             ref={containerRef}
-            className="relative z-20 w-full bg-[#0a0a0a] overflow-hidden py-20 md:py-28 lg:py-36 flex flex-col justify-center"
+            className="relative z-20 w-full bg-[#f5f5f7] overflow-hidden pt-16 sm:pt-20 md:pt-28 lg:pt-40 xl:pt-48 pb-20 md:pb-28 lg:pb-16 xl:pb-28 2xl:pb-36 flex flex-col justify-center"
         >
             <div className="flex flex-col gap-2 md:gap-4 lg:gap-6">
                 {rows.map((skills, rowIdx) => (
