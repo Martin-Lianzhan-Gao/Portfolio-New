@@ -64,7 +64,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body
-                className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} ${inter.variable} ${inriaSans.variable} ${cormorantGaramond.variable} antialiased bg-[#0a0a0a]`}
+                className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} ${inter.variable} ${inriaSans.variable} ${cormorantGaramond.variable}`}
             >
                 <Cursor />
                 <Header />
