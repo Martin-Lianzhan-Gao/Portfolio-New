@@ -1,7 +1,7 @@
 'use client'
 
-import { useMemo, useRef } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
+import { useEffect, useMemo, useRef } from 'react'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { useCursorStore } from '@/hooks/useCursorStore'
 
@@ -136,13 +136,24 @@ void main() {
 }
 `
 
-const DynamicNebula = () => {
+// 预计算调色板 RGB，避免循环内创建 THREE.Color 对象
+const PALETTE = {
+    core:  { r: 1.0,   g: 1.0,   b: 1.0   }, // #ffffff
+    inner: { r: 0.533, g: 0.824, b: 1.0   }, // #88d2ff
+    mid:   { r: 0.094, g: 0.314, b: 0.878 }, // #1850e0
+    outer: { r: 0.047, g: 0.078, b: 0.271 }, // #0c1445
+}
+
+function lerpChannel(a: number, b: number, t: number) { return a + (b - a) * t }
+
+const DynamicNebula = ({ isVisibleRef }: { isVisibleRef: React.RefObject<boolean> }) => {
     const shaderRef = useRef<THREE.ShaderMaterial>(null)
     const pointsRef = useRef<THREE.Points>(null)
+    const { invalidate } = useThree()
 
     const particleGeometry = useMemo(() => {
         const ribbons = 7
-        const count = 280000 // Dense structural grid size
+        const count = 80000 // 从 280k 降到 80k，保持视觉密度的同时大幅减轻 GPU 负担
         const pointsPerRibbon = Math.floor(count / ribbons)
 
         const geometry = new THREE.BufferGeometry()
@@ -151,12 +162,6 @@ const DynamicNebula = () => {
         const colors = new Float32Array(count * 3)
         const sizes = new Float32Array(count)
         const randoms = new Float32Array(count)
-
-        // Palette extracted from the cold icy/electric blue aesthetic
-        const colorCore = new THREE.Color("#ffffff")
-        const colorInner = new THREE.Color("#88d2ff") // Electric cyan highlights
-        const colorMid = new THREE.Color("#1850e0")   // Vivid energetic blue
-        const colorOuter = new THREE.Color("#0c1445") // Deep void structure blue
 
         let index = 0
         for (let r = 0; r < ribbons; r++) {
@@ -199,22 +204,30 @@ const DynamicNebula = () => {
                 positions[index * 3 + 1] = y
                 positions[index * 3 + 2] = z
 
-                // Map colormetrics directly radiating from the central spine outward
+                // 纯数学插值替代 new THREE.Color()，消除循环内对象分配
                 const distFromSpine = Math.abs(radialOffset)
-
-                const mixedColor = new THREE.Color()
+                let cr: number, cg: number, cb: number
 
                 if (distFromSpine < 0.2) {
-                    mixedColor.lerpColors(colorCore, colorInner, distFromSpine / 0.2)
+                    const t = distFromSpine / 0.2
+                    cr = lerpChannel(PALETTE.core.r, PALETTE.inner.r, t)
+                    cg = lerpChannel(PALETTE.core.g, PALETTE.inner.g, t)
+                    cb = lerpChannel(PALETTE.core.b, PALETTE.inner.b, t)
                 } else if (distFromSpine < 0.7) {
-                    mixedColor.lerpColors(colorInner, colorMid, (distFromSpine - 0.2) / 0.5)
+                    const t = (distFromSpine - 0.2) / 0.5
+                    cr = lerpChannel(PALETTE.inner.r, PALETTE.mid.r, t)
+                    cg = lerpChannel(PALETTE.inner.g, PALETTE.mid.g, t)
+                    cb = lerpChannel(PALETTE.inner.b, PALETTE.mid.b, t)
                 } else {
-                    mixedColor.lerpColors(colorMid, colorOuter, (distFromSpine - 0.7) / 2.8)
+                    const t = (distFromSpine - 0.7) / 2.8
+                    cr = lerpChannel(PALETTE.mid.r, PALETTE.outer.r, t)
+                    cg = lerpChannel(PALETTE.mid.g, PALETTE.outer.g, t)
+                    cb = lerpChannel(PALETTE.mid.b, PALETTE.outer.b, t)
                 }
 
-                colors[index * 3] = mixedColor.r
-                colors[index * 3 + 1] = mixedColor.g
-                colors[index * 3 + 2] = mixedColor.b
+                colors[index * 3] = cr
+                colors[index * 3 + 1] = cg
+                colors[index * 3 + 2] = cb
 
                 // Node sizing: large intense flares bounded by ultra-fine interference dust
                 sizes[index] = distFromSpine < 0.22 ? 0.046 : 0.02
@@ -239,6 +252,9 @@ const DynamicNebula = () => {
     const parallax = useRef({ x: 0, y: 0 })
 
     useFrame((state) => {
+        // 离屏时跳过所有计算，不请求下一帧 → Canvas 完全静止
+        if (!isVisibleRef.current) return
+
         if (shaderRef.current) {
             shaderRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
         }
@@ -255,6 +271,9 @@ const DynamicNebula = () => {
             pointsRef.current.rotation.y += parallax.current.x
             pointsRef.current.rotation.x = parallax.current.y
         }
+
+        // demand 模式：手动请求下一帧
+        invalidate()
     })
 
     const uniforms = useMemo(() => ({
@@ -277,15 +296,29 @@ const DynamicNebula = () => {
 }
 
 const OrganicNebula = () => {
+    const containerRef = useRef<HTMLDivElement>(null)
+    const isVisibleRef = useRef(true)
+
+    useEffect(() => {
+        const el = containerRef.current
+        if (!el) return
+        const observer = new IntersectionObserver(
+            ([entry]) => { isVisibleRef.current = entry.isIntersecting },
+            { threshold: 0, rootMargin: '200px' } // 提前 200px 开始渲染，避免滚回时出现空白
+        )
+        observer.observe(el)
+        return () => observer.disconnect()
+    }, [])
+
     return (
-        <div className="w-full h-full pointer-events-none">
+        <div ref={containerRef} className="w-full h-full pointer-events-none">
             <Canvas
-                // Widened FOV to 48 (wide-angle lens) to embrace the gigantic 1.8 scale shape entirely without hard border clipping
+                frameloop="demand"
                 camera={{ position: [0, 0, 14], fov: 38 }}
-                dpr={[1, 2]}
-                gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
+                dpr={[1, 1.5]}
+                gl={{ alpha: true, antialias: false, powerPreference: "high-performance" }}
             >
-                <DynamicNebula />
+                <DynamicNebula isVisibleRef={isVisibleRef} />
             </Canvas>
         </div>
     )
