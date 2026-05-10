@@ -5,9 +5,12 @@ import React, { useRef } from 'react';
 import { ArrowDownRight } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import ScrollTrigger from 'gsap/ScrollTrigger';
 import { worksData } from '../data/worksData';
 import { skillsData } from '../data/skillsData';
 import CursorTarget from '../components/ui/CursorTarget';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const Works = () => {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -17,35 +20,47 @@ const Works = () => {
     useGSAP(() => {
         if (!marqueeRef.current) return;
 
+        const allTweens: gsap.core.Tween[] = [];
+
         // GSAP infinite horizontal scroll loop
-        gsap.to(marqueeRef.current, {
+        allTweens.push(gsap.to(marqueeRef.current, {
             xPercent: -50,
             repeat: -1,
             duration: 48,
-            ease: "none"
-        });
+            ease: "none",
+            paused: true
+        }));
 
         // Footer Kinetic Marquee Wall Animation
         footerMarqueeRefs.current.forEach((marquee, idx) => {
             if (!marquee) return
 
             const direction = idx % 2 === 0 ? -1 : 1;
-            const duration = 100 + (idx * 5); // Stagger speeds: 50s, 55s, 60s, 65s
+            const duration = 100 + (idx * 5);
 
-            if (direction === -1) {
-                // Scroll Left
-                gsap.fromTo(marquee,
+            const tween = direction === -1
+                ? gsap.fromTo(marquee,
                     { xPercent: 0 },
-                    { xPercent: -50, repeat: -1, duration, ease: "none" }
-                );
-            } else {
-                // Scroll Right
-                gsap.fromTo(marquee,
+                    { xPercent: -50, repeat: -1, duration, ease: "none", paused: true }
+                )
+                : gsap.fromTo(marquee,
                     { xPercent: -50 },
-                    { xPercent: 0, repeat: -1, duration, ease: "none" }
+                    { xPercent: 0, repeat: -1, duration, ease: "none", paused: true }
                 );
-            }
+
+            allTweens.push(tween);
         })
+
+        // 离屏暂停所有 marquee
+        ScrollTrigger.create({
+            trigger: containerRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            onEnter: () => allTweens.forEach(t => t.play()),
+            onLeave: () => allTweens.forEach(t => t.pause()),
+            onEnterBack: () => allTweens.forEach(t => t.play()),
+            onLeaveBack: () => allTweens.forEach(t => t.pause()),
+        });
 
         // Neo-Brutalist Ledger Entry Animations (The Gate & The Cut)
         const worksRows = gsap.utils.toArray<HTMLElement>('.works-row');
