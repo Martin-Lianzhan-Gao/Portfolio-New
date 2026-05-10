@@ -28,7 +28,8 @@ const Intro = () => {
     useEffect(() => {
         const outer = glowOuterRef.current;
         const inner = glowInnerRef.current;
-        if (!outer || !inner) return;
+        const topEl = document.getElementById('top');
+        if (!outer || !inner || !topEl) return;
 
         const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -40,13 +41,19 @@ const Intro = () => {
 
         // 内层尺寸与 #top 精确对齐（避免 100vw 包含滚动条的偏差）
         const syncSize = () => {
-            const topEl = document.getElementById('top');
-            if (!topEl) return;
             inner.style.width = `${topEl.offsetWidth}px`;
             inner.style.height = `${topEl.offsetHeight}px`;
         };
         syncSize();
         window.addEventListener('resize', syncSize);
+
+        // 离屏暂停标记
+        let isVisible = true;
+        const observer = new IntersectionObserver(
+            ([entry]) => { isVisible = entry.isIntersecting },
+            { threshold: 0 }
+        );
+        observer.observe(topEl);
 
         // 内部状态
         const state = { x: 0, y: 0, opacity: 0 };
@@ -57,7 +64,7 @@ const Intro = () => {
         const setOpacity = gsap.quickTo(state, 'opacity', { duration: 0.35, ease: 'power2' });
 
         const handlePointerMove = (e: PointerEvent) => {
-            if (e.pointerType !== 'mouse') return;
+            if (e.pointerType !== 'mouse' || !isVisible) return;
             setX(e.clientX);
             setY(e.clientY);
             setOpacity(1);
@@ -67,6 +74,7 @@ const Intro = () => {
 
         // GSAP Ticker 每帧只写 transform + opacity（composite-only）
         const update = () => {
+            if (!isVisible) return; // 离屏跳过，节省帧预算
             const tx = state.x - halfSize;
             const ty = state.y - halfSize;
             // 外层：跟随鼠标
@@ -81,6 +89,7 @@ const Intro = () => {
         document.documentElement.addEventListener('pointerleave', handlePointerLeave);
 
         return () => {
+            observer.disconnect();
             gsap.ticker.remove(update);
             window.removeEventListener('pointermove', handlePointerMove);
             document.documentElement.removeEventListener('pointerleave', handlePointerLeave);
