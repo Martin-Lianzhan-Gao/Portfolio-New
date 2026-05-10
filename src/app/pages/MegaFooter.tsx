@@ -47,13 +47,15 @@ const MegaFooter = () => {
                 </div>
 
                 {/* Giant CTA Text — mailto anchor */}
-                <CursorTarget mode="combo" label="Email Me" icon="arrow-up-right">
-                    <a href="mailto:martingaoorglz@gmail.com" className="group block select-none">
-                        <h2 className="font-inria-sans font-bold text-[14vw] md:text-[11vw] lg:text-[9.5vw] leading-[0.85] tracking-tighter uppercase cursor-pointer">
-                            <span className="inline-block transition-colors duration-700 group-hover:text-[#0a0a0a]/80">LET&apos;S TALK</span>
-                        </h2>
-                    </a>
-                </CursorTarget>
+
+                <a href="mailto:martingaoorglz@gmail.com" className="group block select-none">
+                    <h2 className="font-inria-sans font-bold text-[14vw] md:text-[11vw] lg:text-[9.5vw] leading-[0.85] tracking-tighter uppercase cursor-pointer">
+                        <CursorTarget mode="combo" label="Just Click" icon="arrow-up-right">
+                            <span className="inline-block transition-colors duration-700 group-hover:text-[#0a0a0a]/80">LET'S TALK</span>
+                        </CursorTarget>
+                    </h2>
+                </a>
+
 
             </div>
 
@@ -72,7 +74,7 @@ const MegaFooter = () => {
                 </span>
             </div>
 
-        </footer>
+        </footer >
     )
 }
 
