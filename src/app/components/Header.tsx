@@ -84,6 +84,49 @@ const Header = () => {
         });
     }, { dependencies: [], scope: headerRef });
 
+    // Header color inversion when overlapping white-background sections (Skills / Footer)
+    useEffect(() => {
+        // All white-bg sections that should trigger dark header
+        const lightSections = document.querySelectorAll<HTMLElement>('[data-header-theme="dark"]');
+        if (lightSections.length === 0) return;
+
+        let activeDarkCount = 0;
+
+        const applyColor = (color: string) => {
+            // Skip if mobile menu is open — menu controls its own colors
+            if (isMenuOpenRef.current) return;
+
+            currentHeaderColor.current = color;
+
+            const strokeTargets = [logoRef.current, hamburgerTopRef.current, hamburgerBottomRef.current, xLine1Ref.current, xLine2Ref.current].filter(Boolean);
+            const colorTargets = [...menuItemTextRefs.current].filter(Boolean);
+            const bgTargets = [...underlineRefs.current, rippleRef.current].filter(Boolean);
+
+            gsap.to(strokeTargets, { stroke: color, duration: 0.4, ease: "power2.inOut", overwrite: true });
+            gsap.to(colorTargets, { color: color, duration: 0.4, ease: "power2.inOut", overwrite: true });
+            gsap.to(bgTargets, { backgroundColor: color, duration: 0.4, ease: "power2.inOut", overwrite: true });
+        };
+
+        const triggers: ScrollTrigger[] = [];
+
+        lightSections.forEach((section) => {
+            const st = ScrollTrigger.create({
+                trigger: section,
+                // Start when section top reaches the header position (top of viewport)
+                start: "top top",
+                // End when section bottom passes the header position
+                end: "bottom top",
+                onEnter: () => { activeDarkCount++; applyColor("#0a0a0a"); },
+                onLeave: () => { activeDarkCount--; if (activeDarkCount <= 0) { activeDarkCount = 0; applyColor("#f5f5f7"); } },
+                onEnterBack: () => { activeDarkCount++; applyColor("#0a0a0a"); },
+                onLeaveBack: () => { activeDarkCount--; if (activeDarkCount <= 0) { activeDarkCount = 0; applyColor("#f5f5f7"); } },
+            });
+            triggers.push(st);
+        });
+
+        return () => { triggers.forEach(t => t.kill()); };
+    }, []);
+
     // Initialize desktop hover underline
     useEffect(() => {
         underlineRefs.current.forEach((ref) => {

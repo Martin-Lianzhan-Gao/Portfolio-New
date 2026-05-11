@@ -8,7 +8,7 @@ const MegaFooter = () => {
     const currentYear = new Date().getFullYear()
 
     return (
-        <footer id='contact' className="relative w-full bg-[#f5f5f7] text-[#0a0a0a] flex flex-col items-center z-20">
+        <footer id='contact' data-header-theme="dark" className="relative w-full bg-[#f5f5f7] text-[#0a0a0a] flex flex-col items-center z-20">
 
             {/* Main CTA Section */}
             <div className="w-full max-w-vw-safe px-6 md:px-12 pt-16 md:pt-20 xl:pt-28 pb-20 md:pb-32 lg:pb-40 flex flex-col">

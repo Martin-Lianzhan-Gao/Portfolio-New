@@ -84,6 +84,7 @@ const Skills = () => {
     return (
         <section
             ref={containerRef}
+            data-header-theme="dark"
             className="relative z-20 w-full bg-[#f5f5f7] overflow-hidden pt-16 sm:pt-20 md:pt-28 lg:pt-40 xl:pt-48 pb-20 md:pb-28 lg:pb-16 xl:pb-28 2xl:pb-36 flex flex-col justify-center"
         >
             <div className="flex flex-col gap-2 md:gap-4 lg:gap-6">
