@@ -44,9 +44,9 @@ const MegaFooter = () => {
                 {/* Giant CTA Text — mailto anchor */}
 
                 <a href="mailto:martingaoorglz@gmail.com" className="group block select-none">
-                    <h2 className="font-inria-sans font-bold text-[14vw] md:text-[11vw] lg:text-[9.5vw] leading-[0.85] tracking-tighter uppercase cursor-pointer">
-                        <CursorTarget mode="combo" label="Just Click" icon="arrow-up-right">
-                            <span className="inline-block transition-colors duration-700 group-hover:text-[#0a0a0a]/80">LET'S TALK</span>
+                    <h2 className="font-inria-sans font-bold text-[18vw] md:text-[15vw] lg:text-[17vw] 2xl:text-[11.5vw] leading-[0.85] tracking-tighter uppercase cursor-pointer">
+                        <CursorTarget mode="combo" label="Let's Talk" icon="arrow-up-right" panelBg='#eaeaec' contentColor='#0a0a0a'>
+                            <span className="inline-block transition-colors duration-700 group-hover:text-[#0a0a0a]/80">SAY HELLO</span>
                         </CursorTarget>
                     </h2>
                 </a>
