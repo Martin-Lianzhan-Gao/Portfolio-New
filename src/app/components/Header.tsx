@@ -2,11 +2,8 @@
 import { useRef, useEffect, useState } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
-import ScrollTrigger from 'gsap/ScrollTrigger'
 import Logo from './ui/Logo'
 import CursorTarget from './ui/CursorTarget'
-
-gsap.registerPlugin(ScrollTrigger)
 
 const menuItems = ['about', 'works', 'contact']
 
@@ -84,18 +81,16 @@ const Header = () => {
         });
     }, { dependencies: [], scope: headerRef });
 
-    // Header color inversion when overlapping white-background sections (Skills / Footer)
+    // Header Theme Resolver — elementFromPoint 实时检测，免疫 viewport 动态变化
     useEffect(() => {
-        // All white-bg sections that should trigger dark header
-        const lightSections = document.querySelectorAll<HTMLElement>('[data-header-theme="dark"]');
-        if (lightSections.length === 0) return;
+        const headerEl = headerRef.current;
+        if (!headerEl) return;
 
-        let activeDarkCount = 0;
+        let currentTheme: 'light' | 'dark' = 'light'; // light = 白色 header（深色背景区）
+        let rafId = 0;
 
         const applyColor = (color: string) => {
-            // Skip if mobile menu is open — menu controls its own colors
             if (isMenuOpenRef.current) return;
-
             currentHeaderColor.current = color;
 
             const strokeTargets = [logoRef.current, hamburgerTopRef.current, hamburgerBottomRef.current, xLine1Ref.current, xLine2Ref.current].filter(Boolean);
@@ -107,24 +102,57 @@ const Header = () => {
             gsap.to(bgTargets, { backgroundColor: color, duration: 0.4, ease: "power2.inOut", overwrite: true });
         };
 
-        const triggers: ScrollTrigger[] = [];
+        const resolve = () => {
+            rafId = 0;
 
-        lightSections.forEach((section) => {
-            const st = ScrollTrigger.create({
-                trigger: section,
-                // Start when section top reaches the header position (top of viewport)
-                start: "top top",
-                // End when section bottom passes the header position
-                end: "bottom top",
-                onEnter: () => { activeDarkCount++; applyColor("#0a0a0a"); },
-                onLeave: () => { activeDarkCount--; if (activeDarkCount <= 0) { activeDarkCount = 0; applyColor("#f5f5f7"); } },
-                onEnterBack: () => { activeDarkCount++; applyColor("#0a0a0a"); },
-                onLeaveBack: () => { activeDarkCount--; if (activeDarkCount <= 0) { activeDarkCount = 0; applyColor("#f5f5f7"); } },
-            });
-            triggers.push(st);
-        });
+            // 探测点：header 水平中心，垂直位置取 header 底边（最接近 section 边界的位置）
+            const rect = headerEl.getBoundingClientRect();
+            const probeX = rect.left + rect.width / 2;
+            const probeY = rect.bottom;
 
-        return () => { triggers.forEach(t => t.kill()); };
+            // elementsFromPoint 返回层叠顺序数组，穿透 fixed header
+            const stack = document.elementsFromPoint(probeX, probeY);
+
+            let nextTheme: 'light' | 'dark' = 'light';
+
+            for (const el of stack) {
+                // 跳过 header 自身及其子节点
+                if (headerEl.contains(el)) continue;
+                // 向上查找最近的 theme 标记
+                const themed = el.closest('[data-header-theme]') as HTMLElement | null;
+                if (themed) {
+                    nextTheme = themed.dataset.headerTheme === 'dark' ? 'dark' : 'light';
+                    break;
+                }
+                // 没有 theme 标记，继续扫描更深层的元素
+            }
+
+            if (nextTheme !== currentTheme) {
+                currentTheme = nextTheme;
+                applyColor(currentTheme === 'dark' ? '#0a0a0a' : '#f5f5f7');
+            }
+        };
+
+        const scheduleResolve = () => {
+            if (!rafId) rafId = requestAnimationFrame(resolve);
+        };
+
+        // 监听所有可能导致 section 位置变化的事件
+        window.addEventListener('scroll', scheduleResolve, { passive: true });
+        window.addEventListener('resize', scheduleResolve);
+        window.addEventListener('orientationchange', scheduleResolve);
+        window.visualViewport?.addEventListener('resize', scheduleResolve);
+
+        // 首次执行
+        scheduleResolve();
+
+        return () => {
+            if (rafId) cancelAnimationFrame(rafId);
+            window.removeEventListener('scroll', scheduleResolve);
+            window.removeEventListener('resize', scheduleResolve);
+            window.removeEventListener('orientationchange', scheduleResolve);
+            window.visualViewport?.removeEventListener('resize', scheduleResolve);
+        };
     }, []);
 
     // Initialize desktop hover underline
