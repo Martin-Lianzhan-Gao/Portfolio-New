@@ -13,6 +13,10 @@ const BASE_SCALE_NORMAL = 0.5       // 默认缩放倍率
 const BASE_SCALE_HOVER = 1.15       // Hover命中缩放倍率
 const SLEEP_THRESHOLD = 0.1         // 判定物理休眠的速度阈值
 
+// --- 面板视觉默认值 ---
+const DEFAULT_PANEL_BG = '#f5f5f7'
+const DEFAULT_CONTENT_COLOR = '#0a0a0a'
+
 const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect
 
 export default function Cursor() {
@@ -27,6 +31,12 @@ export default function Cursor() {
     const mode = useCursorStore(state => state.mode)
     const label = useCursorStore(state => state.label)
     const icon = useCursorStore(state => state.icon)
+    const panelBg = useCursorStore(state => state.panelBg)
+    const contentColor = useCursorStore(state => state.contentColor)
+
+    // 用 ref 同步 mode，避免 ticker 每帧调用 getState()
+    const modeRef = useRef(mode)
+    modeRef.current = mode
 
     // 仅用于环境降级控制 (低频)
     const [isEnabled, setIsEnabled] = useState(false)
@@ -141,10 +151,10 @@ export default function Cursor() {
             state.current.lastVisualY = visualY
             const velocity = Math.sqrt(dx * dx + dy * dy)
 
-            // transient 读取低频交互状态
-            const mode = useCursorStore.getState().mode
-            const isPointer = mode === "pointer"
-            const isPanelModeActive = mode === 'text' || mode === 'icon' || mode === 'combo'
+            // transient 读取低频交互状态（从 ref 而非 store）
+            const currentMode = modeRef.current
+            const isPointer = currentMode === "pointer"
+            const isPanelModeActive = currentMode === 'text' || currentMode === 'icon' || currentMode === 'combo'
 
             const targetBaseScale = isPointer ? BASE_SCALE_HOVER : BASE_SCALE_NORMAL
             const currentBaseScale = baseScaleRef.current.value
@@ -256,6 +266,12 @@ export default function Cursor() {
                 0.1  // 在大圆膨胀期间淡入
             )
 
+            // 3. 动态应用自定义颜色
+            const bg = panelBg || DEFAULT_PANEL_BG
+            const color = contentColor || DEFAULT_CONTENT_COLOR
+            tl.to(bgRef.current, { backgroundColor: bg, duration: 0.3, ease: "power2.out" }, 0)
+            tl.to(contentRef.current, { color: color, duration: 0.3, ease: "power2.out" }, 0)
+
         } else {
             // --- Exiting: large circle → dot morph ---
             const tl = gsap.timeline()
@@ -277,10 +293,12 @@ export default function Cursor() {
                 ease: "power3.out",
             }, 0)
 
-            // 缩回小圆后再恢复反色模式，避免巨大的圆突然变色闪烁
+            // 缩回小圆后恢复反色模式、还原默认颜色
             tl.set(rootRef.current, { mixBlendMode: 'difference' })
+            tl.set(bgRef.current, { backgroundColor: DEFAULT_PANEL_BG })
+            tl.set(contentRef.current, { color: '' })
         }
-    }, [isEnabled, mode, label, icon])
+    }, [isEnabled, mode, label, icon, panelBg, contentColor])
 
     if (!isEnabled) return null
 
@@ -296,17 +314,19 @@ export default function Cursor() {
         >
             {/* Physics Layer: 只负责根据鼠标速度形变和小幅拉伸 */}
             <div ref={physicsRef} className="absolute flex items-center justify-center will-change-transform">
-                {/* Background Layer: 永远是白色的圆。抛弃 Scale，直接动画宽高，保证边缘永远是矢量级的绝对锐利 */}
+                {/* Background Layer: 默认色圆。抛弃 Scale，直接动画宽高，保证边缘永远是矢量级的绝对锐利 */}
                 <div
                     ref={bgRef}
-                    className="w-6 h-6 bg-[#F5F5F7] rounded-full will-change-transform flex items-center justify-center"
+                    className="w-6 h-6 rounded-full will-change-transform flex items-center justify-center"
+                    style={{ backgroundColor: DEFAULT_PANEL_BG }}
                 />
             </div>
 
             {/* Content Layer */}
             <div
                 ref={contentRef}
-                className="absolute z-10 flex items-center justify-center gap-2 whitespace-nowrap tracking-wider text-black"
+                className="absolute z-10 flex items-center justify-center gap-2 whitespace-nowrap tracking-[0.02em]"
+                style={{ color: DEFAULT_CONTENT_COLOR }}
             >
                 {(mode === 'text' || mode === 'combo') && label && <span className="text-[16px] font-medium">{label}</span>}
                 {(mode === 'icon' || mode === 'combo') && IconComponent && <IconComponent className="h-4 w-4" strokeWidth={2.5} />}

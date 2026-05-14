@@ -3,10 +3,15 @@ import { create } from 'zustand'
 export type CursorMode = "default" | "pointer" | "text" | "icon" | "combo"
 export type CursorIcon = "arrow-down" | "arrow-right" | "arrow-up-right"
 
-interface CursorConfig {
+/** Shared visual config — used by CursorTarget (input) and CursorState (runtime) */
+export interface CursorVisualConfig {
     mode?: CursorMode
     label?: string
     icon?: CursorIcon
+    /** Panel circle background color (default: light) */
+    panelBg?: string
+    /** Panel text & icon color (default: dark) */
+    contentColor?: string
 }
 
 interface CursorState {
@@ -18,8 +23,10 @@ interface CursorState {
     mode: CursorMode
     label: string
     icon?: CursorIcon
+    panelBg?: string
+    contentColor?: string
 
-    setCursor: (config: CursorConfig) => void
+    setCursor: (config: CursorVisualConfig) => void
     resetCursor: () => void
 }
 
@@ -33,14 +40,16 @@ export const useCursorStore = create<CursorState>((set) => ({
     mode: "default",
     label: "",
     icon: undefined,
+    panelBg: undefined,
+    contentColor: undefined,
 
-    setCursor: ({ mode = "default", label = "", icon }) => {
+    setCursor: ({ mode = "default", label = "", icon, panelBg, contentColor }) => {
         // 有新的 setCursor 进来时，立刻取消任何待执行的 reset，避免中间态闪烁
         if (_resetTimer) {
             clearTimeout(_resetTimer)
             _resetTimer = null
         }
-        set({ mode, label, icon })
+        set({ mode, label, icon, panelBg, contentColor })
     },
 
     resetCursor: () => {
@@ -48,7 +57,7 @@ export const useCursorStore = create<CursorState>((set) => ({
         if (_resetTimer) clearTimeout(_resetTimer)
         _resetTimer = setTimeout(() => {
             _resetTimer = null
-            set({ mode: "default", label: "", icon: undefined })
+            set({ mode: "default", label: "", icon: undefined, panelBg: undefined, contentColor: undefined })
         }, 50)
     },
 }))

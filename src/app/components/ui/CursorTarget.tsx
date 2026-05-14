@@ -1,12 +1,9 @@
 'use client'
 
 import { useEffect, useRef, ReactNode } from 'react'
-import { useCursorStore, CursorMode, CursorIcon } from '@/hooks/useCursorStore'
+import { useCursorStore, CursorMode, CursorIcon, CursorVisualConfig } from '@/hooks/useCursorStore'
 
-interface CursorTargetProps {
-    mode?: CursorMode
-    label?: string
-    icon?: CursorIcon
+interface CursorTargetProps extends CursorVisualConfig {
     className?: string
     children: ReactNode
 }
@@ -15,6 +12,8 @@ export default function CursorTarget({
     mode,
     label,
     icon,
+    panelBg,
+    contentColor,
     className = '',
     children
 }: CursorTargetProps) {
@@ -44,7 +43,7 @@ export default function CursorTarget({
         if (window.matchMedia('(pointer: coarse)').matches) return
 
         isHovering.current = true
-        setCursor({ mode: computedMode, label, icon })
+        setCursor({ mode: computedMode, label, icon, panelBg, contentColor })
     }
 
     const handlePointerLeave = () => {
