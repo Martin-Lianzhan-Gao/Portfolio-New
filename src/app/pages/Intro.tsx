@@ -219,8 +219,7 @@ const Intro = () => {
                         {/* Bottom Left: Location / Status */}
                         <div className="text-left">
                             <div className="leading-[1.6]">
-                                <p className='text-[#f5f5f7]/50'>BASED IN BNE, AUS</p>
-                                <p className="text-[#f5f5f7]/40">WORKING WORLDWIDE</p>
+                                <p className='text-[#f5f5f7]/60'>BASED IN BNE, AUS</p>
                             </div>
                         </div>
 
@@ -233,7 +232,7 @@ const Intro = () => {
                                         descSection.scrollIntoView({ behavior: 'smooth' });
                                     }
                                 }}>
-                                <span className="hidden md:block text-[#f5f5f7]/50 group-hover:text-[#f5f5f7] transition-colors duration-500">DISCOVER</span>
+                                <span className="hidden md:block text-[#f5f5f7]/60 group-hover:text-[#f5f5f7] transition-colors duration-500">DISCOVER</span>
                                 <div className="relative overflow-hidden w-4 h-4 flex items-center justify-center">
                                     {/* First Arrow (Flies down and out) */}
                                     <ArrowDown
