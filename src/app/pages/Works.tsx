@@ -92,10 +92,10 @@ const Works = () => {
             }
 
             rowTl.to(title, {
-                    yPercent: 0,
-                    duration: 1.2,
-                    ease: "power4.out"
-                }, divider ? "-=0.6" : 0) // Ascend monolithic text heavily before cut finishes
+                yPercent: 0,
+                duration: 1.2,
+                ease: "power4.out"
+            }, divider ? "-=0.6" : 0) // Ascend monolithic text heavily before cut finishes
                 .to(fades, {
                     y: 0,
                     opacity: 1,
@@ -152,7 +152,7 @@ const Works = () => {
                             {/* Top Row: Metadata (Breathing Room) */}
                             <div className="row-fade-up w-full flex justify-start mb-8 lg:mb-16">
                                 <span className="font-inter font-medium text-[10px] md:text-xs uppercase tracking-[0.2em] text-[#f5f5f7]/40 [@media(hover:hover)]:group-hover:text-[#f5f5f7]/70 transition-colors duration-700">
-                                    [ {work.date.startDate} - {work.date.endDate} ] / {work.type}
+                                    {work.date.startDate} - {work.date.endDate} / {work.type}
                                 </span>
                             </div>
 
@@ -188,8 +188,8 @@ const Works = () => {
                                         </div>
                                     </div>
 
-                                    <a href="#resume" onClick={(e) => e.preventDefault()} className="row-fade-up hidden [@media(pointer:coarse)]:flex font-inter font-semibold text-[10px] md:text-xs uppercase tracking-[0.25em] text-[#f5f5f7]/60 group-hover:text-white transition-colors duration-300 items-center w-max">
-                                        [ <ArrowDownRight className="w-3 h-3 md:w-3.5 md:h-3.5 transform transition-transform duration-500 group-hover:translate-x-1 group-hover:translate-y-1 group-hover:text-[#E67B4E] block mx-2" strokeWidth={2.5} /> VIEW DETAILS ]
+                                    <a href="#resume" onClick={(e) => e.preventDefault()} className="row-fade-up hidden [@media(pointer:coarse)]:flex font-inter font-semibold text-[10px] uppercase tracking-[0.25em] text-[#f5f5f7]/60 items-center w-max">
+                                        <ArrowDownRight className="w-3 h-3 block mx-2 text-[#E67B4E]" strokeWidth={2.5} /> VIEW DETAILS
                                     </a>
                                 </div>
                             </div>
