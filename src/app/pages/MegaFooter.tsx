@@ -17,13 +17,13 @@ const MegaFooter = () => {
                         Available <span className='max-[400px]:hidden inline-block'>Now</span>
                     </span>
 
-                    <div className="flex flex-row items-center gap-6 md:gap-8">
+                    <div className="flex flex-row items-center gap-6 md:gap-8 font-bold">
                         <CursorTarget mode="pointer">
                             <a
                                 href="mailto:martingaoorglz@gmail.com"
-                                className="font-inter text-xs md:text-sm uppercase tracking-[0.2em] text-[#0a0a0a] hover:text-[#0a0a0a] transition-colors duration-500 flex items-center gap-1.5 group"
+                                className="font-inter text-xs md:text-sm uppercase tracking-[0.2em] text-[#0a0a0a] flex items-center gap-1.5 group"
                             >
-                                Email <ArrowUpRight className="w-3 h-3 md:w-3.5 md:h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
+                                Email <ArrowUpRight strokeWidth={3} className="w-3 h-3 md:w-3.5 md:h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
                             </a>
                         </CursorTarget>
                         <CursorTarget mode="pointer">
@@ -31,9 +31,9 @@ const MegaFooter = () => {
                                 href="https://github.com/Martin-Lianzhan-Gao"
                                 target="_blank"
                                 rel="noreferrer"
-                                className="font-inter text-xs md:text-sm uppercase tracking-[0.2em] text-[#0a0a0a] hover:text-[#0a0a0a] transition-colors duration-500 flex items-center gap-1.5 group"
+                                className="font-inter text-xs md:text-sm uppercase tracking-[0.2em] text-[#0a0a0a] flex items-center gap-1.5 group"
                             >
-                                GitHub <ArrowUpRight className="w-3 h-3 md:w-3.5 md:h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
+                                GitHub <ArrowUpRight strokeWidth={3} className="w-3 h-3 md:w-3.5 md:h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
                             </a>
                         </CursorTarget>
                     </div>

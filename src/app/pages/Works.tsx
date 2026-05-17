@@ -171,7 +171,7 @@ const Works = () => {
                                 {/* Right Box (Context & Action) */}
                                 <div className="w-full lg:flex-1 lg:max-w-[420px] xl:max-w-[600px] flex flex-col gap-10 md:gap-14">
                                     <div className="flex flex-col gap-4 md:gap-5">
-                                        <p className="row-fade-up font-inter text-xs xl:text-sm font-bold text-[#f5f5f7]/70 uppercase tracking-[0.15em]">
+                                        <p className="row-fade-up font-inter text-xs xl:text-sm font-medium text-[#f5f5f7]/70 uppercase tracking-[0.15em]">
                                             {work.position}
                                         </p>
 
