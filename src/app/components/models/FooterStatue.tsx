@@ -77,7 +77,7 @@ const FooterStatue = () => {
     return (
         <div
             ref={containerRef}
-            className="w-[22vw] lg:w-[20vw] xl:w-[16vw] 2xl:w-[14vw] h-[30vw] lg:h-[28vw] xl:h-[22vw] 2xl:h-[18vw] pointer-events-none"
+            className="w-[24vw] lg:w-[22vw] xl:w-[18vw] 2xl:w-[15.5vw] h-[33vw] lg:h-[31vw] xl:h-[24vw] 2xl:h-[20vw] pointer-events-none"
         >
             <Canvas
                 frameloop="demand"
