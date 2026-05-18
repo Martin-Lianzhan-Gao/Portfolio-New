@@ -44,24 +44,22 @@ const MegaFooter = () => {
                 </div>
 
                 {/* Giant CTA Text + 3D Statue */}
-                <a href="mailto:martingaoorglz@gmail.com" className="group block select-none">
-                    <div className="relative">
-                        <h2 className="font-inria-sans font-bold text-[18vw] md:text-[15vw] lg:text-[17vw] 2xl:text-[12.5vw] leading-[0.85] tracking-tighter uppercase cursor-pointer">
-                            <CursorTarget mode="combo" label="Let's Talk" icon="arrow-up-right" panelBg='#eaeaec' contentColor='#0a0a0a'>
+                <CursorTarget mode="combo" label="Let's Talk" icon="arrow-up-right" panelBg='#eaeaec' contentColor='#0a0a0a'>
+                    <a href="mailto:martingaoorglz@gmail.com" className="group block select-none">
+                        <div className="relative">
+                            <h2 className="font-inria-sans font-bold text-[18vw] md:text-[16.5vw] lg:text-[18vw] 2xl:text-[13.5vw] leading-[0.85] tracking-tighter uppercase cursor-pointer">
                                 <span className="inline-block transition-colors duration-700 group-hover:text-[#0a0a0a]/80">SAY HELLO</span>
-                            </CursorTarget>
-                        </h2>
+                            </h2>
 
-                        {/* 3D Socrates Statue — absolute overlay, vertically centered with title */}
-                        <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none z-10">
-                            <Suspense fallback={null}>
-                                <FooterStatue />
-                            </Suspense>
+                            {/* 3D Socrates Statue — absolute overlay, vertically centered with title */}
+                            <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none z-10">
+                                <Suspense fallback={null}>
+                                    <FooterStatue />
+                                </Suspense>
+                            </div>
                         </div>
-                    </div>
-                </a>
-
-
+                    </a>
+                </CursorTarget>
             </div>
 
         </footer >
