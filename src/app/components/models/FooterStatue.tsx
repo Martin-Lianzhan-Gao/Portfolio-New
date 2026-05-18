@@ -35,12 +35,14 @@ function Statue({ isVisibleRef }: { isVisibleRef: React.RefObject<boolean> }) {
         })
     }, [scene])
 
-    // Slow self-rotation around the model's own (tilted) Y-axis
+    // Counter-clockwise self-rotation around the model's own (tilted) Y-axis
     useFrame((state, delta) => {
         if (!isVisibleRef.current) return
         state.invalidate()
         if (spinRef.current) {
-            spinRef.current.rotation.y += delta * 1.5
+            // Clamp delta to prevent jump when resuming from off-screen pause
+            const clampedDelta = Math.min(delta, 1 / 30)
+            spinRef.current.rotation.y -= clampedDelta * 1.5
         }
     })
 
