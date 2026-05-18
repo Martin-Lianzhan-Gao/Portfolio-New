@@ -48,7 +48,7 @@ function Statue({ isVisibleRef }: { isVisibleRef: React.RefObject<boolean> }) {
 
     return (
         // Outer group: 20° rightward tilt, shifted left to prevent right-side clipping
-        <group scale={1.4} position={[-0.1, -1.3, 0]} rotation={[0, 0, -Math.PI / 9]}>
+        <group scale={1.4} position={[-0.2, -1.3, 0]} rotation={[0, 0, -Math.PI / 9]}>
             {/* Inner group: rotates around its own local Y-axis */}
             <group ref={spinRef}>
                 <primitive object={scene} />
