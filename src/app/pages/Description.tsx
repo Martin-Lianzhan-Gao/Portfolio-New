@@ -89,10 +89,10 @@ const Description = () => {
 
     return (
         <div ref={containerRef} id="about" data-theme="dark" className="relative z-20 overflow-hidden bg-[#0a0a0a] w-full pb-14 md:pb-0 md:pt-14 xl:pt-28 flex flex-col items-center">
-            <div className="w-full max-w-vw-safe px-0 md:px-12 flex flex-col md:flex-row justify-center md:justify-between items-start md:items-start min-h-[100dvh] md:gap-20">
+            <div className="w-full max-w-vw-safe px-0 md:px-12 flex flex-col md:flex-row justify-center md:justify-between items-start md:items-start min-h-dvh md:gap-20">
 
                 {/* Left: Statue Image with Overlays */}
-                <div className="relative w-full md:w-[55%] md:h-[100dvh] xl:w-[50%] 2xl:w-[40%] flex flex-col justify-center items-center md:items-start">
+                <div className="relative w-full md:w-[55%] md:h-dvh xl:w-[50%] 2xl:w-[40%] flex flex-col justify-center items-center md:items-start">
                     <div className="relative w-full max-w-full scale-[1.2] lg:scale-100 origin-top-left md:origin-left">
                         <CursorTarget mode='text' label="Not Me">
                             <img
@@ -112,23 +112,23 @@ const Description = () => {
 
 
                         {/* Overlay: Permanent left edge blur into darkness */}
-                        <div className="absolute top-0 left-0 w-[30%] md:w-[20%] h-full bg-gradient-to-r from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+                        <div className="absolute top-0 left-0 w-[30%] md:w-[20%] h-full bg-linear-to-r from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
 
                         {/* Overlay: Permanent right edge blur into darkness */}
-                        <div className="absolute top-0 right-0 w-[30%] md:w-[20%] h-full bg-gradient-to-l from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+                        <div className="absolute top-0 right-0 w-[30%] md:w-[20%] h-full bg-linear-to-l from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
 
                         {/* Overlay: Permanent top edge blur into darkness */}
-                        <div className="absolute top-0 left-0 w-full h-[15%] md:h-[20%] bg-gradient-to-b from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+                        <div className="absolute top-0 left-0 w-full h-[15%] md:h-[20%] bg-linear-to-b from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
 
                         {/* Overlay: Permanent bottom edge blur into darkness */}
-                        <div className="absolute bottom-0 left-0 w-full h-[40%] bg-gradient-to-t from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+                        <div className="absolute bottom-0 left-0 w-full h-[40%] bg-linear-to-t from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
                     </div>
                 </div>
 
                 {/* Right: Text Content */}
                 <div
                     ref={contentRef}
-                    className="relative z-20 font-inter font-light tracking-wide flex flex-col justify-center gap-8 lg:gap-12 2xl:gap-24 text-left w-full md:w-[45%] md:h-[100dvh] xl:w-[50%] 2xl:w-[60%] max-w-[800px] px-[8vw] md:px-0 -mt-[8vh] sm:-mt-[12vh] md:mt-0 md:translate-y-14 xl:translate-y-20"
+                    className="relative z-20 font-inter font-light tracking-wide flex flex-col justify-center gap-8 lg:gap-12 2xl:gap-24 text-left w-full md:w-[45%] md:h-dvh xl:w-[50%] 2xl:w-[60%] max-w-[800px] px-[8vw] md:px-0 mt-[-8vh] sm:mt-[-12vh] md:mt-0 md:translate-y-14 xl:translate-y-20"
                 >
 
                     <p

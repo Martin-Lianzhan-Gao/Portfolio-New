@@ -151,7 +151,7 @@ const Intro = () => {
     }, []);
 
     return (
-        <div id="top" className="relative z-20 w-full h-[100dvh] overflow-hidden bg-[#0a0a0a]">
+        <div id="top" className="relative z-20 w-full h-dvh overflow-hidden bg-[#0a0a0a]">
             {/* Grid Layer — 静态暗线 */}
             <div className="absolute inset-0 w-full h-full pointer-events-none"
                 style={{
@@ -197,7 +197,7 @@ const Intro = () => {
             </div>
 
             {/* Depth Content Layer (Title) - Z-index 0 to sit behind the Nebula */}
-            <div className="absolute top-0 left-0 w-full h-[100dvh] flex flex-col items-center pointer-events-none z-0">
+            <div className="absolute top-0 left-0 w-full h-dvh flex flex-col items-center pointer-events-none z-0">
                 <div className="w-full max-w-vw-safe px-6 md:px-12 pt-[20vh] md:pt-[14vh] flex flex-col items-center text-center">
                     <h1 ref={titleRef} className="font-inria-sans font-medium text-[17vw] lg:text-[14vw] 2xl:text-[12vw] min-[1800px]:text-[10vw] uppercase tracking-tight text-[#f5f5f7]/80 leading-none">
                         MARTINGAO<span className="text-[#e67b4e]">.</span>
@@ -211,7 +211,7 @@ const Intro = () => {
             </div>
 
             {/* Interactive Content Layer (Bottom) - Z-index 30 to sit in front of the Nebula */}
-            <div className="absolute top-0 left-0 w-full h-[100dvh] flex flex-col items-center pointer-events-none z-30">
+            <div className="absolute top-0 left-0 w-full h-dvh flex flex-col items-center pointer-events-none z-30">
                 <div className="w-full h-full max-w-vw-safe px-6 md:px-12 pb-8 md:pb-12 flex flex-col justify-end">
                     {/* BOTTOM LAYER: Grounding Metadata & Scroll */}
                     <div ref={introBottomRef} className="w-full flex flex-row justify-between items-end font-inter font-light text-[12px] md:text-[13px] xl:text-[15px] uppercase tracking-[0.2em]  pointer-events-auto">
@@ -237,12 +237,12 @@ const Intro = () => {
                                     {/* First Arrow (Flies down and out) */}
                                     <ArrowDown
                                         strokeWidth={3}
-                                        className="absolute w-4 h-4 text-[#f5f5f7]/50 transition-all duration-[600ms] ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:text-[#e67b4e] group-hover:translate-y-[150%]"
+                                        className="absolute w-4 h-4 text-[#f5f5f7]/50 transition-all duration-600 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:text-[#e67b4e] group-hover:translate-y-[150%]"
                                     />
                                     {/* Second Arrow (Flies down and in from top) */}
                                     <ArrowDown
                                         strokeWidth={3}
-                                        className="absolute w-4 h-4 text-[#e67b4e] -translate-y-[150%] transition-all duration-[600ms] ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:translate-y-0"
+                                        className="absolute w-4 h-4 text-[#e67b4e] translate-y-[-150%] transition-all duration-600 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:translate-y-0"
                                     />
                                 </div>
                             </div></CursorTarget>

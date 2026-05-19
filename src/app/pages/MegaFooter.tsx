@@ -17,7 +17,7 @@ const MegaFooter = () => {
 
                 {/* Top Row: Availability Label + Social Links */}
                 <div className="flex flex-row justify-between items-center mb-14 md:mb-18 lg:mb-20">
-                    <span className="font-inter text-[10px] md:text-xs xl:text-sm font-bold uppercase tracking-[0.1em] text-[#0a0a0a] border-[2px] border-[#0a0a0a] rounded-full px-4 py-2">
+                    <span className="font-inter text-[10px] md:text-xs xl:text-sm font-bold uppercase tracking-widest text-[#0a0a0a] border-2 border-[#0a0a0a] rounded-full px-4 py-2">
                         Available <span className='max-[400px]:hidden inline-block'>Now</span>
                     </span>
 

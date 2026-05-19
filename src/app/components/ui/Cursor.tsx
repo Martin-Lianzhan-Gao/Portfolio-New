@@ -310,7 +310,7 @@ export default function Cursor() {
     return (
         <div
             ref={rootRef}
-            className="will-change-transform fixed top-0 left-0 pointer-events-none z-[9999] opacity-0 mix-blend-difference flex items-center justify-center"
+            className="will-change-transform fixed top-0 left-0 pointer-events-none z-9999 opacity-0 mix-blend-difference flex items-center justify-center"
         >
             {/* Physics Layer: 只负责根据鼠标速度形变和小幅拉伸 */}
             <div ref={physicsRef} className="absolute flex items-center justify-center will-change-transform">

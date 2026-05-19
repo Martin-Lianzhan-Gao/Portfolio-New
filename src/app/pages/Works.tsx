@@ -116,7 +116,7 @@ const Works = () => {
     );
 
     return (
-        <div ref={containerRef} id="works" className="relative z-20 w-full min-h-[100dvh] bg-[#0a0a0a] overflow-hidden flex flex-col justify-start pb-16 md:pb-24 lg:pb-32">
+        <div ref={containerRef} id="works" className="relative z-20 w-full min-h-dvh bg-[#0a0a0a] overflow-hidden flex flex-col justify-start pb-16 md:pb-24 lg:pb-32">
             <div className="flex w-max whitespace-nowrap will-change-transform mt-20 md:mt-32 xl:mt-40 2xl:mt-50 mb-24 md:mb-40 lg:mb-56" ref={marqueeRef}>
                 {/* 
                   First Full Set 
@@ -142,11 +142,11 @@ const Works = () => {
             <div className="w-full flex-col flex items-center relative z-20 pb-28 md:pb-40 lg:pb-56">
                 {worksData.map((work, idx) => (
                     <CursorTarget key={idx} mode='combo' label='Details' icon='arrow-up-right'>
-                        <div className="works-row group relative w-full max-w-vw-safe mx-auto flex flex-col py-12 lg:py-24 px-6 md:px-12 hover:bg-[#f5f5f7]/[0.02] transition-colors duration-500 cursor-pointer">
+                        <div className="works-row group relative w-full max-w-vw-safe mx-auto flex flex-col py-12 lg:py-24 px-6 md:px-12 hover:bg-[#f5f5f7]/2 transition-colors duration-500 cursor-pointer">
 
                             {/* The Animated SVG Cut Line */}
                             {idx !== 0 && (
-                                <div className="row-divider absolute top-0 left-0 w-full h-[1px] bg-[#f5f5f7]/15"></div>
+                                <div className="row-divider absolute top-0 left-0 w-full h-px bg-[#f5f5f7]/15"></div>
                             )}
 
                             {/* Top Row: Metadata (Breathing Room) */}
@@ -176,7 +176,7 @@ const Works = () => {
                                         </p>
 
                                         {/* Skills with Orange Dot Separators */}
-                                        <div className="row-fade-up font-inter text-[10px] md:text-xs text-[#f5f5f7]/40 uppercase tracking-[0.15em] leading-[2] flex flex-wrap items-center">
+                                        <div className="row-fade-up font-inter text-[10px] md:text-xs text-[#f5f5f7]/40 uppercase tracking-[0.15em] leading-loose flex flex-wrap items-center">
                                             {work.techStack.map((tech, i) => (
                                                 <span key={i} className="flex items-center shrink-0">
                                                     {tech}
@@ -188,7 +188,7 @@ const Works = () => {
                                         </div>
                                     </div>
 
-                                    <a href="#resume" onClick={(e) => e.preventDefault()} className="row-fade-up hidden [@media(pointer:coarse)]:flex font-inter font-semibold text-[10px] uppercase tracking-[0.25em] text-[#f5f5f7]/60 items-center w-max">
+                                    <a href="#resume" onClick={(e) => e.preventDefault()} className="row-fade-up hidden pointer-coarse:flex font-inter font-semibold text-[10px] uppercase tracking-[0.25em] text-[#f5f5f7]/60 items-center w-max">
                                         <ArrowDownRight className="w-3 h-3 block mx-2 text-[#E67B4E]" strokeWidth={2.5} /> VIEW DETAILS
                                     </a>
                                 </div>
