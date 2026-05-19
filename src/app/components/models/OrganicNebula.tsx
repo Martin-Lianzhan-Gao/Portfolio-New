@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
-import { useCursorStore } from '@/hooks/useCursorStore'
+
 
 // Raw structural GLSL optimized to fold parametric mesh grids softly.
 const vertexShader = `
@@ -248,8 +248,7 @@ const DynamicNebula = ({ isVisibleRef }: { isVisibleRef: React.RefObject<boolean
         return geometry
     }, [])
 
-    // 视差平滑缓存（避免突变）
-    const parallax = useRef({ x: 0, y: 0 })
+
 
     useFrame((state) => {
         // 离屏时跳过所有计算，不请求下一帧 → Canvas 完全静止
@@ -264,12 +263,7 @@ const DynamicNebula = ({ isVisibleRef }: { isVisibleRef: React.RefObject<boolean
             pointsRef.current.rotation.y = t * 0.03
             pointsRef.current.rotation.z = Math.sin(t * 0.08) * 0.05
 
-            // Pointer parallax — 瞬态读取，不触发 React render
-            const { nx, ny } = useCursorStore.getState()
-            parallax.current.x += (nx * 0.06 - parallax.current.x) * 0.04
-            parallax.current.y += (ny * 0.04 - parallax.current.y) * 0.04
-            pointsRef.current.rotation.y += parallax.current.x
-            pointsRef.current.rotation.x = parallax.current.y
+
         }
 
         // demand 模式：手动请求下一帧
